@@ -146,7 +146,7 @@ export class SioOutboundProviderComponent implements OnInit {
   updateBloodOutboundDetails(bloodOutboundDetailID) {
     console.log(bloodOutboundDetailID);
     this.updatebloodOutboundObj = {};
-    this.updatebloodOutboundObj.czentrixCallID = "131234";
+    this.updatebloodOutboundObj.callID = "131234";
     this.updatebloodOutboundObj.bloodOutboundDetailID = bloodOutboundDetailID;
 
     this._OWLService.updateBloodBankDetails(JSON.stringify(this.updatebloodOutboundObj)).subscribe(response => { this.updateBloodOutboundRes = response });

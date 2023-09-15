@@ -23,7 +23,7 @@
             <td><strong>{{(md2.activePage-1)*(md2.rowsPerPage)+i+1}}</strong></td>
             <td>{{scheme?.schemeName}}</td>
             <td>{{scheme?.schemeDesc}}</td>
-            <td><a href="{{scheme?.kmFilePath}}" target="_blank">{{scheme?.kmFilePath ? scheme.kmFileManager.fileName : " "}}</a></td>
+            <td><a href="{{scheme?.kmFilePath}}" target="_blank" rel="noopener noreferrer">{{scheme?.kmFilePath ? scheme.kmFileManager.fileName : " "}}</a></td>
             <td>
               <md-icon *ngIf="!scheme.deleted" mdTooltip="{{currentLanguageSet?.edit}}" class="mdicon mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer"
                 (click)="editScheme(scheme)">edit</md-icon>

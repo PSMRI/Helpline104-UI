@@ -158,8 +158,8 @@
       <ng-container formArrayName="bloodBankForm">
           <h4 class="m-l-15">
               <strong>{{currentLanguageSet?.bloodBankDetails}}</strong>&nbsp;
-              <a *ngIf="BB_url_exists" href="{{bloodBankURL}}" target="_blank">{{currentLanguageSet?.checkBloodBankDetails}}</a>
-              <a class="m-l-10" *ngIf="blood_related_document.length>0" href="{{blood_related_document[0]?.subCatFilePath}}" target="_blank">
+              <a *ngIf="BB_url_exists" href="{{bloodBankURL}}" target="_blank" rel="noopener noreferrer">{{currentLanguageSet?.checkBloodBankDetails}}</a>
+              <a class="m-l-10" *ngIf="blood_related_document.length>0" href="{{blood_related_document[0]?.subCatFilePath}}" target="_blank" rel="noopener noreferrer">
                 <md-icon class="f-s-22 icon" mdTooltip="{{blood_related_document[0]?.fileManger[0]?.fileName}}">file_download</md-icon>
                 <span class="m-l-10">{{blood_related_document[0]?.subCategoryName}}</span>
               </a>

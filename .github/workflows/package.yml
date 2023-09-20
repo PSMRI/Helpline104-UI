@@ -16,7 +16,7 @@ on:
       - dist/**
 
 jobs:
-  build:
+  package:
     runs-on: ubuntu-latest
 
     strategy:

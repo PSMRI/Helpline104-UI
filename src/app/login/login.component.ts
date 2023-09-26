@@ -32,6 +32,7 @@ import { SocketService } from "../services/socketService/socket.service";
 import { Subscription } from "rxjs";
 import { InterceptedHttp } from "app/http.interceptor";
 import * as CryptoJS from 'crypto-js';
+import * as bcrypt from 'bcrypt';
 @Component({
   selector: "login-component",
   templateUrl: "./login.html",
@@ -198,7 +199,11 @@ export class loginContentClass implements OnInit {
 
   login(doLogOut) {
     
-    this.encryptpassword = this.encrypt(this.Key_IV, this.password);
+    bcrypt.hash(this.password, 12, (err, hashedPassword) => {
+      if (err) {
+        console.error('Error hashing password:', err);
+      } else {
+        this.encryptPassword = hashedPassword;
     this.loginservice
       .authenticateUser(this.userID, this.encryptpassword, doLogOut)
       .subscribe(
@@ -213,7 +218,9 @@ export class loginContentClass implements OnInit {
           }
         },
         (error: any) => this.errorCallback(error)
-      );
+        );
+      }
+    });
   }
 
   loginUser(doLogOut) {
@@ -222,6 +229,11 @@ export class loginContentClass implements OnInit {
     .subscribe(
       (userLogOutRes: any) => {
       if(userLogOutRes && userLogOutRes.response) {
+        bcrypt.hash(this.password, 12, (err, hashedPassword) => {
+          if (err) {
+            console.error('Error hashing password:', err);
+          } else {
+            this.encryptPassword = hashedPassword;
     this.loginservice
       .authenticateUser(this.userID, this.encryptpassword, doLogOut)
       .subscribe(
@@ -238,6 +250,8 @@ export class loginContentClass implements OnInit {
         (error: any) => this.errorCallback(error)
       );
       }
+    });
+  }
       else
       {
             this.alertMessage.alert(userLogOutRes.errorMessage, 'error');

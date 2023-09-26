@@ -32,7 +32,7 @@ import { SocketService } from "../services/socketService/socket.service";
 import { Subscription } from "rxjs";
 import { InterceptedHttp } from "app/http.interceptor";
 import * as CryptoJS from 'crypto-js';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 @Component({
   selector: "login-component",
   templateUrl: "./login.html",
@@ -65,16 +65,6 @@ export class loginContentClass implements OnInit {
     private httpService: InterceptedHttp
   ) {
     location.onPopState((e: any) => {
-      // console.log(e);
-      // var r = confirm("You will be logout from app");
-      // let txt;
-      // if (r == true) {
-      //   txt = "You pressed OK!";
-      // } else {
-      //   txt = "You pressed Cancel!";
-      // }
-      // alert(txt);
-      //window.history.forward();
     });
     this._keySize = 256;
       this._ivSize = 128;
@@ -83,7 +73,6 @@ export class loginContentClass implements OnInit {
 
   ngOnInit() {
     /*
-      JA354063 - Added on 21/4/2022
       Purpose - If user already logged in , kick the prev session and create a new session
       */
     this.httpService.dologoutUsrFromPreSession(false);
@@ -122,10 +111,8 @@ export class loginContentClass implements OnInit {
             response.isAuthenticated === true &&
             response.Status === "Active"
           ) {
-            // this.dataSettingService.inOutBound = undefined;
             sessionStorage.removeItem("onCall");
             sessionStorage.removeItem("CLI");
-            // sessionStorage.removeItem("session_id");
             this.dataSettingService.current_campaign = undefined;
             this.router.navigate(["/MultiRoleScreenComponent"], {
               skipLocationChange: true,
@@ -273,7 +260,6 @@ export class loginContentClass implements OnInit {
         .providerServiceMapping.serviceProviderID,
       "login response"
     );
-    //console.log(response.previlegeObj[0].roles[0].serviceRoleScreenMappings[0].providerServiceMapping.serviceProvider.serviceProviderID, "Service Provider ID");
 
     this.privleges = response.previlegeObj.filter((userPrivelige) => {
       console.log("userPrivelige.serviceName", userPrivelige);
@@ -294,13 +280,11 @@ export class loginContentClass implements OnInit {
       this.dataSettingService.userPriveliges = previlageObj;
       this.dataSettingService.uid = response.userID;
       this.dataSettingService.agentID = response.agentID;
-      //this.dataSettingService.agentID = 2002;
-      // this.dataSettingService.current_serviceID=response.previlegeObj[0].roles[0].serviceRoleScreenMappings[0].providerServiceMapping.m_ServiceMaster.serviceID;
 
       this.dataSettingService.service_providerID =
         response.previlegeObj[0].roles[0].serviceRoleScreenMappings[0].providerServiceMapping.serviceProviderID;
       this.dataSettingService.providerID =
-        response.previlegeObj[0].roles[0].serviceRoleScreenMappings[0].providerServiceMapping.serviceProviderID; //17nov
+        response.previlegeObj[0].roles[0].serviceRoleScreenMappings[0].providerServiceMapping.serviceProviderID; 
 
       this.dataSettingService.uname = this.userID ? this.userID.trim() : null;
       console.log("array" + JSON.stringify(response.Previlege));
@@ -311,13 +295,11 @@ export class loginContentClass implements OnInit {
       );
 
       if (response.isAuthenticated === true && response.Status === "Active") {
-        // this.dataSettingService.inOutBound = undefined;
         this.dataSettingService.current_campaign = undefined;
         sessionStorage.setItem("key", "pass1234");
         sessionStorage.setItem("authToken", response.key);
         sessionStorage.removeItem("onCall");
         sessionStorage.removeItem("CLI");
-        // sessionStorage.removeItem("session_id");
         this.czentrixServices
           .getCTILoginToken(this.userID, this.password)
           .subscribe(
@@ -333,16 +315,12 @@ export class loginContentClass implements OnInit {
         this.router.navigate(["/MultiRoleScreenComponent"], {
           skipLocationChange: true,
         });
-        // open socket connection
-        // this.socketService.reInstantiate();
-        // this.loginservice.getServiceProviderID(response.previlegeObj[0].serviceID).subscribe(response=>this.getServiceProviderMapIDSuccessHandeler(response));
       }
       if (response.isAuthenticated === true && response.Status === "New") {
         sessionStorage.setItem("key", "pass1234");
         sessionStorage.setItem("authToken", response.key);
         sessionStorage.removeItem("onCall");
         sessionStorage.removeItem("CLI");
-        // sessionStorage.removeItem("session_id");
         this.router.navigate(["/setQuestions"]);
       }
     } else {
@@ -354,8 +332,6 @@ export class loginContentClass implements OnInit {
     }
   }
   errorCallback(error: any) {
-    // this.alertMessage.alert(error.errorMessage);
-    // console.log(error);
     if (error.status) {
       this.loginResult = error.errorMessage;
     } else {
@@ -383,23 +359,7 @@ export class loginContentClass implements OnInit {
   hidePWD() {
     this.dynamictype = "password";
   }
-  // getServiceProviderMapIDSuccessHandeler(response)
-  // {
-  // 	console.log("service provider map id",response);
-  // 	if (response != undefined) {
-  // 		console.log(response.serviceProviderID);
-  // 		this.dataSettingService.service_providerID = response.serviceProviderID;
-  // 		this.dataSettingService.providerID = response.serviceProviderID; // added 7th oct
-  // 		this.dataSettingService.providerServiceMapID = response.providerServiceMapID;// added 7th oct
-  // 	}
-  // 	else
-  // 	{
-  // 		console.log("Service Provider MAP ID is not fetched, undefined");
-  // 	}
-
-  // 	 this.getLoginKey(this.userID, this.password);
-  // }
-// JA354063 - Added on 21/4/2022
+  
 ngOnDestroy() {
   if (this.logoutUserFromPreviousSessionSubscription) {
     this.logoutUserFromPreviousSessionSubscription.unsubscribe();

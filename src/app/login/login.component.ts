@@ -190,7 +190,7 @@ export class loginContentClass implements OnInit {
       if (err) {
         console.error('Error hashing password:', err);
       } else {
-        this.encryptPassword = hashedPassword;
+        this.encryptpassword = hashedPassword;
     this.loginservice
       .authenticateUser(this.userID, this.encryptpassword, doLogOut)
       .subscribe(
@@ -220,7 +220,7 @@ export class loginContentClass implements OnInit {
           if (err) {
             console.error('Error hashing password:', err);
           } else {
-            this.encryptPassword = hashedPassword;
+            this.encryptpassword = hashedPassword;
     this.loginservice
       .authenticateUser(this.userID, this.encryptpassword, doLogOut)
       .subscribe(

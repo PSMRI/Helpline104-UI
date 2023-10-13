@@ -1,3 +1,26 @@
+/* 
+* AMRIT – Accessible Medical Records via Integrated Technology 
+* Integrated EHR (Electronic Health Records) Solution 
+*
+* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+*
+* This file is part of AMRIT.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see https://www.gnu.org/licenses/.
+*/
+
+
 import { Component, OnInit, Input, Inject, ViewChild } from "@angular/core";
 import { MdDialog, MdDialogRef } from "@angular/material";
 import { MD_DIALOG_DATA } from "@angular/material";
@@ -220,6 +243,10 @@ export class CaseSheetComponent implements OnInit {
   treatmentRecommendation: any;
   riskLevel: any;
   benHihlData: Array<any> = [];
+  pccFlag : boolean = false;
+  treatmentRecommendationFlag : boolean = false;
+  categoryFlag : boolean = false;
+  saveMainFlag : boolean = false;
  
   constructor(
     private _userData: UserBeneficiaryData,
@@ -283,6 +310,7 @@ export class CaseSheetComponent implements OnInit {
   @ViewChild("patientDetailForm") patientDetailForm: NgForm;
   @ViewChild("covidVaccineForm") covidVaccineForm: NgForm;
   ngOnInit() {
+    // this.saveMainFlag = false;
     this.currentLanguageSetValue();
     this.screens = this.saved_data.screens;
     this.getCovidVaccineMaster();
@@ -1542,23 +1570,35 @@ fetchBenenficiaryDetails()
   caseSheetObj: any = {};
   saveCaseSheetData(values: any) {
     if (this.current_role === "CO") {
+      // if(this.pcc.length>0 && this.treatmentRecommendation.length>0){
+      //   this.saveMainFlag = true;
+      // }
       if (
-        this.pcc !== undefined &&
+        (this.pcc !== undefined &&
         this.pcc !== null &&
         this.pcc !== "" &&
-        this.pcc.length !== 0
+        this.pcc.length !== 0)
       ) {
-        this.saveCasesheetValues(values);
-      } else {
-        this.alertMessage.alert(this.currentLanguageSet.pleaseFillPcc);
+        this.pccFlag = true;
       }
+      
+      if(this.pccFlag ){
+        this.saveCasesheetValues(values);
+      }
+
+      else{
+        this.pccFlag=false;
+      }
+
+
     } else {
       if (
         (this.pcc !== undefined && this.pcc !== null && this.pcc !== "") ||
         (values.diseasesSummary !== undefined &&
           values.diseasesSummary !== null &&
-          values.diseasesSummary !== "")
+          values.diseasesSummary !== "") 
       ) {
+          //  this.treatmentRecommendationFlag = true;
         this.saveCasesheetValues(values);
       } else {
         this.alertMessage.alert(
@@ -2056,9 +2096,11 @@ fetchBenenficiaryDetails()
 }
 
   formReset() {
+    this.pccFlag=false;
     this.disablenoSymptom = false;
     this.diableOtherSymptom = false;
     this.pcc = "";
+    this.treatmentRecommendation = "";
     this.sctID_psd = "";
     this.sctID_pcc = "";
     this.sctID_pcc_toSave = "";

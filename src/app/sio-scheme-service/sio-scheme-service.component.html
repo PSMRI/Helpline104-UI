@@ -27,7 +27,7 @@
           <td>{{scheme?.schemeName}}</td>
           <td>{{scheme?.schemeDesc}}</td>
           <td>
-            <a href="{{scheme?.kmFilePath}}" (click)="schemeServiceAvailed(scheme.kmFilePath,scheme)"  target="_blank">{{scheme?.kmFilePath ? scheme.kmFileManager.fileName : " "}}</a>
+            <a href="{{scheme?.kmFilePath}}" (click)="schemeServiceAvailed(scheme.kmFilePath,scheme)"  target="_blank" rel="noopener noreferrer">{{scheme?.kmFilePath ? scheme.kmFileManager.fileName : " "}}</a>
           </td>
         </tr>
       </tbody>

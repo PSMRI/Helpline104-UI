@@ -139,6 +139,8 @@ export class ClosureComponent implements OnInit {
   enableInstitute: boolean = false;
   varRefral : any;
   appointmnetSuccessFlag : boolean;
+  benDetailsSelectedData: any;
+  transferCallArr: Array<any> = [];
   
   constructor(
     public dialog: MdDialog,
@@ -203,6 +205,14 @@ export class ClosureComponent implements OnInit {
         this.populateCallTypes(response);
       },
       (err) => {}
+    );
+
+    this._availableServices.getServices(requestObject).subscribe(
+      (response) => {
+        // this.callTypeObj = response;
+        this.populateTransferDropDown(response);
+      },
+      (err) => { }
     );
 
     this.saved_data.serviceAvailed.subscribe((data) => {
@@ -1516,4 +1526,49 @@ export class ClosureComponent implements OnInit {
       }
     })
   }
+  
+  populateTransferDropDown(response: any) {
+    //  this.benDetailsSelectedData = this.saved_data.benDetailsSelected;
+     this.saved_data.isBenDetails$.subscribe((value) => {
+          this.benDetailsSelectedData = value;
+
+          if ((this.current_role.toUpperCase() === "RO") && (this.benDetailsSelectedData === null || this.benDetailsSelectedData === undefined || this.benDetailsSelectedData === "")) {
+            if (response !== null || response !== undefined || response.length > 0) {
+              this.transferCallArr = response.filter(function (item) {
+                return item.subServiceName === 'Health Advisory Service';
+              });
+            }
+      
+          }
+      
+          else {
+            if (response !== null || response !== undefined || response.length > 0) {
+              this.transferCallArr = response;
+              // transferCallArr = response;
+            }
+          }
+          // transferDropdown();
+
+     });
+
+      // let transferCallArr : Array<any> = [];
+  
+      // if ((this.current_role.toUpperCase() === "RO") && (this.benDetailsSelectedData === null || this.benDetailsSelectedData === undefined || this.benDetailsSelectedData === "")) {
+      //   if (response !== null || response !== undefined || response.length > 0) {
+      //     this.transferCallArr = response.filter(function (item) {
+      //       return item.subServiceName === 'Health Advisory Service';
+      //     });
+      //   }
+  
+      // }
+  
+      // else {
+      //   if (response !== null || response !== undefined || response.length > 0) {
+      //     this.transferCallArr = response;
+      //     // transferCallArr = response;
+      //   }
+      // }
+  
+    }
+
 }

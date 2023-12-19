@@ -496,6 +496,8 @@ export class InnerpageComponent implements OnInit, OnDestroy {
       this.selectedBenData.caste = res[0].i_bendemographics.communityName
         ? res[0].i_bendemographics.communityName
         : undefined;
+
+        this.getCommonData.getBenDetailsOfCall(this.selectedBenData);
     }
   }
 

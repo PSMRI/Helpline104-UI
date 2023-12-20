@@ -445,7 +445,6 @@ export class ClosureComponent implements OnInit {
   //       this.roleFlag=false;
 
     if (callType.toLowerCase() === "valid" || callType.toLowerCase() === "transfer" || callType.toLowerCase() === "referral") {
-        // this.validTrans = true;
         this.nuisanceBLock = false;
         this.benDetailSubscription = this.saved_data.isBenDetails$.subscribe((value) => {
           this.benDetailsSelectedData = value;
@@ -458,13 +457,8 @@ export class ClosureComponent implements OnInit {
             } 
           }
           else{
-            this.validTrans = true;
-            
+            this.validTrans = true; 
           }
-
-
-          // transferDropdown();
-
      });
         
     } 

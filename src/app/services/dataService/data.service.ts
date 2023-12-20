@@ -125,5 +125,9 @@ export class dataService {
         this.isBenDetails = value;
         this.isBenDetailsData.next(this.isBenDetails);
     }
+    clearBenData(){
+        this.isBenDetails = null;
+        this.isBenDetailsData.next(this.isBenDetails);
+    }
     
 };

@@ -1563,7 +1563,7 @@ export class ClosureComponent implements OnInit {
           this.benDetailsSelectedData = value;
 
           if ((this.current_role.toUpperCase() === "RO") && (this.benDetailsSelectedData === null || this.benDetailsSelectedData === undefined || this.benDetailsSelectedData === "")) {
-                          if (response !== null || response !== undefined || response.length > 0) {
+                          if (response !== null && response !== undefined && response.length > 0) {
                 this.transferCallArr = response.filter(function (item) {
                   return item.subServiceName === 'Health Advisory Service';
                 });
@@ -1572,7 +1572,7 @@ export class ClosureComponent implements OnInit {
           }
       
           else {
-            if (response !== null || response !== undefined || response.length > 0) {
+            if (response !== null && response !== undefined && response.length > 0) {
               this.transferCallArr = response;
               // transferCallArr = response;
             }

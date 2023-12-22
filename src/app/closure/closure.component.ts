@@ -176,7 +176,6 @@ export class ClosureComponent implements OnInit {
 
   ngOnInit() {
     console.log("@@@@@@@@@@@@@@@@@@@@");
-    this.saved_data.clearBenData();
     this.currentLanguageSetValue();
     let today = new Date();
     this.followupOn = today;

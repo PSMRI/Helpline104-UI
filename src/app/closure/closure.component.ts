@@ -36,7 +36,7 @@ import { dataService } from "../services/dataService/data.service";
 import { CallServices } from "../services/callservices/callservice.service";
 import { FeedbackResponseModel } from "../sio-grievience-service/sio-grievience-service.component";
 import { MdDialog } from "@angular/material";
-import { Observable } from "rxjs/Rx";
+import { Observable, Subscription } from "rxjs/Rx";
 //import { Router } from '@angular/router';
 import { Router } from "@angular/router";
 import { ConfirmationDialogsService } from "./../services/dialog/confirmation.service";
@@ -139,6 +139,10 @@ export class ClosureComponent implements OnInit {
   enableInstitute: boolean = false;
   varRefral : any;
   appointmnetSuccessFlag : boolean;
+  benDetailsSelectedData: any;
+  transferCallArr: Array<any> = [];
+  private benDetailSubscription: Subscription;
+  
   
   constructor(
     public dialog: MdDialog,
@@ -203,6 +207,14 @@ export class ClosureComponent implements OnInit {
         this.populateCallTypes(response);
       },
       (err) => {}
+    );
+
+    this._availableServices.getServices(requestObject).subscribe(
+      (response) => {
+        // this.callTypeObj = response;
+        this.populateTransferDropDown(response);
+      },
+      (err) => { }
     );
 
     this.saved_data.serviceAvailed.subscribe((data) => {
@@ -285,6 +297,10 @@ export class ClosureComponent implements OnInit {
           providerServiceMapID: this.saved_data.current_service.serviceID,
         })
         .subscribe((response) => this.IDsuccessHandeler(response));
+  }
+
+  ngOnDestroy(){
+    this.benDetailSubscription.unsubscribe();
   }
   IDsuccessHandeler(res) {
     this.commonData = res;
@@ -427,10 +443,25 @@ export class ClosureComponent implements OnInit {
   //   if(this.current_role=="Supervisor"){
   //       this.roleFlag=false;
 
-    if (callType == "Valid" || callType == "Transfer" || callType == "Referral") {
-      this.validTrans = true;
-      this.nuisanceBLock = false;
-    } else {
+    if (callType.toLowerCase() === "valid" || callType.toLowerCase() === "transfer" || callType.toLowerCase() === "referral") {
+        this.nuisanceBLock = false;
+        this.benDetailSubscription = this.saved_data.isBenDetails$.subscribe((value) => {
+          this.benDetailsSelectedData = value;
+          if(this.benDetailsSelectedData === null || this.benDetailsSelectedData === undefined || this.benDetailsSelectedData === ""){
+            if(callType.toLowerCase() === "transfer"){
+              this.validTrans = true; 
+            }
+            else{
+              this.validTrans = false; 
+            } 
+          }
+          else{
+            this.validTrans = true; 
+          }
+     });
+        
+    } 
+    else {
       this.validTrans = false;
       this.nuisanceBLock = true; // this is done to disable S & COntinue in case of incomplete
     }
@@ -556,7 +587,6 @@ export class ClosureComponent implements OnInit {
       values.isFollowupRequired = this.doFollow;
       values.isTransfered = this.doTransfer;
       values.isFeedback = this.isFeedbackRequiredFlag;
-
       if (values.isFollowupRequired == undefined) {
         values.isFollowupRequired = false;
       }
@@ -615,8 +645,12 @@ export class ClosureComponent implements OnInit {
                 values.isCompleted = true;
                 this.updateOutboundCallStatus(values);
               }
+              // this.benDetailSubscription.unsubscribe();
+              console.log("BEN DETAILS CHECK***");
+              this.saved_data.clearBenData();
               this.checkForSubmitCloseBtnType(btnType);
             }
+            
           },
           (err) => {
             console.log(err);
@@ -629,8 +663,11 @@ export class ClosureComponent implements OnInit {
         );
       }
       this.submitContinueBtnType(btnType);
+      
     }
+    
   }
+  
   
   setbenRegID(values) {
     if (this.saved_data !== undefined && this.saved_data !== null) {
@@ -881,6 +918,7 @@ export class ClosureComponent implements OnInit {
                     transferToCampaign,
                   "success"
                 );
+               
                 sessionStorage.removeItem("onCall");
                 sessionStorage.removeItem("CLI");
                 this.router.navigate(["/MultiRoleScreenComponent/dashboard"]);
@@ -898,6 +936,7 @@ export class ClosureComponent implements OnInit {
         );
       }
     }
+    
   }
 
   transferEmergencyCallSuccessHandeler(response, transferToCampaign) {
@@ -1516,4 +1555,49 @@ export class ClosureComponent implements OnInit {
       }
     })
   }
+  
+  populateTransferDropDown(response: any) {
+    //  this.benDetailsSelectedData = this.saved_data.benDetailsSelected;
+    this.benDetailSubscription = this.saved_data.isBenDetails$.subscribe((value) => {
+          this.benDetailsSelectedData = value;
+
+          if ((this.current_role.toUpperCase() === "RO") && (this.benDetailsSelectedData === null || this.benDetailsSelectedData === undefined || this.benDetailsSelectedData === "")) {
+                          if (response !== null && response !== undefined && response.length > 0) {
+                this.transferCallArr = response.filter(function (item) {
+                  return item.subServiceName === 'Health Advisory Service';
+                });
+              }
+            
+          }
+      
+          else {
+            if (response !== null && response !== undefined && response.length > 0) {
+              this.transferCallArr = response;
+              // transferCallArr = response;
+            }
+          }
+          // transferDropdown();
+
+     });
+
+      // let transferCallArr : Array<any> = [];
+  
+      // if ((this.current_role.toUpperCase() === "RO") && (this.benDetailsSelectedData === null || this.benDetailsSelectedData === undefined || this.benDetailsSelectedData === "")) {
+      //   if (response !== null || response !== undefined || response.length > 0) {
+      //     this.transferCallArr = response.filter(function (item) {
+      //       return item.subServiceName === 'Health Advisory Service';
+      //     });
+      //   }
+  
+      // }
+  
+      // else {
+      //   if (response !== null || response !== undefined || response.length > 0) {
+      //     this.transferCallArr = response;
+      //     // transferCallArr = response;
+      //   }
+      // }
+  
+    }
+
 }

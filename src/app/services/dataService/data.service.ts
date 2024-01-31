@@ -24,6 +24,7 @@
 import { Injectable } from '@angular/core';
  
 import { Http, Response } from '@angular/http';
+import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/catch';
@@ -69,6 +70,9 @@ export class dataService {
     outboundBloodReqtID: any;
     avoidingEvent: boolean = false;
     transactionId:any;
+    isBenDetails: any="";
+    isBenDetailsData = new BehaviorSubject(this.isBenDetails);
+    isBenDetails$ = this.isBenDetailsData.asObservable();
     
     // bpQuestionTypeId = 18;
     // diabeticQuestionTypeId = 19;
@@ -116,5 +120,14 @@ export class dataService {
     benDataInRO: any;
     apiCalledForInbound=false;
 	appLanguage:any="English";
+
+    getBenDetailsOfCall(value : any){
+        this.isBenDetails = value;
+        this.isBenDetailsData.next(this.isBenDetails);
+    }
+    clearBenData(){
+        this.isBenDetails = null;
+        this.isBenDetailsData.next(this.isBenDetails);
+    }
     
 };

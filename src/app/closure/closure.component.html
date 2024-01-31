@@ -109,7 +109,7 @@
             <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3  p-b-1-5"  *ngIf="validTrans">
               <md-select [disabled]="disableTransfer" placeholder="{{currentLanguageSet?.transferCall}}" name="transferCall" [(ngModel)]="transferCall" (change)="chooseService(transferCall)" [style.width]="'100%'" [disabled]="current_campaign=='OUTBOUND'">
                 <md-option [value]="">Select none</md-option>
-                <md-option *ngFor="let availableService of services" [value]="availableService.subServiceName">{{availableService.subServiceName}}</md-option>
+                <md-option *ngFor="let availableService of transferCallArr" [value]="availableService.subServiceName">{{availableService.subServiceName}}</md-option>
               </md-select>
         </div>
 

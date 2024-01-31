@@ -601,6 +601,13 @@ export class ClosureComponent implements OnInit {
           this.beneficiaryDetails.benCallID !== undefined &&
           this.beneficiaryDetails.benCallID !== null)
       ) {
+        if (this.current_campaign == "OUTBOUND") {
+          values.IsOutbound = true;
+        }
+        else{
+          values.IsOutbound = false;
+        }
+        
         if (this.saved_data.benCallID) {
           values.benCallID = this.saved_data.benCallID;
         } else {

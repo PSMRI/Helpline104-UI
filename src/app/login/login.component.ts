@@ -40,7 +40,7 @@ import * as CryptoJS from 'crypto-js';
 export class loginContentClass implements OnInit {
   model: any = {};
   userID: any;
-  code: any;
+  password: any;
   public loginResult: string;
   key: any;
   iv: any;
@@ -198,7 +198,7 @@ export class loginContentClass implements OnInit {
 
   login(doLogOut) {
     
-    this.encryptpassword = this.encrypt(this.Key_IV, this.code);
+    this.encryptpassword = this.encrypt(this.Key_IV, this.password);
     this.loginservice
       .authenticateUser(this.userID, this.encryptpassword, doLogOut)
       .subscribe(
@@ -305,7 +305,7 @@ export class loginContentClass implements OnInit {
         sessionStorage.removeItem("CLI");
         // sessionStorage.removeItem("session_id");
         this.czentrixServices
-          .getCTILoginToken(this.userID, this.code)
+          .getCTILoginToken(this.userID, this.password)
           .subscribe(
             (response) => {
               this.dataSettingService.loginKey = response.login_key;

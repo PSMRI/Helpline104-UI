@@ -438,6 +438,11 @@ export class SupervisorTrainingResourcesComponent implements OnInit {
       .subscribe((response) => {
         if (response.length !== 0) {
           this.trainingResources = response.data;
+          this.trainingResources.filter(item => {
+            if(item.kmFilePath !== undefined || item.kmFilePath !== null){
+              item.kmFilePath = item.kmFilePath.replace(/^https?:\/\/[^@]+@/, '');
+            }
+          })
           console.log('Training resources', this.trainingResources);
         }
         else {

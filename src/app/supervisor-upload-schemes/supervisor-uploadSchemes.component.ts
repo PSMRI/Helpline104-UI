@@ -282,6 +282,11 @@ export class SupervisorSchemeComponent implements OnInit {
   getSchemesSuccess(res) {
     if (res.length > 0)
       this.schemeList = res;
+    this.schemeList.filter(item => {
+      if(item.kmFilePath !== undefined || item.kmFilePath !== null){
+        item.kmFilePath = item.kmFilePath.replace(/^https?:\/\/[^@]+@/, '');
+      }
+    })
   }
   editScheme(scheme) {
     this.create = false;

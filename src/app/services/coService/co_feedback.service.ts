@@ -35,19 +35,19 @@ import { SecurityInterceptedHttp } from '../../http.securityinterceptor';
 export class CoFeedbackService {
 
     test = [];
-    // private _baseurl: string = "http://localhost:9090/helpline1097APIV1/"
+    // private _baseurl: string = "http://localhost:9090/helpline1097APIV1"
     private _baseurl: String = this._config.get1097BaseURL();
     private _commonBaseURL: String = this._config.getCommonBaseURL();
     private _104baseurl: String = this._config.get104BaseURL();
 
-    private _createFeedbackURL: string = this._104baseurl + "beneficiary/saveBenFeedback/"
+    private _createFeedbackURL: string = this._104baseurl + "beneficiary/saveBenFeedback"
     private _getDesignationsURL: string = this._commonBaseURL + "institute/getDesignations"
     private _getFeedbackHistoryByID: string = this._commonBaseURL + "feedback/getFeedbacksList"
     private getCategoryUrl: string = this._commonBaseURL + 'category/categories';
     private getSubCategoryUrl: string = this._commonBaseURL + 'service/subcategory';
-    private _createImrMmrURL: string = this._104baseurl + "beneficiary/saveIMRMMR/";
-    private _getIMRMMRWorklistURL: string = this._104baseurl + "beneficiary/getIMRMMRList/";
-    private _updateImrMmrURL: string = this._104baseurl + "/beneficiary/update/ImrMmrComplaint/";
+    private _createImrMmrURL: string = this._104baseurl + "beneficiary/saveIMRMMR";
+    private _getIMRMMRWorklistURL: string = this._104baseurl + "beneficiary/getIMRMMRList";
+    private _updateImrMmrURL: string = this._104baseurl + "/beneficiary/update/ImrMmrComplaint";
     constructor(private _http: SecurityInterceptedHttp, private _config: ConfigService, private _httpInterceptor: InterceptedHttp) { }
 
     createImrMmrURL(data: any) {

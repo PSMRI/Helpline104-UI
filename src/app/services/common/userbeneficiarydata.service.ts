@@ -32,10 +32,10 @@ import { SecurityInterceptedHttp } from '../../http.securityinterceptor';
 @Injectable()
 export class UserBeneficiaryData
 {
-    // _commonBaseURL = "http://localhost:9090/CommonV1/";
+    // _commonBaseURL = "http://localhost:9090/CommonV1";
     _commonBaseURL = this._config.getCommonBaseURL();
     _104BaseURL = this._config.get104BaseURL();
-    _getUserBeneficaryDataURL = this._commonBaseURL + "beneficiary/getRegistrationDataV1/";
+    _getUserBeneficaryDataURL = this._commonBaseURL + "beneficiary/getRegistrationDataV1";
     _storeAltNumberURL =  this._104BaseURL + "beneficiary/save/BeneficiaryPhoneNumber";
     headers = new Headers( { 'Content-Type': 'application/json' } );
     options = new RequestOptions( { headers: this.headers } );

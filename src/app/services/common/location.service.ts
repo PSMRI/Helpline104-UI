@@ -34,7 +34,7 @@ import { InterceptedHttp } from 'app/http.interceptor';
 @Injectable()
 export class LocationService
 {
-    // _commonBaseURL = "http://localhost:9090/CommonV1/";
+    // _commonBaseURL = "http://localhost:9090/CommonV1";
     _commonBaseURL = this._config.getCommonBaseURL();
     _104BaseURL = this._config.get104BaseURL();
     _getStateListURL = this._commonBaseURL + "location/states/";
@@ -42,15 +42,15 @@ export class LocationService
     _getTalukListURL = this._commonBaseURL + "location/taluks/";
     _getBlockListURL = this._commonBaseURL + "location/districtblocks/";
     _getBranchListURL = this._commonBaseURL + "location/village/";
-    _getInstituteListURL = this._commonBaseURL + 'institute/getInstituteTypes/';
-    _getDesignationListURL = this._commonBaseURL + "institute/getDesignationsByInstitute/";
-    _getDirectoriesListURL = this._commonBaseURL + "directory/getDirectory/";
-    _getSubDirectoriesListURL = this._commonBaseURL + "directory/getSubDirectory/";
-    _getCountryURL = this._104BaseURL + "/countryCityController/getCountry";
-    _getCityURL = this._104BaseURL + "/countryCityController/getCities/";
-    _getInstNameURL = this._commonBaseURL + "/institute/getInstituteNameByTypeAndDistrict/";
-    _getInstNameByIdURL = this._commonBaseURL + "/institute/getInstituteName/";
-    _getFaciltySupportServiceURL = this._104BaseURL + "/beneficiary/fetchimrmmrmasters";
+    _getInstituteListURL = this._commonBaseURL + 'institute/getInstituteTypes';
+    _getDesignationListURL = this._commonBaseURL + "institute/getDesignationsByInstitute";
+    _getDirectoriesListURL = this._commonBaseURL + "directory/getDirectory";
+    _getSubDirectoriesListURL = this._commonBaseURL + "directory/getSubDirectory";
+    _getCountryURL = this._104BaseURL + "countryCityController/getCountry";
+    _getCityURL = this._104BaseURL + "countryCityController/getCities";
+    _getInstNameURL = this._commonBaseURL + "institute/getInstituteNameByTypeAndDistrict/";
+    _getInstNameByIdURL = this._commonBaseURL + "institute/getInstituteName/";
+    _getFaciltySupportServiceURL = this._104BaseURL + "beneficiary/fetchimrmmrmasters";
     _getGovtIDURL = this._commonBaseURL + "beneficiary/getRegistrationDataV1";
     
 

@@ -33,12 +33,12 @@ import { SecurityInterceptedHttp } from '../../http.securityinterceptor';
 @Injectable()
 export class FeedbackTypes {
     
-    // _commonBaseURL = "http://localhost:9090/helpline1097APIV1/";
+    // _commonBaseURL = "http://localhost:9090/helpline1097APIV1";
     _helpline1097BaseURL = this._config.get1097BaseURL();
      _commonBaseURL = this._config.getCommonBaseURL();
      _helpline104BaseURL = this._config.get104BaseURL();
     _getFeedbackTypesURL = this._helpline104BaseURL + "beneficiary/get/natureOfComplaintTypes";
-    _getFeedbackSeverityURL = this._commonBaseURL + "feedback/getSeverity/";
+    _getFeedbackSeverityURL = this._commonBaseURL + "feedback/getSeverity";
 
 	getFeedbackIDTypes_url = this._commonBaseURL + "feedback/getFeedbackType";
 	getFeedbackLogsUrl = this._commonBaseURL + 'feedback/getFeedbackLogs';

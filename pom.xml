@@ -55,6 +55,12 @@
 				<environment>test</environment>
 			</properties>
 		</profile>
+    <profile>
+      <id>ci</id>
+      <properties>
+        <environment>ci</environment>
+      </properties>
+    </profile>
 	</profiles>
 	
 	<!-- we could create individual properties similar to variables -->

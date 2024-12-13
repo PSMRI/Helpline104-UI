@@ -45,6 +45,7 @@ import { SmsTemplateService } from './../services/supervisorServices/sms-templat
 import { NgForm, FormArray, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from 'app/set-language.component';
+import { sessionStorageService } from 'app/services/sessionStorageService/session-storage.service';
 
 
 declare var jQuery: any;
@@ -130,6 +131,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
 
   constructor(public searchBenData: SearchService,
     public commonAppData: dataService,
+    private sessionstorage:sessionStorageService,
     private _smsService: SmsTemplateService,
     public bloodOnCallService: BloodOnCallServices,
     public dialog: MdDialog, public ref: ChangeDetectorRef,
@@ -209,8 +211,8 @@ export class SioBloodOnCallServiceComponent implements OnInit {
           //console.log(err)
         });
 
-      if (sessionStorage.getItem('CLI') != undefined) {
-        this.callerNumber = sessionStorage.getItem('CLI');
+      if (this.sessionstorage.getItem('CLI') != undefined) {
+        this.callerNumber = this.sessionstorage.getItem('CLI');
       }
     }
 
@@ -1145,7 +1147,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
         this.alertMesage.alert(this.currentLanguageSet.somethingWentWrongInCalling, 'error');
       } else {
         this.showDialBenificiary = false;
-        sessionStorage.setItem("onCall", "yes");
+        this.sessionstorage.setItem("onCall", "yes");
         this.outboundService.onCall.next(true);
         this.outBoundOnCall.emit(true);
       }
@@ -1168,9 +1170,9 @@ export class SioBloodOnCallServiceComponent implements OnInit {
   closeCall() {
     this.cz_service.disconnectCall(this.commonAppData.agentID).subscribe((res) => {
       this.alertMesage.alert(this.currentLanguageSet.callClosedSuccessfully, 'success');
-      sessionStorage.removeItem("onCall");
-      sessionStorage.removeItem("CLI");
-      // sessionStorage.removeItem("session_id");
+      this.sessionstorage.removeItem("onCall");
+      this.sessionstorage.removeItem("CLI");
+      // this.sessionstorage.removeItem("session_id");
       this.showDialBenificiary = true;
       this.showDialBlood = true;
       this.outBoundOnCall.emit(false);
@@ -1190,7 +1192,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
         this.alertMesage.alert(this.currentLanguageSet.somethingWentWrongInCalling, 'error');
       } else {
         this.showDialBlood = false;
-        sessionStorage.setItem("onCall", "yes");
+        this.sessionstorage.setItem("onCall", "yes");
         this.outboundService.onCall.next(true);
         this.outBoundOnCall.emit(true);
       }

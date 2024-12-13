@@ -26,6 +26,7 @@ import { MD_DIALOG_DATA, MdDialogRef } from '@angular/material';
 import { ConfirmationDialogsService } from './../services/dialog/confirmation.service';
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from 'app/set-language.component';
+import { sessionStorageService } from 'app/services/sessionStorageService/session-storage.service';
 
 @Component({
   selector: 'app-view-disease-summary-details',
@@ -47,6 +48,7 @@ export class ViewDiseaseSummaryDetailsComponent implements OnInit {
   currentLanguageSet: any;
 
   constructor(@Inject(MD_DIALOG_DATA) public input: any,
+  private sessionstorage:sessionStorageService,
     private dialogRef: MdDialogRef<ViewDiseaseSummaryDetailsComponent>,
     private confirmationDialogsService: ConfirmationDialogsService,
     public HttpServices: HttpServices) {
@@ -81,11 +83,11 @@ export class ViewDiseaseSummaryDetailsComponent implements OnInit {
   }
   closeDialog() {
     this.dialogRef.close(this.input.summaryDetails);
-    sessionStorage.setItem("diseaseClose","True");
+    this.sessionstorage.setItem("diseaseClose","True");
   }
   closeCancelDialog()
   {
-    sessionStorage.setItem("diseaseClose","False");
+    this.sessionstorage.setItem("diseaseClose","False");
     this.dialogRef.close();
   }
 }

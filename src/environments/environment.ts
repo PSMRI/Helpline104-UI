@@ -20,6 +20,8 @@
 * along with this program.  If not, see https://www.gnu.org/licenses/.
 */
 
+import { keys } from "./enckey";
+
 
 // The file contents for the current environment will overwrite these during build.
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
@@ -27,5 +29,6 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  encKey: keys.dev,
 };

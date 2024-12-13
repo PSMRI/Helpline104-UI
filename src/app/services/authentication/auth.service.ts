@@ -29,11 +29,12 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { InterceptedHttp } from './../../http.interceptor';
 import { dataService } from '../dataService/data.service';
+import { sessionStorageService } from '../sessionStorageService/session-storage.service';
 
 @Injectable()
 export class AuthService {
 
-    constructor(private getCommonData: dataService, private _http : Http, private _config : ConfigService){}
+    constructor(private getCommonData: dataService,private sessionstorage:sessionStorageService, private _http : Http, private _config : ConfigService){}
 
     common_url = this._config.getCommonBaseURL();
     _agentLogOut = this.common_url + 'cti/doAgentLogout';

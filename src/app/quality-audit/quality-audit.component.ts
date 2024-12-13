@@ -30,6 +30,7 @@ import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from "@angular/material";
 import { SetLanguageComponent } from "app/set-language.component";
 import { HttpServices } from "app/services/http-services/http_services.service";
 import { CaseSheetService } from "app/services/caseSheetService/caseSheet.service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 @Component({
   selector: "app-quality-audit",
@@ -102,6 +103,7 @@ export class QualityAuditComponent implements OnInit, DoCheck {
   vaccineTypeSelected: any;
 
   constructor(
+    private sessionstorage:sessionStorageService,
     private commonData: dataService,
     private qualityAuditService: QualityAuditService,
     private alertService: ConfirmationDialogsService,
@@ -471,8 +473,8 @@ export class QualityAuditComponent implements OnInit, DoCheck {
   hideCaseSheetFunction() {
     this.showCaseSheet = false;
     this.benCallID = undefined;
-    sessionStorage.removeItem("callGroup");
-    sessionStorage.removeItem("callsType");
+    this.sessionstorage.removeItem("callGroup");
+    this.sessionstorage.removeItem("callsType");
   }
 
   print() {
@@ -531,8 +533,8 @@ export class QualityAuditComponent implements OnInit, DoCheck {
             return this.setCallGroupAndSubType(item);
           }
         });
-        this.callGroup = sessionStorage.getItem("callGroup");
-        this.callsType = sessionStorage.getItem("callsType");
+        this.callGroup = this.sessionstorage.getItem("callGroup");
+        this.callsType = this.sessionstorage.getItem("callsType");
       },
       (err) => {
         console.log("ERROR 1", err);
@@ -557,14 +559,14 @@ export class QualityAuditComponent implements OnInit, DoCheck {
       item.benCall.callTypeObj.callGroupType !== null
     ) {
       console.log("Item1", item.benCall.callTypeObj.callGroupType);
-      sessionStorage.setItem(
+      this.sessionstorage.setItem(
         "callGroup",
         item.benCall.callTypeObj.callGroupType
       );
-      sessionStorage.setItem("callsType", item.benCall.callTypeObj.callType);
+      this.sessionstorage.setItem("callsType", item.benCall.callTypeObj.callType);
     } else {
-      sessionStorage.setItem("callGroup", "");
-      sessionStorage.setItem("callsType", "");
+      this.sessionstorage.setItem("callGroup", "");
+      this.sessionstorage.setItem("callsType", "");
     }
     return item;
   }
@@ -786,6 +788,7 @@ export class CaseSheetSummaryDialogComponent {
   constructor(
     @Inject(MD_DIALOG_DATA) public data: any,
     public dialog: MdDialog,
+    
     public dialogRef: MdDialogRef<CaseSheetSummaryDialogComponent>
   ) {
     console.log("modal content", this.data);

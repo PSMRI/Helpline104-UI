@@ -29,6 +29,7 @@ import { dataService } from 'app/services/dataService/data.service';
 import { ConfirmationDialogsService } from 'app/services/dialog/confirmation.service';
 import { HttpServices } from 'app/services/http-services/http_services.service';
 import { SearchService } from 'app/services/searchBeneficiaryService/search.service';
+import { sessionStorageService } from 'app/services/sessionStorageService/session-storage.service';
 import { SetLanguageComponent } from 'app/set-language.component';
 import { empty } from 'rxjs/Observer';
 
@@ -82,6 +83,7 @@ export class ScheduleAppointmentComponent implements OnInit {
   constructor(
     @Inject(MD_DIALOG_DATA) public data: any,
 public dialog: MdDialog,
+private sessionstorage:sessionStorageService,
     public dialogReff: MdDialogRef<ScheduleAppointmentComponent>,
     public commonDataService: dataService,
     private _callServices: CallServices,
@@ -122,7 +124,7 @@ public dialog: MdDialog,
     // this.getFaciliyMaster();
     this.beneficiaryRegID=this.saved_data.benRegID
     this.beneficiaryCallID=this.saved_data.benCallID
-    this.beneficiaryPhoneNum=sessionStorage.getItem("CLI");
+    this.beneficiaryPhoneNum=this.sessionstorage.getItem("CLI");
     
     
   

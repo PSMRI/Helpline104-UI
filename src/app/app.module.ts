@@ -281,6 +281,7 @@ import { CounsellorHistory, Counsellor_104_Component } from './104-counsellor/10
 import { ConsentFormComponent } from './104-consent/consent-form.component';
 import { CheifComplaintSnomedSearchComponent } from './cheif-complaint-snomed-search/cheif-complaint-snomed-search.component';
 import { ScheduleAppointmentComponent } from './schedule-appointment/schedule-appointment.component';
+import { sessionStorageService } from './services/sessionStorageService/session-storage.service';
 
 
 
@@ -468,6 +469,7 @@ import { ScheduleAppointmentComponent } from './schedule-appointment/schedule-ap
   providers: [loginService, dataService, DashboardHttpServices, HttpServices, SearchService, CoReferralService, SchemeService, CallServices,
     CoCategoryService, FeedbackTypes, LocationService, UserBeneficiaryData, CoFeedbackService,
     CzentrixServices, PrescriptionService, CaseSheetService, OtherHelplineService,
+    SioService, EpidemicServices, CDSSService, OrganDonationServices, BloodOnCallServices, CallerService, FoodSafetyServices, ConfigService,sessionStorageService,
     SioService, EpidemicServices, CDSSService, OrganDonationServices, BloodOnCallServices, CallerService, FoodSafetyServices, ConfigService,
     DiseaseScreeningService, OutboundSearchRecordService, OutboundCallAllocationService, OutboundReAllocationService,
     OutboundWorklistService, AvailableServices, SupervisorCallTypeReportService, FeedbackService,

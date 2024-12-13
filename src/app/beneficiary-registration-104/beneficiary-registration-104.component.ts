@@ -56,6 +56,7 @@ import * as moment from "moment";
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { RegisterService } from "app/services/register-services/register-service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 @Component({
   selector: "app-beneficiary-registration-104",
@@ -222,6 +223,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     private _smsService: SmsTemplateService,
     private fb: FormBuilder,
     public HttpServices: HttpServices,
+    private sessionstorage:sessionStorageService,
     private registerService: RegisterService,
   ) {}
 
@@ -236,12 +238,12 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.checkHAOPrivilege();
     this.IntializeSessionValues();
     //this._util.getDistricts().subscribe(response => this.districts = this.successHandeler(response));
-    if (sessionStorage.getItem("CLI") != undefined) {
-      this.callerNumber = sessionStorage.getItem("CLI");
+    if (this.sessionstorage.getItem("CLI") != undefined) {
+      this.callerNumber = this.sessionstorage.getItem("CLI");
       this.phoneNo = this.callerNumber;
     }
-    if (sessionStorage.getItem("session_id") != undefined) {
-      this.callerID = sessionStorage.getItem("session_id");
+    if (this.sessionstorage.getItem("session_id") != undefined) {
+      this.callerID = this.sessionstorage.getItem("session_id");
     }
     this.emailPattern = /^[0-9a-zA-Z_.]+@[a-zA-Z_]+?\.\b(org|com|in|co.in)\b$/;
     this.retrieveRegHistoryByPhoneNo(this.callerNumber);

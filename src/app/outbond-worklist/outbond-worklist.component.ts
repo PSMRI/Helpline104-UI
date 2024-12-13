@@ -52,6 +52,7 @@ import { FoodSafetyServices } from "../services/sioService/foodSafetyService.ser
 import { OrganDonationServices } from "app/services/sioService/organDonationServices.service";
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 @Component({
   selector: "app-outbond-worklist",
@@ -92,6 +93,7 @@ export class OutbondWorklistComponent implements OnInit {
 
   constructor(
     private outboundListner: OutboundListnerService,
+    private sessionstorage:sessionStorageService,
     private caseSheetService: CaseSheetService,
     private listnerService: ListnerService,
     public router: Router,
@@ -316,7 +318,7 @@ export class OutbondWorklistComponent implements OnInit {
             this._dataServivce.outboundBenID =
               data.beneficiary.beneficiaryRegID;
             this._dataServivce.outboundCallReqID = data.outboundCallReqID;
-            sessionStorage.setItem("onCall", "yes");
+            this.sessionstorage.setItem("onCall", "yes");
             this._dataServivce.isSelf = data.isSelf;
             this._dataServivce.outboundRequestID = data.requestNo;
             //  this.router.navigate(['/MultiRoleScreenComponent/InnerpageComponent']);
@@ -344,8 +346,8 @@ export class OutbondWorklistComponent implements OnInit {
     this._dataServivce.outboundCallReqID = data.outboundCallReqID;
     this._dataServivce.outboundBloodReqtID = data.requestNo;
     this._dataServivce.avoidingEvent = false;
-    sessionStorage.setItem("service", data.requestedFeature);
-    sessionStorage.setItem("CLI", data.beneficiary.benPhoneMaps[0].phoneNo);
+    this.sessionstorage.setItem("service", data.requestedFeature);
+    this.sessionstorage.setItem("CLI", data.beneficiary.benPhoneMaps[0].phoneNo);
     this.router.navigate(["/MultiRoleScreenComponent/InnerpageComp"]);
   }
   manualDial(phoneNumber: any) {
@@ -357,7 +359,7 @@ export class OutbondWorklistComponent implements OnInit {
         (res) => {
           this._dataServivce.avoidingEvent = true;
           this.disableDialingWorklist = true;
-          sessionStorage.setItem("onCall", "yes");
+          this.sessionstorage.setItem("onCall", "yes");
           //  console.log('resp', res);
         },
         (err) => {
@@ -371,15 +373,15 @@ export class OutbondWorklistComponent implements OnInit {
       (res) => {
         if (res.statusCode === 200) {
           this.message.alert(this.currentLanguageSet.callClosedSuccessfully, "success");
-          sessionStorage.removeItem("onCall");
-          sessionStorage.removeItem("CLI");
-          sessionStorage.removeItem("service");
+          this.sessionstorage.removeItem("onCall");
+          this.sessionstorage.removeItem("CLI");
+          this.sessionstorage.removeItem("service");
           this._dataServivce.avoidingEvent = false;
           this.disableDialingWorklist = false;
         } else {
-          sessionStorage.removeItem("onCall");
-          sessionStorage.removeItem("CLI");
-          sessionStorage.removeItem("service");
+          this.sessionstorage.removeItem("onCall");
+          this.sessionstorage.removeItem("CLI");
+          this.sessionstorage.removeItem("service");
           this._dataServivce.avoidingEvent = false;
           this.disableDialingWorklist = false;
           console.log("err", res.errorMessage);
@@ -388,7 +390,7 @@ export class OutbondWorklistComponent implements OnInit {
       (err) => {
         console.log("error", err.errorMessage);
         this.disableDialingWorklist = false;
-        sessionStorage.removeItem("onCall");
+        this.sessionstorage.removeItem("onCall");
       }
     );
   }

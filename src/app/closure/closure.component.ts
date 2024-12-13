@@ -51,6 +51,7 @@ import { SetLanguageComponent } from "app/set-language.component";
 import { CaseSheetService } from "app/services/caseSheetService/caseSheet.service";
 import { ScheduleAppointmentComponent } from "app/schedule-appointment/schedule-appointment.component";
 import { map } from "jquery";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 
 declare var jQuery: any;
@@ -145,6 +146,7 @@ export class ClosureComponent implements OnInit {
   
   
   constructor(
+    private sessionstorage:sessionStorageService,
     public dialog: MdDialog,
     public _userdata: UserBeneficiaryData,
     private _callServices: CallServices,
@@ -439,7 +441,7 @@ export class ClosureComponent implements OnInit {
   getCallSubType(callType: any, firstTime?) {
     this.subCallTypeID = undefined;
     this.callType = callType;
-    // this.current_role=sessionStorage.getItem("current_role")
+    // this.current_role=this.sessionstorage.getItem("current_role")
   //   if(this.current_role=="Supervisor"){
   //       this.roleFlag=false;
 
@@ -610,9 +612,9 @@ export class ClosureComponent implements OnInit {
       values.fitToBlock = values.callTypeID.split(",")[1];
       values.callTypeID = values.callTypeID.split(",")[0];
       values.agentID = this.saved_data.agentID;
-      values.callID = sessionStorage.getItem("session_id");
+      values.callID = this.sessionstorage.getItem("session_id");
       values.agentIPAddress = this.ipAddress;
-      values.callID = sessionStorage.getItem("session_id");
+      values.callID = this.sessionstorage.getItem("session_id");
       if (btnType == "submitClose") {
         values.endCall = true;
         values.callEndUserID = this.saved_data.uid;
@@ -890,7 +892,7 @@ export class ClosureComponent implements OnInit {
   transferCallToCampaign1(transferToCampaign, values) {
     console.log("transfer camapign");
     if (values) {
-      sessionStorage.setItem("callTransferred", transferToCampaign);
+      this.sessionstorage.setItem("callTransferred", transferToCampaign);
       this.doTransfer = true;
       this.transferCondition = transferToCampaign;
       this.setbenRegID(values);
@@ -926,8 +928,8 @@ export class ClosureComponent implements OnInit {
                   "success"
                 );
                
-                sessionStorage.removeItem("onCall");
-                sessionStorage.removeItem("CLI");
+                this.sessionstorage.removeItem("onCall");
+                this.sessionstorage.removeItem("CLI");
                 this.router.navigate(["/MultiRoleScreenComponent/dashboard"]);
                 this.doTransfer = false;
                 //  console.log("transferToCampaign response: " + JSON.stringify(response));
@@ -983,9 +985,9 @@ export class ClosureComponent implements OnInit {
       this.message.alert(this.currentLanguageSet.pleaseConfigureTheCampaigns);
     else if (!this.ipAddress) {
       this.message.alert(this.currentLanguageSet.pleaseLoginToSoftPhone);
-      sessionStorage.removeItem("onCall");
-      sessionStorage.removeItem("CLI");
-      // sessionStorage.removeItem("session_id");
+      this.sessionstorage.removeItem("onCall");
+      this.sessionstorage.removeItem("CLI");
+      // this.sessionstorage.removeItem("session_id");
       this.router.navigate(["/MultiRoleScreenComponent/dashoard"]);
     } else if (this.subCallTypeID == undefined) {
       this.message.alert(this.currentLanguageSet.pleaseSelectSubtypeToTransfer);
@@ -1120,9 +1122,9 @@ export class ClosureComponent implements OnInit {
       this.currentLanguageSet.callTransferredTo + " " + this.transferCondition,
       "success"
     );
-    sessionStorage.removeItem("onCall");
-    sessionStorage.removeItem("CLI");
-    // sessionStorage.removeItem("session_id");
+    this.sessionstorage.removeItem("onCall");
+    this.sessionstorage.removeItem("CLI");
+    // this.sessionstorage.removeItem("session_id");
     this.router.navigate(["/MultiRoleScreenComponent/dashboard"]);
   }
 

@@ -36,6 +36,7 @@ import { ConfirmationDialogsService } from './services/dialog/confirmation.servi
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { SocketService } from './services/socketService/socket.service';
+import { sessionStorageService } from './services/sessionStorageService/session-storage.service';
 
 @Injectable()
 export class SecurityInterceptedHttp extends Http {
@@ -43,7 +44,7 @@ export class SecurityInterceptedHttp extends Http {
     onlineFlag: boolean = true;
     count = 0;
     constructor(backend: ConnectionBackend, defaultOptions: RequestOptions
-        , private router: Router, private authService: AuthService, private message: ConfirmationDialogsService, private socketService: SocketService) {
+        ,private sessionstorage:sessionStorageService, private router: Router, private authService: AuthService, private message: ConfirmationDialogsService, private socketService: SocketService) {
         super(backend, defaultOptions);
     }
 
@@ -144,9 +145,41 @@ export class SecurityInterceptedHttp extends Http {
         if (options.headers == null) {
             options.headers = new Headers();
         }
+        let authTkn ="";
+        if (sessionStorage.getItem('authToken')) {
+        
+            authTkn= sessionStorage.getItem('authToken');
+        }
+        let cvalue="";
+        var nameEQ = 'Jwttoken' + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+          if (c.indexOf(nameEQ) == 0) cvalue= c.substring(nameEQ.length, c.length);
+        }
+     
+            console.error(" Jwt_token",cvalue);
+            let Jwt_token: any;
+            if (cvalue && cvalue!== null) {
+     
+                Jwt_token = cvalue;
+               
+            }
+        // let Jwt_token ="";
+        // if (this.sessionstorage.getCookie('Jwttoken')) {
+        
+        //     Jwt_token= this.sessionstorage.getCookie('Jwttoken');
+        //     options.headers.append('Jwttoken', Jwt_token);
+        // }
+        console.error("authTkn", authTkn)
+
         options.headers.append('Content-Type', 'application/json');
         options.headers.append('Access-Control-Allow-Origin', '*');
-        options.headers.append('Authorization', this.authService.getToken());
+        options.headers.append('Authorization', authTkn);
+        options.headers.append('Jwttoken', Jwt_token);
+   
+
         return options;
     }
     private onEnd(): void {
@@ -157,10 +190,10 @@ export class SecurityInterceptedHttp extends Http {
         } else if (response.json().statusCode === 5002) {
             //   this.authService.cZentrixLogout();
 
-            sessionStorage.removeItem('key');
-            sessionStorage.removeItem('onCall');
-            sessionStorage.removeItem("CLI");
-            sessionStorage.removeItem('service');
+            this.sessionstorage.removeItem('key');
+            this.sessionstorage.removeItem('onCall');
+            this.sessionstorage.removeItem("CLI");
+            this.sessionstorage.removeItem('service');
             this.router.navigate(['']);
             this.message.alert(response.json().errorMessage, "error");
             this.authService.removeToken();

@@ -53,6 +53,7 @@ import * as moment from "moment";
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { CallerService } from "app/services/common/caller.service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 declare var jQuery: any;
 
@@ -258,6 +259,7 @@ export class CaseSheetComponent implements OnInit {
     private snomedService: SnomedService,
     private saved_data: dataService,
     public HttpServices: HttpServices,
+    private sessionstorage:sessionStorageService,
     // public router: Router,
     public route: ActivatedRoute,
     private _CDSSService: CDSSService,
@@ -320,8 +322,8 @@ export class CaseSheetComponent implements OnInit {
     this.initiallyState();
     this.initiallyCountry();
     this.fetchCommonData();
-    if (sessionStorage.getItem("session_id") != undefined) {
-      this.callerID = sessionStorage.getItem("session_id");
+    if (this.sessionstorage.getItem("session_id") != undefined) {
+      this.callerID = this.sessionstorage.getItem("session_id");
     }
 
     this.current_role = this.saved_data.current_role;
@@ -2277,7 +2279,7 @@ fetchBenenficiaryDetails()
                   .substring(1)
                   .replace(/\$/g, ",");
               }
-              if (sessionStorage.getItem("diseaseClose") == "False") {
+              if (this.sessionstorage.getItem("diseaseClose") == "False") {
                 // this.caseSheetForm.reset();
                 this.caseSheetForm.controls["diseasesSummary"].setValue(" ");
                 this.caseSheetForm.controls["informationGiven"].setValue(" ");

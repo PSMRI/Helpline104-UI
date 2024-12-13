@@ -30,6 +30,7 @@ import { OutboundListnerService } from "../services/common/outboundlistner.servi
 import { CallServices } from "../services/callservices/callservice.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { HttpServices } from "app/services/http-services/http_services.service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 @Component({
   selector: "app-104-sio",
   templateUrl: "./104-sio.component.html",
@@ -43,6 +44,7 @@ export class Sio_104_Component implements OnInit, OnChanges, DoCheck {
     private _router: Router,
     private outboundService: OutboundListnerService,
     private _callServices: CallServices,
+    private sessionstorage:sessionStorageService,
     private httpServices: HttpServices
   ) {
     this.outboundService.onCall.subscribe((data) => {
@@ -64,8 +66,8 @@ export class Sio_104_Component implements OnInit, OnChanges, DoCheck {
 
   ngOnInit() {
     this.assignSelectedLanguage();
-    if (sessionStorage.getItem("service") != undefined) {
-      this.outboundFor = sessionStorage.getItem("service");
+    if (this.sessionstorage.getItem("service") != undefined) {
+      this.outboundFor = this.sessionstorage.getItem("service");
     }
     this.current_campaign = this.getCommonData.current_campaign;
     console.log("campaign: " + this.current_campaign);

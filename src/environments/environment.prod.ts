@@ -20,10 +20,9 @@
 * along with this program.  If not, see https://www.gnu.org/licenses/.
 */
 
-import { keys } from "./enckey";
 
-
+const sessionStorageEncKey = '<%= SESSION_STORAGE_ENC_KEY %>';
 export const environment = {
   production: true,
-  encKey: keys.prod,
+  encKey: sessionStorageEncKey,
 };

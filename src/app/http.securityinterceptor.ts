@@ -150,34 +150,29 @@ export class SecurityInterceptedHttp extends Http {
         
             authTkn= sessionStorage.getItem('authToken');
         }
-        let cvalue="";
-        var nameEQ = 'Jwttoken' + "=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-          if (c.indexOf(nameEQ) == 0) cvalue= c.substring(nameEQ.length, c.length);
-        }
-     
-            console.error(" Jwt_token",cvalue);
-            let Jwt_token: any;
-            if (cvalue && cvalue!== null) {
-     
-                Jwt_token = cvalue;
-               
-            }
-        // let Jwt_token ="";
-        // if (this.sessionstorage.getCookie('Jwttoken')) {
-        
-        //     Jwt_token= this.sessionstorage.getCookie('Jwttoken');
-        //     options.headers.append('Jwttoken', Jwt_token);
+        // let cvalue="";
+        // var nameEQ = 'Jwttoken' + "=";
+        // var ca = document.cookie.split(';');
+        // for (var i = 0; i < ca.length; i++) {
+        //   var c = ca[i];
+        //   while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        //   if (c.indexOf(nameEQ) == 0) cvalue= c.substring(nameEQ.length, c.length);
         // }
+     
+        //     console.error(" Jwt_token",cvalue);
+        //     let Jwt_token: any;
+        //     if (cvalue && cvalue!== null) {
+     
+        //         Jwt_token = cvalue;
+               
+        //     }
+        
         console.error("authTkn", authTkn)
 
         options.headers.append('Content-Type', 'application/json');
         options.headers.append('Access-Control-Allow-Origin', '*');
         options.headers.append('Authorization', authTkn);
-        options.headers.append('Jwttoken', Jwt_token);
+        // options.headers.append('Jwttoken', Jwt_token);
    
 
         return options;

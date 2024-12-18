@@ -206,9 +206,6 @@ export class loginContentClass implements OnInit {
       .subscribe(
         (response: any) => {
           console.error("response",response);
-            let tkn = response.Jwttoken;
-
-            this.sessionstorage.setCookie('Jwttoken', tkn,1 );
           if (
             response !== undefined &&
             response !== null &&
@@ -232,11 +229,6 @@ export class loginContentClass implements OnInit {
       .authenticateUser(this.userID, this.encryptpassword, doLogOut)
       .subscribe(
         (response: any) => {
-          console.error("response",response);
-            let tkn = response.Jwttoken;
-
-            this.sessionstorage.setCookie('Jwttoken', tkn,1 );
-          
          
           if (
             response !== undefined &&

@@ -30,6 +30,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { SecurityInterceptedHttp } from '../../http.securityinterceptor';
 import { Router } from '@angular/router';
+import { sessionStorageService } from '../sessionStorageService/session-storage.service';
 
 @Injectable()
 export class CallServices {
@@ -55,6 +56,7 @@ export class CallServices {
     private _http: SecurityInterceptedHttp,
     private _config: ConfigService,
     private _httpInterceptor: InterceptedHttp,
+    private sessionstorage:sessionStorageService,
     public router: Router,
     // public successAppointment : boolean = true
   ) { }
@@ -141,9 +143,9 @@ export class CallServices {
   }
   clearSessionValuesAfterCallClose() {
     console.log("Clear sessions before moving to dashboard");
-		sessionStorage.removeItem("onCall");
-		sessionStorage.removeItem("CLI");
-		// sessionStorage.removeItem("session_id");
+		this.sessionstorage.removeItem("onCall");
+		this.sessionstorage.removeItem("CLI");
+		// this.sessionstorage.removeItem("session_id");
 		this.router.navigate(['/MultiRoleScreenComponent/dashboard']);
 	}
 

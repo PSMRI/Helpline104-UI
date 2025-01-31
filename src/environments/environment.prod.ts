@@ -21,6 +21,8 @@
 */
 
 
+const sessionStorageEncKey = '<%= SESSION_STORAGE_ENC_KEY %>';
 export const environment = {
-  production: true
+  production: true,
+  encKey: sessionStorageEncKey,
 };

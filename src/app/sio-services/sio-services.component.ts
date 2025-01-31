@@ -26,6 +26,7 @@ import { dataService } from '../services/dataService/data.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from 'app/set-language.component';
+import { sessionStorageService } from 'app/services/sessionStorageService/session-storage.service';
 
 declare var jQuery: any;
 
@@ -43,10 +44,10 @@ export class SioServicesComponent implements OnInit {
 
   @Output() outBoundOnCall: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(public getCommonData: dataService, private route : ActivatedRoute,public HttpServices: HttpServices) { 
+  constructor(public getCommonData: dataService,private sessionstorage:sessionStorageService, private route : ActivatedRoute,public HttpServices: HttpServices) { 
    
-    if(sessionStorage.getItem('service') != undefined) {
-      this.outboundFor = sessionStorage.getItem('service');
+    if(this.sessionstorage.getItem('service') != undefined) {
+      this.outboundFor = this.sessionstorage.getItem('service');
     }
   }
 

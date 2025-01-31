@@ -24,21 +24,23 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, Router, ActivatedRoute, RouterStateSnapshot, CanDeactivate  } from '@angular/router';
 import { dataService } from '../dataService/data.service';
+import { sessionStorageService } from '../sessionStorageService/session-storage.service';
 
 @Injectable()
 export class AuthGuard2 implements CanActivate {
 
   constructor(
     private router: Router,
+    private sessionstorage:sessionStorageService,
     private route: ActivatedRoute, public dataSettingService: dataService) { }
 
   canActivate(route, state) {
    // console.log(route.params.service);
 
     //console.log(state);
-    var key = sessionStorage.getItem("onCall");
-    var key2  = sessionStorage.getItem("key");
-    if(key == "yes" || sessionStorage.getItem('service') == 'Blood Request') {
+    var key = this.sessionstorage.getItem("onCall");
+    var key2  = this.sessionstorage.getItem("key");
+    if(key == "yes" || this.sessionstorage.getItem('service') == 'Blood Request') {
       return true;;
     }
 

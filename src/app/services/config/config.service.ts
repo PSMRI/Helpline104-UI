@@ -25,14 +25,14 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-const commonIP = 'http://10.208.122.38:8080/';
-const IP1097 = 'http://10.208.122.38:8080/';
-const telephonyServerIP = 'http://10.208.122.99/';
-const adminIP = 'http://10.208.122.38:8080/';
-const IP104 = 'http://10.208.122.38:8080/';
-const mmuIP = 'http://10.208.122.38:8080/';
-const tmIP = 'http://10.208.122.38:8080/';
-const FHIRIP = "http://10.208.122.38:8080";
+const commonIP = 'http://amritwprdev.piramalswasthya.org:8080/';
+const IP1097 = 'http://amritwprdev.piramalswasthya.org:8080/';
+const telephonyServerIP = 'http://192.168.45.55/';
+const adminIP = 'http://amritwprdev.piramalswasthya.org:8080/';
+const IP104 = 'http://amritwprdev.piramalswasthya.org:8080/';
+const mmuIP = 'http://amritwprdev.piramalswasthya.org:8080/';
+const tmIP = 'http://amritwprdev.piramalswasthya.org:8080/';
+const FHIRIP = "http://amritwprdev.piramalswasthya.org:8080";
 
 @Injectable()
 export class ConfigService {
@@ -60,9 +60,9 @@ export class ConfigService {
     // private _opencommonBaseURL: String = `http://localhost:8080/`;
     // private _commonBaseUrlForLicense: String = `http://localhost:8080/`;
 
-    // private _commonBaseURL: String = "http://10.208.122.38:8080/apiman-gateway/IEMR/Common/1.0/";
-    // private _opencommonBaseURL: String="http://10.208.122.38:8080/apiman-gateway/IEMR/Common/open/";
-    //   private _helpline104BaseURL: String = "http://10.208.122.38:8080/apiman-gateway/IEMR/104/1.0/";
+    // private _commonBaseURL: String = "http://amritwprdev.piramalswasthya.org:8080/apiman-gateway/IEMR/Common/1.0/";
+    // private _opencommonBaseURL: String="http://amritwprdev.piramalswasthya.org:8080/apiman-gateway/IEMR/Common/open/";
+    //   private _helpline104BaseURL: String = "http://amritwprdev.piramalswasthya.org:8080/apiman-gateway/IEMR/104/1.0/";
 
     // 10.208.122.38
     //NOTE: Socket URL is mentioned in Socket Service has  as it is giving cyclic dependency error if given here

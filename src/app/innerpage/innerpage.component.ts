@@ -41,6 +41,7 @@ import { loginService } from "./../services/loginService/login.service";
 import { SocketService } from "../services/socketService/socket.service";
 import { OutboundListnerService } from "../services/common/outboundlistner.service";
 import { SetLanguageComponent } from "app/set-language.component";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 @Component({
   selector: "app-innerpage",
@@ -104,6 +105,7 @@ export class InnerpageComponent implements OnInit, OnDestroy {
   app_language: any;
 
   constructor(
+    private sessionstorage:sessionStorageService,
     public getCommonData: dataService,
     public route: ActivatedRoute,
     public router: Router,
@@ -149,18 +151,18 @@ export class InnerpageComponent implements OnInit, OnDestroy {
         (response) => (this.commonData = this.successHandler(response))
       );
 
-    if (sessionStorage.getItem("CLI") !== undefined) {
-      this.callerNumber = sessionStorage.getItem("CLI");
+    if (this.sessionstorage.getItem("CLI") !== undefined) {
+      this.callerNumber = this.sessionstorage.getItem("CLI");
     }
-    if (sessionStorage.getItem("session_id") !== undefined) {
-      this.callerID = sessionStorage.getItem("session_id");
+    if (this.sessionstorage.getItem("session_id") !== undefined) {
+      this.callerID = this.sessionstorage.getItem("session_id");
 
       if (
         this.current_campaign === "OUTBOUND" &&
         this.getCommonData.setUniqueCallIDForOutbound === true &&
-        sessionStorage.getItem("session_id") !== undefined &&
-        sessionStorage.getItem("session_id") !== "undefined" &&
-        sessionStorage.getItem("session_id") !== null
+        this.sessionstorage.getItem("session_id") !== undefined &&
+        this.sessionstorage.getItem("session_id") !== "undefined" &&
+        this.sessionstorage.getItem("session_id") !== null
       ) {
         this.storeCallID(this.getCommonData.outboundBenID, this.callerID);
       }
@@ -550,7 +552,7 @@ export class InnerpageComponent implements OnInit, OnDestroy {
         eventSpiltData[2] !== null &&
         eventSpiltData[2] !== ""
       ) {
-        sessionStorage.setItem("session_id", eventSpiltData[2]);
+        this.sessionstorage.setItem("session_id", eventSpiltData[2]);
       } else {
         console.log("session ID is null");
       }
@@ -597,8 +599,8 @@ export class InnerpageComponent implements OnInit, OnDestroy {
       requestObj.benCallID =
         this.getCommonData.beneficiaryDataAcrossApp.beneficiaryDetails.benCallID;
     }
-    if (sessionStorage.getItem("session_id") === this.custdisconnectCallID) {
-      requestObj.callID = sessionStorage.getItem("session_id");
+    if (this.sessionstorage.getItem("session_id") === this.custdisconnectCallID) {
+      requestObj.callID = this.sessionstorage.getItem("session_id");
       requestObj.callType = "Wrapup Exceeds";
       requestObj.callTypeID = this.wrapupExceedsCallID.toString();
       requestObj.beneficiaryRegID = this.beneficiaryRegID;
@@ -618,19 +620,19 @@ export class InnerpageComponent implements OnInit, OnDestroy {
           if (response) {
             console.log(
               "current call got closed",
-              sessionStorage.getItem("session_id")
+              this.sessionstorage.getItem("session_id")
             );
             this.message.alert(
               this.currentLanguageSet.successfullyClosedTheCall,
               "success"
             );
-            sessionStorage.removeItem("onCall");
-            sessionStorage.removeItem("CLI");
+            this.sessionstorage.removeItem("onCall");
+            this.sessionstorage.removeItem("CLI");
             console.log("Call Closure is Executed");
             if (this.current_campaign !== "OUTBOUND") {
               this.unsubscribeWrapupTime();
             }
-            const priv_Flag = sessionStorage.getItem("privilege_flag");
+            const priv_Flag = this.sessionstorage.getItem("privilege_flag");
             console.log("Current Role Flag" + priv_Flag);
             if (priv_Flag === "HYBRID HAO") {
               console.log("Call Closure is Executed as role changed");
@@ -760,7 +762,7 @@ export class InnerpageComponent implements OnInit, OnDestroy {
     );
   }
   logOut() {
-    if (sessionStorage.getItem("onCall") !== "yes") {
+    if (this.sessionstorage.getItem("onCall") !== "yes") {
       this.ipSuccessLogoutHandler();
     } else {
       this.message.alert(this.currentLanguageSet.youAreNotAllowedToLogOut);
@@ -772,16 +774,16 @@ export class InnerpageComponent implements OnInit, OnDestroy {
         (response) => {
           this.router.navigate([""]);
           this.authService.removeToken();
-          sessionStorage.removeItem("onCall");
-          sessionStorage.removeItem("setLanguage");
+          this.sessionstorage.removeItem("onCall");
+          this.sessionstorage.removeItem("setLanguage");
           this.getCommonData.appLanguage = "English";
           // this.socketService.logOut();
         },
         (err) => {
           this.router.navigate([""]);
           this.authService.removeToken();
-          sessionStorage.removeItem("onCall");
-          sessionStorage.removeItem("setLanguage");
+          this.sessionstorage.removeItem("onCall");
+          this.sessionstorage.removeItem("setLanguage");
           this.getCommonData.appLanguage = "English";
           // this.socketService.logOut();
         }
@@ -795,16 +797,16 @@ export class InnerpageComponent implements OnInit, OnDestroy {
               (resp) => {
                 this.router.navigate([""]);
                 this.authService.removeToken();
-                sessionStorage.removeItem("onCall");
-                sessionStorage.removeItem("setLanguage");
+                this.sessionstorage.removeItem("onCall");
+                this.sessionstorage.removeItem("setLanguage");
                 this.getCommonData.appLanguage = "English";
                 // this.socketService.logOut();
               },
               (err) => {
                 this.router.navigate([""]);
                 this.authService.removeToken();
-                sessionStorage.removeItem("onCall");
-                sessionStorage.removeItem("setLanguage");
+                this.sessionstorage.removeItem("onCall");
+                this.sessionstorage.removeItem("setLanguage");
                 this.getCommonData.appLanguage = "English";
                 // this.socketService.logOut();
               }
@@ -818,8 +820,8 @@ export class InnerpageComponent implements OnInit, OnDestroy {
   }
   removeSessionStorageValues() {
     this.authService.removeToken();
-    sessionStorage.removeItem("onCall");
-    sessionStorage.removeItem("setLanguage");
+    this.sessionstorage.removeItem("onCall");
+    this.sessionstorage.removeItem("setLanguage");
     this.getCommonData.appLanguage = "English";
   }
   ngOnDestroy() {
@@ -836,8 +838,8 @@ export class InnerpageComponent implements OnInit, OnDestroy {
   }
 
   getLanguage() {
-    if (sessionStorage.getItem("setLanguage") != null) {
-      this.changeLanguage(sessionStorage.getItem("setLanguage"));
+    if (this.sessionstorage.getItem("setLanguage") != null) {
+      this.changeLanguage(this.sessionstorage.getItem("setLanguage"));
     } else {
       this.changeLanguage(this.app_language);
     }
@@ -873,7 +875,7 @@ export class InnerpageComponent implements OnInit, OnDestroy {
     }
     console.log("language is ", response);
     this.currentLanguageSet = response[language];
-    sessionStorage.setItem("setLanguage", language);
+    this.sessionstorage.setItem("setLanguage", language);
     if (this.currentLanguageSet) {
       this.languageArray.forEach((item) => {
         if (item.languageName === language) {

@@ -41,6 +41,7 @@ import { AgentForceLogoutComponent } from "../agent-force-logout/agent-force-log
 import { ViewVersionDetailsComponent } from "../view-version-details/view-version-details.component";
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 @Component({
   selector: "app-multi-role-screen",
@@ -71,6 +72,7 @@ export class MultiRoleScreenComponent implements OnInit {
   app_language: any;
 
   constructor(
+    private sessionstorage:sessionStorageService,
     private message: ConfirmationDialogsService,
     private authService: AuthService,
     public getCommonData: dataService,
@@ -180,9 +182,9 @@ export class MultiRoleScreenComponent implements OnInit {
   ipSuccessLogoutHandler() {
     this.czentrixServices.agentLogout(this.getCommonData.agentID, "").subscribe(
       (res) => {
-        sessionStorage.removeItem("key");
-        sessionStorage.removeItem("onCall");
-        sessionStorage.removeItem("setLanguage");
+        this.sessionstorage.removeItem("key");
+        this.sessionstorage.removeItem("onCall");
+        this.sessionstorage.removeItem("setLanguage");
         this.getCommonData.appLanguage="English";
         this.loginService
           .userLogout()
@@ -192,9 +194,9 @@ export class MultiRoleScreenComponent implements OnInit {
         // this.socketService.logOut();
       },
       (err) => {
-        sessionStorage.removeItem("key");
-        sessionStorage.removeItem("onCall");
-        sessionStorage.removeItem("setLanguage");
+        this.sessionstorage.removeItem("key");
+        this.sessionstorage.removeItem("onCall");
+        this.sessionstorage.removeItem("setLanguage");
         this.getCommonData.appLanguage="English";
         this.loginService
           .userLogout()
@@ -287,8 +289,8 @@ export class MultiRoleScreenComponent implements OnInit {
   }
 
   getLanguage() {
-    if (sessionStorage.getItem("setLanguage") != null) {
-      this.changeLanguage(sessionStorage.getItem("setLanguage"));
+    if (this.sessionstorage.getItem("setLanguage") != null) {
+      this.changeLanguage(this.sessionstorage.getItem("setLanguage"));
     } else {
       this.changeLanguage(this.app_language);
     }
@@ -318,7 +320,7 @@ export class MultiRoleScreenComponent implements OnInit {
     }
     console.log("language is ", response);
     this.currentLanguageSet = response[language];
-    sessionStorage.setItem("setLanguage", language);
+    this.sessionstorage.setItem("setLanguage", language);
     if (this.currentLanguageSet) {
     this.languageArray.forEach((item) => {
     if (item.languageName === language) {

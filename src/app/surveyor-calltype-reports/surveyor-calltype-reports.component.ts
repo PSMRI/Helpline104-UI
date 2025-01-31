@@ -47,6 +47,7 @@ import { OutboundSearchRecordService } from "../services/outboundServices/outbou
 import { OutboundReAllocationService } from "../services/outboundServices/outbound-call-reallocation.service";
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 @Component({
   selector: "app-surveyor-calltype-reports",
@@ -110,6 +111,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
   currentLanguageSet: any;
 
   constructor(
+    private sessionstorage:sessionStorageService,
     private message: ConfirmationDialogsService,
     private cz_service: CzentrixServices,
     public router: Router,
@@ -391,7 +393,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
   }
 
   eventSuccess(data, pageNo, rowsPerPage, status) {
-    sessionStorage.setItem("onCall", "yes");
+    this.sessionstorage.setItem("onCall", "yes");
     let dialogReff = this.dialog.open(CDICallModel, {
       // height: '650px',
       // width: '1050px',
@@ -407,9 +409,9 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
       this.filterCallListArray = [];
       this.setTableFlag(true, pageNo, rowsPerPage, status);
       this.commonDataService.avoidingEvent = false;
-      sessionStorage.removeItem("onCall");
-      sessionStorage.removeItem("CLI");
-      // sessionStorage.removeItem("session_id");
+      this.sessionstorage.removeItem("onCall");
+      this.sessionstorage.removeItem("CLI");
+      // this.sessionstorage.removeItem("session_id");
       this.cz_service
         .disconnectCall(this.commonDataService.agentID, "")
         .subscribe(

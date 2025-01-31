@@ -30,6 +30,7 @@ import { InterceptedHttp } from './../../http.interceptor';
 import { ConfigService } from '../config/config.service';
 import { AuthService } from './../../services/authentication/auth.service';
 import 'rxjs/add/operator/toPromise';
+import { sessionStorageService } from '../sessionStorageService/session-storage.service';
 
 
 @Injectable()
@@ -38,12 +39,12 @@ export class AuthGuard implements CanActivate {
   _authorisedUser = this._baseURL + 'user/getLoginResponse';
   _deleteToken = this._baseURL + 'user/userLogout';
   constructor(
-    private router: Router, private _config: ConfigService,
+    private router: Router, private _config: ConfigService,private sessionstorage:sessionStorageService,
     private route: ActivatedRoute, public dataSettingService: dataService, private _http: InterceptedHttp
     , private authService: AuthService) { }
 
   canActivate(route, state) {
-    const key = sessionStorage.getItem('onCall');
+    const key = this.sessionstorage.getItem('onCall');
     const authkey = sessionStorage.getItem('authToken');
 
     // if (authkey) {
@@ -94,9 +95,11 @@ export class AuthGuard implements CanActivate {
 
 @Injectable()
 export class SaveFormsGuard implements CanDeactivate<dataService> {
-
+constructor(private sessionstorage:sessionStorageService,){
+  
+}
   canDeactivate() {
-    var key = sessionStorage.getItem('onCall');
+    var key = this.sessionstorage.getItem('onCall');
     if (key == 'yes') {
       //alert("You are not allowed to go back");
       return true;

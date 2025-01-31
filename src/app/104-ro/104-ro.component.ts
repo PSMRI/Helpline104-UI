@@ -30,6 +30,7 @@ import { CallServices } from "../services/callservices/callservice.service";
 import { HttpServices } from "app/services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { RegisterService } from "app/services/register-services/register-service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 @Component({
   selector: "app-104-ro",
   templateUrl: "./104-ro.component.html",
@@ -61,17 +62,18 @@ export class Ro_104_Component implements OnInit, DoCheck, OnChanges {
     private callerService: CallerService,
     private _callServices: CallServices,
     private httpServices:HttpServices,
+    private sessionstorage:sessionStorageService,
     private registerService: RegisterService,
   ) {}
   ngOnInit() {
     this.assignSelectedLanguage();
     this.screens = this.getCommonData.screens;
     this.disableClosure = false;
-    if (sessionStorage.getItem("CLI") != undefined) {
-      this.callerNumber = sessionStorage.getItem("CLI");
+    if (this.sessionstorage.getItem("CLI") != undefined) {
+      this.callerNumber = this.sessionstorage.getItem("CLI");
     }
-    if (sessionStorage.getItem("session_id") != undefined) {
-      this.callerID = sessionStorage.getItem("session_id");
+    if (this.sessionstorage.getItem("session_id") != undefined) {
+      this.callerID = this.sessionstorage.getItem("session_id");
     }
     if (this.screens.includes("Health_Advice")) {
       this.hasHAOpriveledge = true;

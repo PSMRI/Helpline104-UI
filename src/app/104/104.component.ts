@@ -27,6 +27,7 @@ import { ConfirmationDialogsService } from "app/services/dialog/confirmation.ser
 import { SearchService } from "app/services/searchBeneficiaryService/search.service";
 import { CallerService } from "../services/common/caller.service";
 import { dataService } from "../services/dataService/data.service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 declare var jQuery: any;
 
 @Component({
@@ -55,6 +56,7 @@ export class Helpline_104_Component implements OnInit {
     private _util: SearchService,
     private callerService: CallerService,
     public commonAppData: dataService,
+    private sessionstorage:sessionStorageService,
     private alertMessage: ConfirmationDialogsService
   ) {}
   ngOnInit() {
@@ -67,11 +69,11 @@ export class Helpline_104_Component implements OnInit {
       this.hasHAOpriveledge = true;
     }
     this.current_campaign = this.commonAppData.current_campaign;
-    if (sessionStorage.getItem("CLI") != undefined) {
-      this.callerNumber = sessionStorage.getItem("CLI");
+    if (this.sessionstorage.getItem("CLI") != undefined) {
+      this.callerNumber = this.sessionstorage.getItem("CLI");
     }
-    if (sessionStorage.getItem("session_id") != undefined) {
-      this.callerID = sessionStorage.getItem("session_id");
+    if (this.sessionstorage.getItem("session_id") != undefined) {
+      this.callerID = this.sessionstorage.getItem("session_id");
     }
     if (
       this.current_role !== "Supervisor" &&

@@ -28,6 +28,7 @@ declare var jQuery: any;
 import { CallServices } from "../services/callservices/callservice.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { HttpServices } from "app/services/http-services/http_services.service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 @Component({
   selector: "app-104-hao",
   templateUrl: "./104-hao.component.html",
@@ -52,10 +53,11 @@ export class Hao_104_Component implements OnInit, OnChanges, DoCheck {
     private dialogService: ConfirmationDialogsService,
     public commonAppData: dataService,
     private _callServices: CallServices,
+    private sessionstorage:sessionStorageService,
     private httpServices: HttpServices
   ) {
-    if (sessionStorage.getItem("service") != undefined) {
-      this.outboundFor = sessionStorage.getItem("service");
+    if (this.sessionstorage.getItem("service") != undefined) {
+      this.outboundFor = this.sessionstorage.getItem("service");
     } else {
       this.outboundFor = "casesheet";
     }

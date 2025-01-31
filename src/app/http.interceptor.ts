@@ -45,6 +45,7 @@ import { ConfirmationDialogsService } from "./services/dialog/confirmation.servi
 import "rxjs/add/operator/catch";
 import "rxjs/add/observable/throw";
 import { SocketService } from "./services/socketService/socket.service";
+import { sessionStorageService } from "./services/sessionStorageService/session-storage.service";
 
 @Injectable()
 export class InterceptedHttp extends Http {
@@ -59,7 +60,8 @@ export class InterceptedHttp extends Http {
     private router: Router,
     private authService: AuthService,
     private message: ConfirmationDialogsService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private sessionstorage:sessionStorageService,
   ) {
     super(backend, defaultOptions);
   }
@@ -171,7 +173,8 @@ export class InterceptedHttp extends Http {
     if (
       sessionStorage.getItem("apiman_key") != undefined &&
       sessionStorage.getItem("apiman_key") != null
-    ) {
+    ) 
+    {
       url = url + "?apikey=" + sessionStorage.getItem("apiman_key");
       return url;
     } else {

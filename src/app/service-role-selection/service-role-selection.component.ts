@@ -29,6 +29,7 @@ declare var jQuery: any;
 import { SocketService } from "../services/socketService/socket.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { HttpServices } from "app/services/http-services/http_services.service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 
 @Component({
   selector: "app-service-role-selection",
@@ -40,6 +41,7 @@ export class ServiceRoleSelectionComponent implements OnInit, DoCheck {
   assignSelectedLanguageValue: any;
 
   constructor(
+    private sessionstorage:sessionStorageService,
     public getCommonData: dataService,
     public router: Router,
     private listnerService: ListnerService,

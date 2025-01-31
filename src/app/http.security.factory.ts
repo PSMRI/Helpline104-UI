@@ -33,12 +33,14 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { AuthService } from './services/authentication/auth.service';
 import { ConfirmationDialogsService } from './services/dialog/confirmation.service';
 import { SocketService } from './services/socketService/socket.service';
+import { sessionStorageService } from './services/sessionStorageService/session-storage.service';
 
 export function SecurityFactory(xhrBackend: XHRBackend,
     requestOptions: RequestOptions,
      router: Router,
       authService: AuthService,
+      sessionstorage: sessionStorageService, 
        message: ConfirmationDialogsService,
         socketService: SocketService): Http {
-    return new SecurityInterceptedHttp(xhrBackend, requestOptions, router, authService, message, socketService);
+    return new SecurityInterceptedHttp(xhrBackend,requestOptions,sessionstorage, router, authService, message, socketService,);
 } 

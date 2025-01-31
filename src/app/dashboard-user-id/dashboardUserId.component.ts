@@ -30,6 +30,7 @@ import { Subscription } from "rxjs/Subscription";
 import { OutboundListnerService } from "../services/common/outboundlistner.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { HttpServices } from "app/services/http-services/http_services.service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 @Component({
   selector: "dashboard-user-id",
   templateUrl: "./dashboardUserId.html",
@@ -40,6 +41,7 @@ export class DashboardUserIdComponent implements OnInit, OnDestroy {
   assignSelectedLanguageValue: any;
 
   constructor(
+    private sessionstorage:sessionStorageService,
     public dataSettingService: dataService,
     private Czentrix: CzentrixServices,
     public router: Router,
@@ -76,25 +78,25 @@ export class DashboardUserIdComponent implements OnInit, OnDestroy {
             ) {
               /*First call landing to the agent (conditions related to auto call closure issue)*/
               if (
-                !sessionStorage.getItem("session_id") &&
-                !sessionStorage.getItem("callTransferred")
+                !this.sessionstorage.getItem("session_id") &&
+                !this.sessionstorage.getItem("callTransferred")
               ) {
                 this.routeToInnerPage(res);
               } else if (
-                sessionStorage.getItem("session_id") !== res.session_id
+                this.sessionstorage.getItem("session_id") !== res.session_id
               ) {
                 // If session id is different from previous session id then allow the call to drop
                 this.routeToInnerPage(res);
               } 
               // else if (
-              //   sessionStorage.getItem("session_id") === res.session_id && // on call transfer
-              //   sessionStorage.getItem("callTransferred")
+              //   this.sessionstorage.getItem("session_id") === res.session_id && // on call transfer
+              //   this.sessionstorage.getItem("callTransferred")
               // ) {
               //   this.routeToInnerPage(res);
               // }
                else if (
-                !sessionStorage.getItem("session_id") && // First call transfer cases
-                sessionStorage.getItem("callTransferred")
+                !this.sessionstorage.getItem("session_id") && // First call transfer cases
+                this.sessionstorage.getItem("callTransferred")
               ) {
                 this.routeToInnerPage(res);
               } else {
@@ -135,9 +137,9 @@ export class DashboardUserIdComponent implements OnInit, OnDestroy {
       session_id !== null &&
       session_id !== ""
     ) {
-      sessionStorage.setItem("CLI", CLI);
-      sessionStorage.setItem("session_id", session_id);
-      sessionStorage.setItem("onCall", "yes");
+      this.sessionstorage.setItem("CLI", CLI);
+      this.sessionstorage.setItem("session_id", session_id);
+      this.sessionstorage.setItem("onCall", "yes");
       this.dataSettingService.apiCalledForInbound = false;
       this.router.navigate([
         "/MultiRoleScreenComponent/RedirectToInnerpageComponent",

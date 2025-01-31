@@ -36,6 +36,7 @@ import { Subscription } from "rxjs/Subscription";
 import { CallServices } from "../services/callservices/callservice.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { HttpServices } from "app/services/http-services/http_services.service";
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 declare var jQuery: any;
 
 @Component({
@@ -61,6 +62,7 @@ export class dashboardContentClass implements OnInit {
   assignSelectedLanguageValue: any;
 
   constructor(
+    private sessionstorage:sessionStorageService,
     public dataSettingService: dataService,
     private _callServices: CallServices,
     public router: Router,
@@ -245,22 +247,22 @@ export class dashboardContentClass implements OnInit {
       this.eventSpiltData[2] !== ""
     ) {
       if (
-        !sessionStorage.getItem("session_id") &&
-        !sessionStorage.getItem("callTransferred")
+        !this.sessionstorage.getItem("session_id") &&
+        !this.sessionstorage.getItem("callTransferred")
       ) {
         this.handleEvent();
       } else if (
-        sessionStorage.getItem("session_id") !== this.eventSpiltData[2]
+        this.sessionstorage.getItem("session_id") !== this.eventSpiltData[2]
       ) {
         this.handleEvent(); // If session id is different from previous session id then allow the call to drop
       } else if (
-        sessionStorage.getItem("session_id") === this.eventSpiltData[2] && // on call transfer
-        sessionStorage.getItem("callTransferred")
+        this.sessionstorage.getItem("session_id") === this.eventSpiltData[2] && // on call transfer
+        this.sessionstorage.getItem("callTransferred")
       ) {
         this.handleEvent();
       } else if (
-        !sessionStorage.getItem("session_id") && // First call transfer cases
-        sessionStorage.getItem("callTransferred")
+        !this.sessionstorage.getItem("session_id") && // First call transfer cases
+        this.sessionstorage.getItem("callTransferred")
       ) {
         this.handleEvent();
       } else {
@@ -276,7 +278,7 @@ export class dashboardContentClass implements OnInit {
     if (key == "pass1234") {
       if (this.eventSpiltData.length > 2) {
         if (this.current_role != "Surveyor") {
-          sessionStorage.setItem("onCall", "yes");
+          this.sessionstorage.setItem("onCall", "yes");
           this.routeToInnerPage();
 
           // if (this.dataSettingService.benRegID == undefined && this.dataSettingService.current_campaign == 'OUTBOUND') {
@@ -286,8 +288,8 @@ export class dashboardContentClass implements OnInit {
         }
       }
     } else {
-      sessionStorage.removeItem("key");
-      sessionStorage.removeItem("onCall");
+      this.sessionstorage.removeItem("key");
+      this.sessionstorage.removeItem("onCall");
       this.router.navigate([""]);
     }
     // event.stopImmediatePropagation();
@@ -300,8 +302,8 @@ export class dashboardContentClass implements OnInit {
       this.dataSettingService.avoidingEvent != true &&
       this.dataSettingService.current_campaign != "OUTBOUND"
     ) {
-      sessionStorage.setItem("CLI", this.eventSpiltData[1]);
-      sessionStorage.setItem("session_id", this.eventSpiltData[2]);
+      this.sessionstorage.setItem("CLI", this.eventSpiltData[1]);
+      this.sessionstorage.setItem("session_id", this.eventSpiltData[2]);
       this.router.navigate([
         "/MultiRoleScreenComponent/RedirectToInnerpageComponent",
       ]);

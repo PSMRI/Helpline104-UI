@@ -32,6 +32,7 @@ import { IfObservable } from 'rxjs/observable/IfObservable';
 import { CovidserviceService } from 'app/services/covidService/covidservice.service';
 import { SetLanguageComponent } from 'app/set-language.component';
 import { HttpServices } from 'app/services/http-services/http_services.service';
+import { sessionStorageService } from 'app/services/sessionStorageService/session-storage.service';
 
 declare var jQuery: any;
 
@@ -123,7 +124,7 @@ export class Covid19Component implements OnInit {
   feverStatsList: any;
   feverPatternList: any;
   assignSelectedLanguageValue: any;
-  constructor(public getCommonData: dataService, private _userData: UserBeneficiaryData,
+  constructor(public getCommonData: dataService, private _userData: UserBeneficiaryData,private sessionstorage:sessionStorageService,
     private _util: SearchService, private alertMessage: ConfirmationDialogsService,
     private _locationService: LocationService, private caseSheetService: CaseSheetService, public covidService:CovidserviceService,
     public httpServices:HttpServices
@@ -151,8 +152,8 @@ export class Covid19Component implements OnInit {
       this.current_language_set = this.current_language;
     }
     this.current_campaign = this.getCommonData.current_campaign;
-    if (sessionStorage.getItem('session_id') != undefined) {
-      this.callerID = sessionStorage.getItem('session_id');
+    if (this.sessionstorage.getItem('session_id') != undefined) {
+      this.callerID = this.sessionstorage.getItem('session_id');
     }
     let obj = {
       "beneficiaryRegID": this.beneficiaryRegID,

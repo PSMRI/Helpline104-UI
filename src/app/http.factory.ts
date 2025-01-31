@@ -34,6 +34,7 @@ import { ConfirmationDialogsService } from "./services/dialog/confirmation.servi
 import { AuthService } from "./services/authentication/auth.service";
 import { Router } from "@angular/router";
 import { SocketService } from "./services/socketService/socket.service";
+import { sessionStorageService } from "./services/sessionStorageService/session-storage.service";
 
 export function httpFactory(
   xhrBackend: XHRBackend,
@@ -42,6 +43,7 @@ export function httpFactory(
   router: Router,
   authService: AuthService,
   alertMessage: ConfirmationDialogsService,
+  sessionstorage:sessionStorageService,
   socketService: SocketService
  
 ): Http {
@@ -52,6 +54,7 @@ export function httpFactory(
     router,
     authService,
     alertMessage,
-    socketService
+    socketService,
+    sessionstorage
   );
 }

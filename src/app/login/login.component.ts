@@ -32,6 +32,7 @@ import { SocketService } from "../services/socketService/socket.service";
 import { Subscription } from "rxjs";
 import { InterceptedHttp } from "app/http.interceptor";
 import * as CryptoJS from 'crypto-js';
+import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 @Component({
   selector: "login-component",
   templateUrl: "./login.html",
@@ -61,6 +62,7 @@ export class loginContentClass implements OnInit {
     location: PlatformLocation,
     private czentrixServices: CzentrixServices,
     private socketService: SocketService,
+    private sessionstorage:sessionStorageService,
     private httpService: InterceptedHttp
   ) {
     location.onPopState((e: any) => {
@@ -122,9 +124,9 @@ export class loginContentClass implements OnInit {
             response.Status === "Active"
           ) {
             // this.dataSettingService.inOutBound = undefined;
-            sessionStorage.removeItem("onCall");
-            sessionStorage.removeItem("CLI");
-            // sessionStorage.removeItem("session_id");
+            this.sessionstorage.removeItem("onCall");
+            this.sessionstorage.removeItem("CLI");
+            // this.sessionstorage.removeItem("session_id");
             this.dataSettingService.current_campaign = undefined;
             this.router.navigate(["/MultiRoleScreenComponent"], {
               skipLocationChange: true,
@@ -203,6 +205,7 @@ export class loginContentClass implements OnInit {
       .authenticateUser(this.userID, this.encryptpassword, doLogOut)
       .subscribe(
         (response: any) => {
+          console.error("response",response);
           if (
             response !== undefined &&
             response !== null &&
@@ -226,6 +229,7 @@ export class loginContentClass implements OnInit {
       .authenticateUser(this.userID, this.encryptpassword, doLogOut)
       .subscribe(
         (response: any) => {
+         
           if (
             response !== undefined &&
             response !== null &&
@@ -248,7 +252,7 @@ export class loginContentClass implements OnInit {
 
   privleges: any;
   successCallback(response: any) {
-    sessionStorage.setItem(
+    this.sessionstorage.setItem(
       "privilege_flag",
       response.previlegeObj[0].roles[0].RoleName
     );
@@ -299,11 +303,11 @@ export class loginContentClass implements OnInit {
       if (response.isAuthenticated === true && response.Status === "Active") {
         // this.dataSettingService.inOutBound = undefined;
         this.dataSettingService.current_campaign = undefined;
-        sessionStorage.setItem("key", "pass1234");
+        this.sessionstorage.setItem("key", "pass1234");
         sessionStorage.setItem("authToken", response.key);
-        sessionStorage.removeItem("onCall");
-        sessionStorage.removeItem("CLI");
-        // sessionStorage.removeItem("session_id");
+        this.sessionstorage.removeItem("onCall");
+        this.sessionstorage.removeItem("CLI");
+        // this.sessionstorage.removeItem("session_id");
         this.czentrixServices
           .getCTILoginToken(this.userID, this.password)
           .subscribe(
@@ -324,11 +328,11 @@ export class loginContentClass implements OnInit {
         // this.loginservice.getServiceProviderID(response.previlegeObj[0].serviceID).subscribe(response=>this.getServiceProviderMapIDSuccessHandeler(response));
       }
       if (response.isAuthenticated === true && response.Status === "New") {
-        sessionStorage.setItem("key", "pass1234");
+        this.sessionstorage.setItem("key", "pass1234");
         sessionStorage.setItem("authToken", response.key);
-        sessionStorage.removeItem("onCall");
-        sessionStorage.removeItem("CLI");
-        // sessionStorage.removeItem("session_id");
+        this.sessionstorage.removeItem("onCall");
+        this.sessionstorage.removeItem("CLI");
+        // this.sessionstorage.removeItem("session_id");
         this.router.navigate(["/setQuestions"]);
       }
     } else {

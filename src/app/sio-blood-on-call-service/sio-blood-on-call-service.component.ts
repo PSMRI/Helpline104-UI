@@ -211,7 +211,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
           //console.log(err)
         });
 
-      if (this.sessionstorage.getItem('CLI') != undefined) {
+      if (this.sessionstorage.getItem('CLI') !== undefined) {
         this.callerNumber = this.sessionstorage.getItem('CLI');
       }
     }

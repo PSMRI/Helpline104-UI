@@ -46,7 +46,7 @@ export class SioServicesComponent implements OnInit {
 
   constructor(public getCommonData: dataService,private sessionstorage:sessionStorageService, private route : ActivatedRoute,public HttpServices: HttpServices) { 
    
-    if(this.sessionstorage.getItem('service') != undefined) {
+    if(this.sessionstorage.getItem('service') !== undefined) {
       this.outboundFor = this.sessionstorage.getItem('service');
     }
   }

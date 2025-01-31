@@ -44,15 +44,15 @@ export class ConfigService {
     // private _telephonyServerURL: String = "http://helplines.piramalswasthya.org/"; 
 
 
-    private _helpline1097BaseURL: string = `${IP1097}1097api-v3.0.0/`;
+    private _helpline1097BaseURL: string = `${IP1097}1097api-v1.0/`;
     private _telephonyServerURL: string = `${telephonyServerIP}`;
-    private _commonBaseUrlForLicense: string = `${commonIP}commonapi-v3.0.0/`;
-    private _commonBaseURL: string = `${commonIP}commonapi-v3.0.0/`;
-    private _opencommonBaseURL: string = `${commonIP}commonapi-v3.0.0/`;
-    private _helpline104BaseURL: string = `${IP104}104api-v3.0.0/`;
-    private _adminBaseURL: string = `${adminIP}adminapi-v3.0.0/`;
-    private _mmuBaseURL: string = `${mmuIP}mmuapi-v3.0.0/`;
-    private _tmBaseURL: string = `${tmIP}tmapi-v3.0.0/`;
+    private _commonBaseUrlForLicense: string = `${commonIP}commonapi-v1.0/`;
+    private _commonBaseURL: string = `${commonIP}commonapi-v1.0/`;
+    private _opencommonBaseURL: string = `${commonIP}commonapi-v1.0/`;
+    private _helpline104BaseURL: string = `${IP104}104api-v1.0/`;
+    private _adminBaseURL: string = `${adminIP}adminapi-v1.0/`;
+    private _mmuBaseURL: string = `${mmuIP}mmuapi-v1.0/`;
+    private _tmBaseURL: string = `${tmIP}tmapi-v1.0/`;
     private _fhirBaseURL = `${FHIRIP}/fhirapi-v1.0/`;
     // private czentrics ='http://10.208.122.99/';
     // private _commonBaseURL: String = `http://localhost:8080/`;

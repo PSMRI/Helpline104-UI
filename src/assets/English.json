@@ -972,6 +972,7 @@
     "bloodSugarMgdlFasting": "Blood Sugar (mg/dl) Fasting",
     "endTimeCantBeLessThanStartTime": "End time can't be less than start time",
     "bloodOnCallDetailedReport": "Blood On Call Detailed Report",
+    "startDate": "Start Date",
     "male": "Male",
     "ageCanlyBeSetBetweenTodayTo${this.agelimit}Years": "Age can only be set between Today to ${this.ageLimit} Years",
     "emergencyContacts": "Emergency Contacts",

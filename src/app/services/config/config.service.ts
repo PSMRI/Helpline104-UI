@@ -25,14 +25,14 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
-const commonIP = 'http://amritwprdev.piramalswasthya.org:8080/';
-const IP1097 = 'http://amritwprdev.piramalswasthya.org:8080/';
-const telephonyServerIP = 'http://192.168.45.55/';
-const adminIP = 'http://amritwprdev.piramalswasthya.org:8080/';
-const IP104 = 'http://amritwprdev.piramalswasthya.org:8080/';
-const mmuIP = 'http://amritwprdev.piramalswasthya.org:8080/';
-const tmIP = 'http://amritwprdev.piramalswasthya.org:8080/';
-const FHIRIP = "http://amritwprdev.piramalswasthya.org:8080";
+const commonIP = 'https://amritwprdev.piramalswasthya.org/';
+const IP1097 = 'https://amritwprdev.piramalswasthya.org/';
+const telephonyServerIP = 'https://uatcz.piramalswasthya.org/';
+const adminIP = 'https://amritwprdev.piramalswasthya.org/';
+const IP104 = 'https://amritwprdev.piramalswasthya.org/';
+const mmuIP = 'https://amritwprdev.piramalswasthya.org/';
+const tmIP = 'https://amritwprdev.piramalswasthya.org/';
+const FHIRIP = "https://amritwprdev.piramalswasthya.org";
 
 @Injectable()
 export class ConfigService {

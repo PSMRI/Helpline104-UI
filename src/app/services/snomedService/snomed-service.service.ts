@@ -34,7 +34,7 @@ export class SnomedService {
 	constructor(private http: SecurityInterceptedHttp, private _config: ConfigService) { }
 
 	getSnomedCTRecord(term) {
-		return this.http.post(this._104baseUrl + "snomed/getSnomedCTRecord/", { "term": term }).map(this.extractData).catch(this.handleError);
+		return this.http.post(this._104baseUrl + "snomed/getSnomedCTRecord", { "term": term }).map(this.extractData).catch(this.handleError);
 	}
 
 	private extractData(response: Response) {

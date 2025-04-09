@@ -36,14 +36,14 @@ export class SearchService {
     _commonBaseUrl = this._config.getCommonBaseURL();
     _104BaseUrl = this._config.get104BaseURL();
     responseData: any;
-    _getuserdata = "beneficiary/searchUserByID/";
-    _updatebeneficiaryurl = "beneficiary/update/";
+    _getuserdata = "beneficiary/searchUserByID";
+    _updatebeneficiaryurl = "beneficiary/update";
     _getuserdatabyno: any;
     _searchBeneficiaryURL: any;
     _fhirBaseUrl =this._config.getFHIRBaseURL();
     _updatebeneficiaryincall = this._commonBaseUrl + 'call/updatebeneficiaryincall';
-    updateOtherURL = '/beneficiary/updateCommunityorEducation';
-    _getHealthIdURL = '/healthID/getBenhealthID'
+    updateOtherURL = 'beneficiary/updateCommunityorEducation';
+    _getHealthIdURL = 'healthID/getBenhealthID'
 
     /*Edited by: Diamond Khanna, Date:28,september,2017*/
     getStates_url: any;
@@ -55,17 +55,17 @@ export class SearchService {
     /*end*/
 
     constructor(private _http: SecurityInterceptedHttp, private _config: ConfigService, private httpIntercept: InterceptedHttp) {
-        this._getuserdatabyno = this._commonBaseUrl + 'beneficiary/searchUserByPhone/';
+        this._getuserdatabyno = this._commonBaseUrl + 'beneficiary/searchUserByPhone';
         this._searchBeneficiaryURL = this._commonBaseUrl + "beneficiary/searchBeneficiary";
 
         /*Edited by: Diamond Khanna, Date:28,september,2017*/
         this.getStates_url = this._adminUrl + "m/role/state";
-        this.getDistricts_url = this._104BaseUrl + "location/districts/";
+        this.getDistricts_url = this._104BaseUrl + "location/districts";
         this.getSubDistricts_url = this._commonBaseUrl + "location/taluks/";
         this.getVillages_url = this._commonBaseUrl + "location/village/";
         this.createBenURL = this._commonBaseUrl + "beneficiary/create";
         /*end*/
-        this.getFacilityMaster_url = this._commonBaseUrl + "uptsu/get/facilityMaster/";
+        this.getFacilityMaster_url = this._commonBaseUrl + "uptsu/get/facilityMaster";
         this.getSaveAppointment_url = this._commonBaseUrl + "uptsu/save/appointment-details";
     }
     createBenURL: any;

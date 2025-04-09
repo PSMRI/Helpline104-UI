@@ -34,7 +34,7 @@ import { InterceptedHttp } from './../../http.interceptor';
 export class CallerService {
     _104baseUrl = this._config.get104BaseURL();
     _commonBaseURL = this._config.getCommonBaseURL();
-    _storeCallIDURL = this._104baseUrl + "beneficiary/startCall/";
+    _storeCallIDURL = this._104baseUrl + "beneficiary/startCall";
     _setCallHistory = this._104baseUrl + "beneficiary/set/callHistory";
     _getBeneficiaryURL = this._commonBaseURL + "call/beneficiaryByCallID";
     //_getBeneficiaryURL =this._commonBaseURL + "beneficiary/call/getCallHistoryByCallID"; 

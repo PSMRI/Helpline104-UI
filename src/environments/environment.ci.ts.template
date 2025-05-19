@@ -40,6 +40,6 @@ export const environment = {
   adminAPI: ADMIN_API,
   ip104: API104,
   mmuAPI: MMU_API,
-  tmIP: TM_API,
+  tmAPI: TM_API,
   fhirAPI: FHIR_API
 };

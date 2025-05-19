@@ -21,31 +21,25 @@
 */
 
 
+const sessionStorageEncKey = '<%= SESSION_STORAGE_ENC_KEY %>';
+const COMMON_API = '<%= COMMON_API_BASE %>';
+const TM_API = '<%= TM_API_BASE %>';
+const API104 = '<%= HELPLINE104_API_BASE %>';
+const MMU_API =  '<%= MMU_API_BASE %>';
+const ADMIN_API = '<%= ADMIN_API_BASE %>';
+const FHIR_API = '<%= FHIR_API_BASE %>';
+const IP1097 = '<%= HELPLINE1097_API_BASE %>';
+const TELEPHONY_SERVER = '<%= TELEPHONY_SERVER %>';
 
-module.exports = function(grunt) {
-
-  grunt.loadNpmTasks('grunt-war');
-  // Project configuration.
-  grunt.initConfig({
-    pkg: grunt.file.readJSON('package.json'),
-    war: {
-      target: {
-        options: {
-          war_dist_folder: 'target',
-          /* Folder where to generate the WAR. */
-          war_name: '104ui-v1.0',
-          /* The name fo the WAR file (.war will be the extension) */
-          webxml_display_name: '104ui-v1.0',
-        },
-        files: [{
-          expand: true,
-          cwd: 'dist',
-          src: ['**'],
-          dest: ''
-        }]
-      }
-    }
-  });
-
-  grunt.registerTask('default', ['war']);
+export const environment = {
+  production: true,
+  encKey: sessionStorageEncKey,
+  commonAPI: COMMON_API,
+  ip1097: IP1097,
+  telephoneServer: TELEPHONY_SERVER,
+  adminAPI: ADMIN_API,
+  ip104: API104,
+  mmuAPI: MMU_API,
+  tmIP: TM_API,
+  fhirAPI: FHIR_API
 };

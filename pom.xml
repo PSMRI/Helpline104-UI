@@ -7,7 +7,7 @@
 	<groupId>com.iemr.104ui</groupId>
 	<artifactId>104-ui</artifactId>
 	<version>3.1.0</version>
-	<name>104-ui</name>
+	<name>Helpline-104-UI</name>
 	<description>Piramal - 104: Module ui</description>
 	
 	<packaging>war</packaging>

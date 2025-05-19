@@ -6,8 +6,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.iemr.104ui</groupId>
 	<artifactId>104-ui</artifactId>
-	<version>1.0</version>
-	<name>104-ui</name>
+	<version>3.1.0</version>
+	<name>Helpline-104-UI</name>
 	<description>Piramal - 104: Module ui</description>
 	
 	<packaging>war</packaging>
@@ -82,7 +82,7 @@
 	
 	<!-- install the necessary node_modules & compile in prod mode -->
 	<build>
-		<finalName>104ui-v1.0</finalName>
+		<finalName>${artifactId}-${version}</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>

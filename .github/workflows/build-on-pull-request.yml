@@ -30,4 +30,4 @@ jobs:
             npm config set legacy-peer-deps true
             npm install node-sass --force
             npm install --force
-            npm run build
+            npm run build-ci

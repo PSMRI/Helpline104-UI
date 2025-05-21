@@ -1098,7 +1098,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
         ? "months"
         : registeredBenData.ageUnits == "day"
         ? "days"
-        : registeredBenData.ageUnits;
+        : registeredBenData.ageUnits.toLowerCase();
     this.titleId = registeredBenData.titleId;
     this.emailID = registeredBenData.emailID;
     this.maritalStatusID = registeredBenData.maritalStatusID;

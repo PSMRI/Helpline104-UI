@@ -49,3 +49,6 @@ config.json
 debug.log
 npm-debug.log.4044449283
 /.vscode
+src/environments/environment.ts
+src/environments/environment.ci.ts
+

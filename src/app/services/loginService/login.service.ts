@@ -57,13 +57,14 @@ export class loginService {
       .map(this.extractData)
       .catch(this.handleError);
   }
-  public authenticateUser(uname, pwd, doLogout) {
+  public authenticateUser(uname, pwd, doLogout,captchaToken) {
     return this.httpInter
       .post(this._baseUrl + "user/userAuthenticate", {
         userName: uname,
         password: pwd,
         doLogout: doLogout,
        withCredentials: true,
+       captchaToken:captchaToken
       })
       .map(this.extractData)
       .catch(this.handleError);

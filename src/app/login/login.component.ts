@@ -53,6 +53,7 @@ export class loginContentClass implements OnInit {
   _iterationCount: any;
   logoutUserFromPreviousSessionSubscription: Subscription;
   encryptpassword: any;
+  captchaToken: string;
 
   constructor(
     public loginservice: loginService,
@@ -202,7 +203,7 @@ export class loginContentClass implements OnInit {
     
     this.encryptpassword = this.encrypt(this.Key_IV, this.password);
     this.loginservice
-      .authenticateUser(this.userID, this.encryptpassword, doLogOut)
+      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.captchaToken)
       .subscribe(
         (response: any) => {
           console.error("response",response);
@@ -226,7 +227,7 @@ export class loginContentClass implements OnInit {
       (userLogOutRes: any) => {
       if(userLogOutRes && userLogOutRes.response) {
     this.loginservice
-      .authenticateUser(this.userID, this.encryptpassword, doLogOut)
+      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.captchaToken)
       .subscribe(
         (response: any) => {
          
@@ -252,6 +253,7 @@ export class loginContentClass implements OnInit {
 
   privleges: any;
   successCallback(response: any) {
+    this.captchaToken = ''
     this.sessionstorage.setItem(
       "privilege_flag",
       response.previlegeObj[0].roles[0].RoleName
@@ -348,6 +350,7 @@ export class loginContentClass implements OnInit {
     // console.log(error);
     if (error.status) {
       this.loginResult = error.errorMessage;
+      this.captchaToken = ''
     } else {
       this.loginResult = "Internal issue please try after some time";
     }
@@ -373,6 +376,11 @@ export class loginContentClass implements OnInit {
   hidePWD() {
     this.dynamictype = "password";
   }
+
+  onCaptchaResolved(token: string) {
+    this.captchaToken = token;
+  }
+
   // getServiceProviderMapIDSuccessHandeler(response)
   // {
   // 	console.log("service provider map id",response);

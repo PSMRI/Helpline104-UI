@@ -21,7 +21,7 @@
 */
 
 
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { loginService } from "../services/loginService/login.service";
 import { dataService } from "../services/dataService/data.service";
 import { Router } from "@angular/router";
@@ -39,6 +39,7 @@ import { sessionStorageService } from "app/services/sessionStorageService/sessio
   styleUrls: ["./login.component.css"],
 })
 export class loginContentClass implements OnInit {
+  @ViewChild('captchaCmp') captchaCmp: any;
   model: any = {};
   userID: any;
   password: any;
@@ -218,6 +219,7 @@ export class loginContentClass implements OnInit {
         },
         (error: any) => this.errorCallback(error)
       );
+      this.resetCaptcha();
   }
 
   loginUser(doLogOut) {
@@ -246,6 +248,7 @@ export class loginContentClass implements OnInit {
       else
       {
             this.alertMessage.alert(userLogOutRes.errorMessage, 'error');
+            this.resetCaptcha();
       }
       });
   }
@@ -253,7 +256,7 @@ export class loginContentClass implements OnInit {
 
   privleges: any;
   successCallback(response: any) {
-    this.captchaToken = ''
+    this.resetCaptcha();
     this.sessionstorage.setItem(
       "privilege_flag",
       response.previlegeObj[0].roles[0].RoleName
@@ -350,11 +353,11 @@ export class loginContentClass implements OnInit {
     // console.log(error);
     if (error.status) {
       this.loginResult = error.errorMessage;
-      this.captchaToken = ''
     } else {
       this.loginResult = "Internal issue please try after some time";
     }
     console.log(error);
+    this.resetCaptcha();
   }
 
   getLoginKey(userId, password) {
@@ -379,6 +382,13 @@ export class loginContentClass implements OnInit {
 
   onCaptchaResolved(token: string) {
     this.captchaToken = token;
+  }
+
+  resetCaptcha() {
+    if (this.captchaCmp && typeof this.captchaCmp.reset === 'function') {
+      this.captchaCmp.reset();
+      this.captchaToken = '';
+    }
   }
 
   // getServiceProviderMapIDSuccessHandeler(response)

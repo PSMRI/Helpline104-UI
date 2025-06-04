@@ -46,7 +46,9 @@ const defaultEnvValues = {
   ADMIN_API_BASE: '',
   FHIR_API_BASE: '',
   HELPLINE1097_API_BASE: '',
-  TELEPHONY_SERVER: ''
+  TELEPHONY_SERVER: '',
+  SITE_KEY:'',
+  CAPTCHA_CHALLENGE_URL:''
 };
 
 // Generate output data

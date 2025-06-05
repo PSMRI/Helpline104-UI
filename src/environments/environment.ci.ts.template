@@ -32,6 +32,7 @@ const IP1097 = '<%= HELPLINE1097_API_BASE %>';
 const TELEPHONY_SERVER = '<%= TELEPHONY_SERVER %>';
 const siteKey = '<%= SITE_KEY %>';
 const captchaChallengeURL = '<%= CAPTCHA_CHALLENGE_URL %>';
+const enableCaptcha = '<%= ENABLE_CAPTCHA %>';
 
 export const environment = {
   production: true,
@@ -45,5 +46,6 @@ export const environment = {
   tmAPI: TM_API,
   fhirAPI: FHIR_API,
   siteKey:siteKey,
-  captchaChallengeURL: captchaChallengeURL
+  captchaChallengeURL: captchaChallengeURL,
+  enableCaptcha: enableCaptcha
 };

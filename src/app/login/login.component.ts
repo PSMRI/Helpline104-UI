@@ -33,6 +33,7 @@ import { Subscription } from "rxjs";
 import { InterceptedHttp } from "app/http.interceptor";
 import * as CryptoJS from 'crypto-js';
 import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
+import { environment } from "environments/environment";
 @Component({
   selector: "login-component",
   templateUrl: "./login.html",
@@ -55,6 +56,7 @@ export class loginContentClass implements OnInit {
   logoutUserFromPreviousSessionSubscription: Subscription;
   encryptpassword: any;
   captchaToken: string;
+  enableCaptcha = environment.enableCaptcha;
 
   constructor(
     public loginservice: loginService,
@@ -229,7 +231,7 @@ export class loginContentClass implements OnInit {
       (userLogOutRes: any) => {
       if(userLogOutRes && userLogOutRes.response) {
     this.loginservice
-      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.captchaToken)
+      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.enableCaptcha && this.captchaToken)
       .subscribe(
         (response: any) => {
          
@@ -385,7 +387,7 @@ export class loginContentClass implements OnInit {
   }
 
   resetCaptcha() {
-    if (this.captchaCmp && typeof this.captchaCmp.reset === 'function') {
+    if (this.enableCaptcha && this.captchaCmp && typeof this.captchaCmp.reset === 'function') {
       this.captchaCmp.reset();
       this.captchaToken = '';
     }

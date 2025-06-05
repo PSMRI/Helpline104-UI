@@ -37,6 +37,7 @@ const API1097 = 'http://localhost:8090/';
 const API104 = 'http://localhost:8081/';
 const siteKey = '';
 const captchaChallengeURL = '';
+const enableCaptcha = false;
 
 export const environment = {
   production: false,
@@ -50,5 +51,6 @@ export const environment = {
   tmAPI: tmAPI,
   fhirAPI: fhirAPI,
   siteKey:siteKey,
-  captchaChallengeURL:captchaChallengeURL
+  captchaChallengeURL:captchaChallengeURL,
+  enableCaptcha: enableCaptcha,
 };

@@ -57,15 +57,20 @@ export class loginService {
       .map(this.extractData)
       .catch(this.handleError);
   }
-  public authenticateUser(uname, pwd, doLogout,captchaToken) {
+  public authenticateUser(uname, pwd, doLogout, captchaToken?) {
+    const requestBody: any = {
+      userName: uname,
+      password: pwd,
+      doLogout: doLogout,
+      withCredentials: true,
+    };
+
+    if (captchaToken) {
+      requestBody.captchaToken = captchaToken;
+    }
+
     return this.httpInter
-      .post(this._baseUrl + "user/userAuthenticate", {
-        userName: uname,
-        password: pwd,
-        doLogout: doLogout,
-       withCredentials: true,
-       captchaToken:captchaToken
-      })
+      .post(this._baseUrl + "user/userAuthenticate", requestBody)
       .map(this.extractData)
       .catch(this.handleError);
   };

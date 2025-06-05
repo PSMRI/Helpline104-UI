@@ -207,7 +207,7 @@ export class loginContentClass implements OnInit {
     
     this.encryptpassword = this.encrypt(this.Key_IV, this.password);
     this.loginservice
-      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.captchaToken)
+      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.enableCaptcha && this.captchaToken)
       .subscribe(
         (response: any) => {
           console.error("response",response);

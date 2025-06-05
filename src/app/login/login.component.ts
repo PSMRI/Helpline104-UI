@@ -34,13 +34,14 @@ import { InterceptedHttp } from "app/http.interceptor";
 import * as CryptoJS from 'crypto-js';
 import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
 import { environment } from "environments/environment";
+import { CaptchaComponent } from "app/captcha/captcha.component";
 @Component({
   selector: "login-component",
   templateUrl: "./login.html",
   styleUrls: ["./login.component.css"],
 })
 export class loginContentClass implements OnInit {
-  @ViewChild('captchaCmp') captchaCmp: any;
+  @ViewChild('captchaCmp') captchaCmp: CaptchaComponent | undefined;
   model: any = {};
   userID: any;
   password: any;

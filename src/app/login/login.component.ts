@@ -207,7 +207,7 @@ export class loginContentClass implements OnInit {
     
     this.encryptpassword = this.encrypt(this.Key_IV, this.password);
     this.loginservice
-      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.enableCaptcha && this.captchaToken)
+      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.enableCaptcha ? this.captchaToken : undefined)
       .subscribe(
         (response: any) => {
           console.error("response",response);
@@ -222,7 +222,6 @@ export class loginContentClass implements OnInit {
         },
         (error: any) => this.errorCallback(error)
       );
-      this.resetCaptcha();
   }
 
   loginUser(doLogOut) {
@@ -232,7 +231,7 @@ export class loginContentClass implements OnInit {
       (userLogOutRes: any) => {
       if(userLogOutRes && userLogOutRes.response) {
     this.loginservice
-      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.enableCaptcha && this.captchaToken)
+      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.enableCaptcha ? this.captchaToken : undefined)
       .subscribe(
         (response: any) => {
          
@@ -259,7 +258,6 @@ export class loginContentClass implements OnInit {
 
   privleges: any;
   successCallback(response: any) {
-    this.resetCaptcha();
     this.sessionstorage.setItem(
       "privilege_flag",
       response.previlegeObj[0].roles[0].RoleName
@@ -344,6 +342,7 @@ export class loginContentClass implements OnInit {
         this.router.navigate(["/setQuestions"]);
       }
     } else {
+      this.resetCaptcha();
       console.log("checked for 104");
       this.alertMessage.alert(
         "User doesn't have privilege to access 104",

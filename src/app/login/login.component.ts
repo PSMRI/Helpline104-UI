@@ -21,7 +21,7 @@
 */
 
 
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { loginService } from "../services/loginService/login.service";
 import { dataService } from "../services/dataService/data.service";
 import { Router } from "@angular/router";
@@ -33,12 +33,15 @@ import { Subscription } from "rxjs";
 import { InterceptedHttp } from "app/http.interceptor";
 import * as CryptoJS from 'crypto-js';
 import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
+import { environment } from "environments/environment";
+import { CaptchaComponent } from "app/captcha/captcha.component";
 @Component({
   selector: "login-component",
   templateUrl: "./login.html",
   styleUrls: ["./login.component.css"],
 })
 export class loginContentClass implements OnInit {
+  @ViewChild('captchaCmp') captchaCmp: CaptchaComponent | undefined;
   model: any = {};
   userID: any;
   password: any;
@@ -53,6 +56,8 @@ export class loginContentClass implements OnInit {
   _iterationCount: any;
   logoutUserFromPreviousSessionSubscription: Subscription;
   encryptpassword: any;
+  captchaToken: string;
+  enableCaptcha = environment.enableCaptcha;
 
   constructor(
     public loginservice: loginService,
@@ -202,7 +207,7 @@ export class loginContentClass implements OnInit {
     
     this.encryptpassword = this.encrypt(this.Key_IV, this.password);
     this.loginservice
-      .authenticateUser(this.userID, this.encryptpassword, doLogOut)
+      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.enableCaptcha ? this.captchaToken : undefined)
       .subscribe(
         (response: any) => {
           console.error("response",response);
@@ -226,7 +231,7 @@ export class loginContentClass implements OnInit {
       (userLogOutRes: any) => {
       if(userLogOutRes && userLogOutRes.response) {
     this.loginservice
-      .authenticateUser(this.userID, this.encryptpassword, doLogOut)
+      .authenticateUser(this.userID, this.encryptpassword, doLogOut,this.enableCaptcha ? this.captchaToken : undefined)
       .subscribe(
         (response: any) => {
          
@@ -245,6 +250,7 @@ export class loginContentClass implements OnInit {
       else
       {
             this.alertMessage.alert(userLogOutRes.errorMessage, 'error');
+            this.resetCaptcha();
       }
       });
   }
@@ -336,6 +342,7 @@ export class loginContentClass implements OnInit {
         this.router.navigate(["/setQuestions"]);
       }
     } else {
+      this.resetCaptcha();
       console.log("checked for 104");
       this.alertMessage.alert(
         "User doesn't have privilege to access 104",
@@ -352,6 +359,7 @@ export class loginContentClass implements OnInit {
       this.loginResult = "Internal issue please try after some time";
     }
     console.log(error);
+    this.resetCaptcha();
   }
 
   getLoginKey(userId, password) {
@@ -373,6 +381,18 @@ export class loginContentClass implements OnInit {
   hidePWD() {
     this.dynamictype = "password";
   }
+
+  onCaptchaResolved(token: string) {
+    this.captchaToken = token;
+  }
+
+  resetCaptcha() {
+    if (this.enableCaptcha && this.captchaCmp && typeof this.captchaCmp.reset === 'function') {
+      this.captchaCmp.reset();
+      this.captchaToken = '';
+    }
+  }
+
   // getServiceProviderMapIDSuccessHandeler(response)
   // {
   // 	console.log("service provider map id",response);

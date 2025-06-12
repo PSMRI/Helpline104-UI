@@ -22,7 +22,7 @@ export class CaptchaComponent implements AfterViewInit, OnDestroy {
     try {
       await this.captchaService.loadScript();
 
-      const captchaElement = this.captchaRef?.nativeElement;
+      const captchaElement = this.captchaRef.nativeElement;
       if (!captchaElement) {
         console.error('CAPTCHA container element not found');
         return;

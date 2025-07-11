@@ -35,6 +35,9 @@ const telephoneServer = 'http://uatcz.piramalswasthya.org/';
 const fhirAPI = 'http://localhost:8093/';
 const API1097 = 'http://localhost:8090/';
 const API104 = 'http://localhost:8081/';
+const siteKey = '';
+const captchaChallengeURL = '';
+const enableCaptcha = false;
 
 export const environment = {
   production: false,
@@ -46,5 +49,8 @@ export const environment = {
   ip104: API104,
   mmuAPI: mmuAPI,
   tmAPI: tmAPI,
-  fhirAPI: fhirAPI
+  fhirAPI: fhirAPI,
+  siteKey:siteKey,
+  captchaChallengeURL:captchaChallengeURL,
+  enableCaptcha: enableCaptcha,
 };

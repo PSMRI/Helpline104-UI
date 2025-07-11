@@ -30,6 +30,9 @@ const ADMIN_API = '<%= ADMIN_API_BASE %>';
 const FHIR_API = '<%= FHIR_API_BASE %>';
 const IP1097 = '<%= HELPLINE1097_API_BASE %>';
 const TELEPHONY_SERVER = '<%= TELEPHONY_SERVER %>';
+const siteKey = '<%= SITE_KEY %>';
+const captchaChallengeURL = '<%= CAPTCHA_CHALLENGE_URL %>';
+const enableCaptcha = <%= ENABLE_CAPTCHA %>;
 
 export const environment = {
   production: true,
@@ -41,5 +44,8 @@ export const environment = {
   ip104: API104,
   mmuAPI: MMU_API,
   tmAPI: TM_API,
-  fhirAPI: FHIR_API
+  fhirAPI: FHIR_API,
+  siteKey:siteKey,
+  captchaChallengeURL: captchaChallengeURL,
+  enableCaptcha: enableCaptcha
 };

@@ -57,17 +57,36 @@ export class loginService {
       .map(this.extractData)
       .catch(this.handleError);
   }
-  public authenticateUser(uname, pwd, doLogout) {
-    return this.httpInter
-      .post(this._baseUrl + "user/userAuthenticate", {
-        userName: uname,
-        password: pwd,
-        doLogout: doLogout,
-       withCredentials: true,
+
+  public authenticateUser(uname, pwd, doLogout, captchaToken){
+    const body: any = {
+      userName: uname,
+      password: pwd,
+      withCredentials: true,
+      doLogout: doLogout,
+    };
+    
+    if (captchaToken) { body.captchaToken = captchaToken; }
+
+    return this.httpInter.post(this._baseUrl + "user/userAuthenticate", body)
+      .map((res: Response) => {
+        const json = res.json();
+        if (json.statusCode && json.statusCode !== 200) {
+          throw {
+            status: json.statusCode,
+            errorMessage: json.errorMessage || 'Unknown error'
+          };
+        }
+        return json.data;
       })
-      .map(this.extractData)
-      .catch(this.handleError);
-  };
+      .catch((err: any) => {
+        const payload = err.errorMessage
+          ? err
+          : (err.json ? err.json() : { errorMessage: err.toString() });
+        return Observable.throw(payload);
+      });
+  }
+
 
   public userLogOutFromPreviousSession(uname) {
     return this.httpInter

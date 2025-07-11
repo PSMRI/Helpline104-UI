@@ -282,7 +282,8 @@ import { ConsentFormComponent } from './104-consent/consent-form.component';
 import { CheifComplaintSnomedSearchComponent } from './cheif-complaint-snomed-search/cheif-complaint-snomed-search.component';
 import { ScheduleAppointmentComponent } from './schedule-appointment/schedule-appointment.component';
 import { sessionStorageService } from './services/sessionStorageService/session-storage.service';
-
+import { CaptchaService } from './services/captcha-service/captcha.service';
+import { CaptchaComponent } from './captcha/captcha.component';
 
 
 @NgModule({
@@ -319,7 +320,7 @@ import { sessionStorageService } from './services/sessionStorageService/session-
     ViewDiseaseSummaryContentsComponent,
     SupervisorQualityReportComponent, SupervisorCallSummaryReportComponent, ViewDiseaseSummaryDetailsComponent, CaseSheetCovidModalComponent, HaoImrMmrInformationComponent,BalVivahComponent,Covid19Component,
     SetLanguageComponent,BeneficiaryABHADetailsModal,StringValidator,TextareaDirective,TextareaDirectiveWithCopyPaste,InputFieldValidatorDirective,SearchIdValidatorDirective,SmsTemplateValidatorDirective,AnswerValidatorDirective,UsernameValidatorDirective,BloodBankUrlValidatorDirective,SmsTemplateValidatorDirectiveWithCopyPaste,
-    ClosureRemarksDirective, IdValidatorDirective, AppNameDirectiveWithCopyPaste, DiseaseSummaryEnableCopyPaste, PresentChiefComplaintDirective, Counsellor_104_Component, ConsentFormComponent, CounsellorHistory, CheifComplaintSnomedSearchComponent,ScheduleAppointmentComponent],
+    ClosureRemarksDirective, IdValidatorDirective, AppNameDirectiveWithCopyPaste, DiseaseSummaryEnableCopyPaste, PresentChiefComplaintDirective, Counsellor_104_Component, ConsentFormComponent, CounsellorHistory, CheifComplaintSnomedSearchComponent,ScheduleAppointmentComponent, CaptchaComponent],
   imports: [
     // TranslateModule.forRoot(),
     BrowserModule,
@@ -489,7 +490,8 @@ import { sessionStorageService } from './services/sessionStorageService/session-
       provide: SecurityInterceptedHttp,
       useFactory: SecurityFactory,
       deps: [XHRBackend, RequestOptions, Router, AuthService, ConfirmationDialogsService, SocketService]
-    }
+    },
+    CaptchaService
   ],
 
 

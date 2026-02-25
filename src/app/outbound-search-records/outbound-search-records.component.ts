@@ -27,11 +27,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { OutboundSearchRecordService } from '../services/outboundServices/outbound-search-records.service';
+import { OutboundActivityService } from '../services/outboundServices/outbound-activity.service';
 import { dataService } from '../services/dataService/data.service';
 import { AvailableServices } from '../services/common/104-services';
+import { ConfirmationDialogsService } from '../services/dialog/confirmation.service';
 import { NgForm } from '@angular/forms';
 import { SetLanguageComponent } from 'app/set-language.component';
 import { HttpServices } from 'app/services/http-services/http_services.service';
+import { MdSlideToggleModule, MdInputModule} from '@angular/material';
 
 declare var jQuery: any;
 
@@ -75,15 +78,25 @@ export class OutboundSearchRecordsComponent implements OnInit, DoCheck {
 	start_date: Date;
 	maxStartDate: any;
 	maxEndDate: any;
+	activities: any[] = [];
+	showEditPopup: boolean = false;
+editableActivity: any = {};
+selectedActivityRef: any = null;
+activityPage: number = 1;
+activityPageSize: number = 5;
+
+
 
 	@ViewChild('searchForm') searchForm: NgForm;
 	assignSelectedLanguageValue: any;
 
 	constructor(
 		private _OSRService: OutboundSearchRecordService,
+		private _activityService: OutboundActivityService,
 		private saved_data: dataService,
 		private _availableServices: AvailableServices,
-		private httpServices: HttpServices
+		private httpServices: HttpServices,
+		private message: ConfirmationDialogsService
 	) {
 
 	}
@@ -142,6 +155,8 @@ export class OutboundSearchRecordsComponent implements OnInit, DoCheck {
 		this.maxEndDate = new Date();
 		this.maxEndDate.setDate(this.today.getDate() + 30);
 		this.maxEndDate.setHours(23, 59, 59, 0);
+
+		this.getActivities();
 	}
 	
 	getMinValueForEndDate(sDate) {
@@ -350,4 +365,117 @@ export class OutboundSearchRecordsComponent implements OnInit, DoCheck {
 		this.assignSelectedLanguage();
 	  }
 	  /* Ends*/
+
+getActivities() {
+  this._activityService.getAllActivities().subscribe(
+    (response) => {
+      this.activities = response;
+    },
+    (error) => {
+      console.log('Error fetching activities', error);
+      this.message.alert('Error fetching activities', 'error');
+    }
+  );
 }
+
+addNewActivity(activityName: string) {
+  if (!activityName || activityName.trim() === '') return;
+
+  const payload = {
+    activityName: activityName.trim(),
+    activityDesc: "",
+    isActive: true,
+    createdBy: this.saved_data.Userdata.userName,  
+    providerServiceMapID: this.saved_data.current_service.serviceID
+  };
+
+  this._activityService.saveActivity(payload).subscribe(
+    (response) => {
+      this.message.alert('Activity added successfully', 'success');
+      this.getActivities();
+    },
+    (error) => {
+      console.log('Error adding activity', error);
+      this.message.alert('Error adding activity', 'error');
+    }
+  );
+}
+
+toggleActivity(activity: any) {
+  const payload = {
+    activityID: activity.activityID,
+    deleted: !activity.deleted,
+	modifiedBy: this.saved_data.Userdata.userName,
+  };
+
+  this._activityService.toggleActivityStatus(payload).subscribe(
+    (response) => {
+      this.message.alert('Activity status updated successfully', 'success');
+    },
+    (error) => {
+      activity.isActive = !activity.isActive;
+      console.log('Error toggling activity status', error);
+      this.message.alert('Error updating activity status', 'error');
+    }
+  );
+}
+
+openEditPopup(activity) {
+  this.selectedActivityRef = activity;
+  this.editableActivity = { ...activity };
+  this.showEditPopup = true;
+}
+
+saveActivityEdit() {
+  if (!this.editableActivity.activityName.trim()) return;
+
+  const payload = {
+    activityID: this.editableActivity.activityID,
+    activityName: this.editableActivity.activityName.trim(),
+    modifiedBy: this.saved_data.Userdata.userName
+  };
+
+  this._activityService.updateActivity(payload).subscribe(
+    (response) => {
+      this.selectedActivityRef.activityName = this.editableActivity.activityName.trim();
+      this.showEditPopup = false;
+	  this.getActivities()
+      this.message.alert('Activity updated successfully', 'success');
+
+    },
+    (error) => {
+      console.log('Error updating activity', error);
+      this.message.alert('Error updating activity', 'error');
+    }
+  );
+}
+
+cancelEdit() {
+  this.showEditPopup = false;
+}
+
+get pagedActivities(): any[] {
+  const start = (this.activityPage - 1) * this.activityPageSize;
+  return this.activities.slice(start, start + this.activityPageSize);
+}
+
+get totalActivityPages(): number {
+  return Math.ceil(this.activities.length / this.activityPageSize);
+}
+
+prevActivityPage() {
+  if (this.activityPage > 1) {
+    this.activityPage--;
+  }
+}
+
+nextActivityPage() {
+  if (this.activityPage < this.totalActivityPages) {
+    this.activityPage++;
+  }
+}
+
+
+
+}
+

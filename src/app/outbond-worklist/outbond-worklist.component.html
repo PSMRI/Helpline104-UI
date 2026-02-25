@@ -296,13 +296,23 @@
                   </md-input-container>
                 </div>
                 <div *ngIf="disableDialingWorklist" class="col-xs-4 col-sm-3 col-md-1 col-lg-1 ">
-                  <button  md-mini-fab color="warn" (click)="closeCall()"
-                  mdTooltip="{{currentLanguageSet?.closeCall}}" >
+                  <button
+                      type="button"
+                      md-mini-fab
+                      color="warn"
+                      (click)="closeCall()"
+                      mdTooltip="{{currentLanguageSet?.closeCall}}">
+
                   <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call_end</md-icon>
                 </button>
                 </div>
                 <div *ngIf="!disableDialingWorklist" class="col-xs-6 col-sm-3 col-md-1 col-lg-1 ">
-                  <button [disabled]="number.invalid" md-mini-fab color="accent" (click)="manualDial(number.value)"
+                 <button
+                      type="button"
+                      md-mini-fab
+                      color="accent"
+                      (click)="manualDial(number.value)"
+
                   mdTooltip="{{currentLanguageSet?.dial}}" >
                   <md-icon mdSuffix class="mat-icon material-icons" role="img" aria-hidden="true" style="cursor: pointer">call</md-icon>
                 </button>
@@ -310,6 +320,67 @@
               </form>
             </div>
           </div>
+     <!-- CALL ACTIVITY DETAILS -->
+        <div class="col-xs-12 col-sm-12 m-t-20" *ngIf="showCallActivityDetails">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4><strong>Call Activity Details</strong></h4>
+            </div>
+
+            <div class="panel-body">
+              <div class="row">
+
+                <!-- Activity -->
+                <div class="col-md-6">
+                  <md-select
+                    placeholder="Activity *"
+                    [(ngModel)]="callActivityForm.activity"
+                    [ngModelOptions]="{ standalone: true }">
+                    <md-option *ngFor="let act of activityList" [value]="act">
+                      {{ act.activityName }}
+                    </md-option>
+                  </md-select>
+                </div>
+
+                <!-- Call Status -->
+                <div class="col-md-6">
+                  <md-select
+                    placeholder="Call Status *"
+                    [(ngModel)]="callActivityForm.callStatus"
+                    [ngModelOptions]="{ standalone: true }">
+                    <md-option *ngFor="let status of callStatusList" [value]="status">
+                      {{ status }}
+                    </md-option>
+                  </md-select>
+                </div>
+
+                <!-- Remarks -->
+                <div class="col-md-6">
+                  <md-input-container style="width:100%">
+                    <textarea
+                      mdInput
+                      rows="2"
+                      placeholder="Remarks (optional)"
+                      [(ngModel)]="callActivityForm.remarks"
+                      [ngModelOptions]="{ standalone: true }">
+                    </textarea>
+                  </md-input-container>
+                </div>
+
+              </div>
+
+              <div class="text-right m-t-10">
+                <button type="button"
+                        md-raised-button
+                        color="primary"
+                        (click)="saveCallActivity()">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
           <div class="col-xs-12 col-sm-12" *ngIf="displayHistory">
             <h4 class="pull-left f-s-b ">
               <strong>{{currentLanguageSet?.history}}</strong>

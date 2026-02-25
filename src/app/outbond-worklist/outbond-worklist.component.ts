@@ -37,6 +37,7 @@ import { dataService } from "../services/dataService/data.service";
 import { FormGroup, FormControl } from "@angular/forms";
 import { OutboundWorklistService } from "../services/outboundServices/outbound-work-list.service";
 import { OutboundSearchRecordService } from "../services/outboundServices/outbound-search-records.service";
+import { OutboundActivityService } from "../services/outboundServices/outbound-activity.service";
 import { MdDialog, MdDialogRef } from "@angular/material";
 import { MD_DIALOG_DATA } from "@angular/material";
 import { AvailableServices } from "../services/common/104-services";
@@ -91,6 +92,23 @@ export class OutbondWorklistComponent implements OnInit {
   maxlength: any = 10;
   currentLanguageSet: any;
 
+  showCallActivityDetails: boolean = false;
+  currentCallSessionId: any;
+
+  callActivityForm = {
+    activity: null,
+    callStatus: '',
+    remarks: ''
+  };
+
+  activityList: any[] = [];
+
+  callStatusList = [
+    'Answered',
+    'Not Answered',
+    'Did Not Want Further Call'
+  ];
+
   constructor(
     private outboundListner: OutboundListnerService,
     private sessionstorage:sessionStorageService,
@@ -99,6 +117,7 @@ export class OutbondWorklistComponent implements OnInit {
     public router: Router,
     private _OWLService: OutboundWorklistService,
     private _OSRService: OutboundSearchRecordService,
+    private _activityService: OutboundActivityService,
     private _dataServivce: dataService,
     public dialog: MdDialog,
     private _availableServices: AvailableServices,
@@ -114,8 +133,27 @@ export class OutbondWorklistComponent implements OnInit {
     this.current_role = this._dataServivce.current_role;
     this._today = new Date();
     this.agentData = this._dataServivce.Userdata;
-    //this.data = { assignedUserID: this._dataServivce.uid, providerServiceMapID:15};
-    this.data = {
+  
+    this.getOutboundActivityList();
+    this.requestObj = {
+      providerServiceMapID: this._dataServivce.current_service.serviceID,
+    };
+
+    this._availableServices
+      .getServices(this.requestObj)
+      .subscribe((response) => this.successHandler(response));
+
+    const obj = { innerPage: false };
+    this.listnerService.cZentrixSendData(obj);
+
+    this._dataServivce.sendHeaderStatus.next("");
+    this._dataServivce.avoidingEvent = false;
+
+    this.loadActivities();
+  }
+
+  getOutboundActivityList() {
+     this.data = {
       assignedUserID: this._dataServivce.uid,
       providerServiceMapID: this._dataServivce.current_service.serviceID,
     };
@@ -141,19 +179,19 @@ export class OutbondWorklistComponent implements OnInit {
         );
     });
 
-    this.requestObj = {
-      providerServiceMapID: this._dataServivce.current_service.serviceID,
-    };
-
-    this._availableServices
-      .getServices(this.requestObj)
-      .subscribe((response) => this.successHandler(response));
-
-    const obj = { innerPage: false };
-    this.listnerService.cZentrixSendData(obj);
-
-    this._dataServivce.sendHeaderStatus.next("");
-    this._dataServivce.avoidingEvent = false;
+  }
+  
+  loadActivities() {
+    this._activityService.getAllActivities().subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.activityList = response.filter((item) => item.deleted === false);
+        }
+      },
+      (error) => {
+        console.log('Error fetching activities', error);
+      }
+    );
   }
   ngDoCheck() {
     this.assignSelectedLanguage();
@@ -369,15 +407,32 @@ export class OutbondWorklistComponent implements OnInit {
       );
   }
   closeCall() {
+    this.cz_service.getAgentStatus().subscribe(
+      (agentRes) => {
+        if (agentRes && agentRes.session_id) {
+          this.currentCallSessionId = agentRes.session_id;
+        }
+        this.disconnectAndCleanup();
+      },
+      (err) => {
+        console.log("Error fetching agent status", err);
+        this.disconnectAndCleanup();
+      }
+    );
+  }
+
+  disconnectAndCleanup() {
     this.cz_service.disconnectCall(this._dataServivce.agentID).subscribe(
       (res) => {
-        if (res.statusCode === 200) {
+        console.log("resp", res);
+        if (res.status === "SUCCESS") {
           this.message.alert(this.currentLanguageSet.callClosedSuccessfully, "success");
           this.sessionstorage.removeItem("onCall");
           this.sessionstorage.removeItem("CLI");
           this.sessionstorage.removeItem("service");
           this._dataServivce.avoidingEvent = false;
           this.disableDialingWorklist = false;
+          this.showCallActivityDetails = true;
         } else {
           this.sessionstorage.removeItem("onCall");
           this.sessionstorage.removeItem("CLI");
@@ -477,6 +532,38 @@ export class OutbondWorklistComponent implements OnInit {
       this.maxlength = "10";
     }
   }
+
+  saveCallActivity() {
+
+  if (!this.callActivityForm.activity || !this.callActivityForm.callStatus) {
+    this.message.alert('Activity and Call Status are mandatory', 'error');
+    return;
+  }
+
+  
+console.log('Saving call activity with form data:', this.callActivityForm, 'Current Call Session ID:', this.currentCallSessionId);
+const payload = {
+  callId: this.currentCallSessionId,
+  activityID: this.callActivityForm.activity && this.callActivityForm.activity.activityID ? this.callActivityForm.activity.activityID : this.callActivityForm.activity,
+  callStatus: this.callActivityForm.callStatus,
+  callRemarks: this.callActivityForm.remarks,
+  createdBy: this._dataServivce.Userdata.userName
+};
+
+  this._activityService.saveCallActivity(payload).subscribe(
+    (response) => {
+      this.message.alert('Call activity saved successfully', 'success');
+      this.callActivityForm = { activity: null, callStatus: '', remarks: '' };
+      this.showCallActivityDetails = false;
+      this.getOutboundActivityList();
+    },
+    (error) => {
+      console.log('Error saving call activity', error);
+      this.message.alert('Error saving call activity', 'error');
+    }
+  );
+}
+
 }
 
 @Component({

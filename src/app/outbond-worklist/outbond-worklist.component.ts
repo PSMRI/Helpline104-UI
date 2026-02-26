@@ -109,6 +109,10 @@ export class OutbondWorklistComponent implements OnInit {
     'Did Not Want Further Call'
   ];
 
+  callActivityDetailsList: any[] = [];
+  filteredCallActivityDetailsList: any[] = [];
+  callActivitySearchTerm: string = '';
+
   constructor(
     private outboundListner: OutboundListnerService,
     private sessionstorage:sessionStorageService,
@@ -150,6 +154,7 @@ export class OutbondWorklistComponent implements OnInit {
     this._dataServivce.avoidingEvent = false;
 
     this.loadActivities();
+    this.loadCallActivityDetails();
   }
 
   getOutboundActivityList() {
@@ -533,6 +538,45 @@ export class OutbondWorklistComponent implements OnInit {
     }
   }
 
+  loadCallActivityDetails() {
+    const reqObj = {
+      createdBy: this._dataServivce.Userdata.userName
+    };
+    this._activityService.getCallDetails(reqObj).subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.callActivityDetailsList = response;
+          this.filteredCallActivityDetailsList = response;
+        } else {
+          this.callActivityDetailsList = [];
+          this.filteredCallActivityDetailsList = [];
+        }
+        this.callActivitySearchTerm = '';
+      },
+      (error) => {
+        console.log('Error fetching call activity details', error);
+        this.callActivityDetailsList = [];
+        this.filteredCallActivityDetailsList = [];
+      }
+    );
+  }
+
+  filterCallActivityDetails(searchTerm: string) {
+    if (!searchTerm || searchTerm.trim() === '') {
+      this.filteredCallActivityDetailsList = this.callActivityDetailsList;
+    } else {
+      const term = searchTerm.trim().toLowerCase();
+      this.filteredCallActivityDetailsList = this.callActivityDetailsList.filter((item) => {
+        return (
+          (item.beneficiaryPhoneNumber && item.beneficiaryPhoneNumber.toLowerCase().includes(term)) ||
+          (item.activityName && item.activityName.toLowerCase().includes(term)) ||
+          (item.callStatus && item.callStatus.toLowerCase().includes(term)) ||
+          (item.callRemarks && item.callRemarks.toLowerCase().includes(term))
+        );
+      });
+    }
+  }
+
   saveCallActivity() {
 
   if (!this.callActivityForm.activity || !this.callActivityForm.callStatus) {
@@ -547,7 +591,8 @@ const payload = {
   activityID: this.callActivityForm.activity && this.callActivityForm.activity.activityID ? this.callActivityForm.activity.activityID : this.callActivityForm.activity,
   callStatus: this.callActivityForm.callStatus,
   callRemarks: this.callActivityForm.remarks,
-  createdBy: this._dataServivce.Userdata.userName
+  createdBy: this._dataServivce.Userdata.userName,
+  beneficiaryPhoneNumber: this.phoneNumber
 };
 
   this._activityService.saveCallActivity(payload).subscribe(
@@ -556,12 +601,14 @@ const payload = {
       this.callActivityForm = { activity: null, callStatus: '', remarks: '' };
       this.showCallActivityDetails = false;
       this.getOutboundActivityList();
+      this.loadCallActivityDetails();
     },
     (error) => {
       console.log('Error saving call activity', error);
       this.message.alert('Error saving call activity', 'error');
     }
   );
+
 }
 
 }

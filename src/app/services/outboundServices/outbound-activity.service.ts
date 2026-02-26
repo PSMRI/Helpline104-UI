@@ -41,6 +41,7 @@ export class OutboundActivityService {
     private _updateActivityUrl: string = this._baseurl + "outbound/activity/name";
     private _getCallActivityUrl: string = this._baseurl + "outbound/activities";
     private _savecallActivityUrl: string = this._baseurl + "outbound/callDetails/save";
+    private _getCallDetailsUrl: string = this._baseurl + "outbound/callDetails/get";
 
     constructor(
         private _http: SecurityInterceptedHttp,
@@ -75,6 +76,11 @@ export class OutboundActivityService {
 
     saveCallActivity(data: any) {
         return this._httpInterceptor.post(this._savecallActivityUrl, data)
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    getCallDetails(data: any) {
+        return this._httpInterceptor.get(this._getCallDetailsUrl)
             .map(this.extractData).catch(this.handleError);
     }
 

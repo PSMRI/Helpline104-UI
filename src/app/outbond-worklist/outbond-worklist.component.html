@@ -331,31 +331,35 @@
               <div class="row">
 
                 <!-- Activity -->
-                <div class="col-md-6">
-                  <md-select
-                    placeholder="Activity *"
-                    [(ngModel)]="callActivityForm.activity"
-                    [ngModelOptions]="{ standalone: true }">
-                    <md-option *ngFor="let act of activityList" [value]="act">
-                      {{ act.activityName }}
-                    </md-option>
-                  </md-select>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+                  <!-- <md-input-container style="width:100%"> -->
+                    <md-select
+                      placeholder="Activity *"
+                      [(ngModel)]="callActivityForm.activity"
+                      [ngModelOptions]="{ standalone: true }" style="width:100%;min-width:200px;">
+                      <md-option *ngFor="let act of activityList" [value]="act">
+                        {{ act.activityName }}
+                      </md-option>
+                    </md-select>
+                  <!-- </md-input-container> -->
                 </div>
 
                 <!-- Call Status -->
-                <div class="col-md-6">
-                  <md-select
-                    placeholder="Call Status *"
-                    [(ngModel)]="callActivityForm.callStatus"
-                    [ngModelOptions]="{ standalone: true }">
-                    <md-option *ngFor="let status of callStatusList" [value]="status">
-                      {{ status }}
-                    </md-option>
-                  </md-select>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
+                  <!-- <md-input-container style="width:100%"> -->
+                    <md-select
+                      placeholder="Call Status *"
+                      [(ngModel)]="callActivityForm.callStatus"
+                      [ngModelOptions]="{ standalone: true }" style="width:100%;min-width:200px;">
+                      <md-option *ngFor="let status of callStatusList" [value]="status">
+                        {{ status }}
+                      </md-option>
+                    </md-select>
+                  <!-- </md-input-container> -->
                 </div>
 
                 <!-- Remarks -->
-                <div class="col-md-6">
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
                   <md-input-container style="width:100%">
                     <textarea
                       mdInput
@@ -376,6 +380,61 @@
                         (click)="saveCallActivity()">
                   Save
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CALL ACTIVITY LIST -->
+        <div class="col-xs-12 col-sm-12 m-t-20">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4 class="pull-left"><strong>Call Activity History</strong></h4>
+              <div class="pull-right" style="width:250px;">
+                <md-input-container style="width:100%">
+                  <input mdInput
+                    placeholder="Search call activities"
+                    [(ngModel)]="callActivitySearchTerm"
+                    [ngModelOptions]="{ standalone: true }"
+                    (keyup)="filterCallActivityDetails(callActivitySearchTerm)">
+                </md-input-container>
+              </div>
+              <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+              <div class="table-responsive">
+                <table class="table table-striped" [md2Data]="filteredCallActivityDetailsList" #md2Activity="md2DataTable" [rowsPerPage]="5" aria-describedby="callActivityHistory">
+                  <thead>
+                    <tr>
+                      <th id="callActivitySNo">{{currentLanguageSet?.sno}}</th>
+                      <th id="callphonenumber">Beneficiary Phone Number</th>
+                      <th id="callActivityName">Activity</th>
+                      <th id="callActivityStatus">Call Status</th>
+                      <th id="callActivityRemarks">{{currentLanguageSet?.remarks}}</th>
+                      <th id="callActivityCreatedDate">Call Connected Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngIf="md2Activity.data.length == 0">
+                      <td class="t-a-c record-not-found" colspan="7">No records found</td>
+                    </tr>
+                    <tr *ngFor="let item of md2Activity.data; let i = index">
+                      <td>{{(md2Activity.activePage-1)*(md2Activity.rowsPerPage)+i+1}}</td>
+                      <td>{{ item?.beneficiaryPhoneNumber }}</td>
+                      <td>{{ item?.activityName }}</td>
+                      <td>{{ item?.callStatus }}</td>
+                      <td>{{ item?.callRemarks }}</td>
+                      <td>{{ item?.createdDate | date: 'dd/MM/yyyy' }}</td>
+                    </tr>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan="7">
+                        <md2-pagination></md2-pagination>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
               </div>
             </div>
           </div>

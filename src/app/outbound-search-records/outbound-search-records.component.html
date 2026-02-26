@@ -127,7 +127,7 @@
               </button>
 
               <md-slide-toggle
-                [(ngModel)]="activity.deleted"
+                [ngModel]="!activity.deleted"
                 (change)="toggleActivity(activity)"
                 color="primary"
                 mdTooltip="Enable / Disable">

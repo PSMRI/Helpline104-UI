@@ -35,6 +35,7 @@ Ensure that the following prerequisites are met before building the MMU service:
 * JDK 1.8
 * Maven
 * NPM/YARN
+* Node.js v16.x (recommended; project may not work with Node v18+)
 * Spring Boot v2
 * MySQL
 

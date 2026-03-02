@@ -35,9 +35,18 @@ Ensure that the following prerequisites are met before building the MMU service:
 * JDK 1.8
 * Maven
 * NPM/YARN
-* Node.js v16.x (recommended; project may not work with Node v18+)
+* * Node.js v10.24.1 (Required. Project is incompatible with Node 16+ due to Angular 4 and CLI 1.x dependencies)
 * Spring Boot v2
 * MySQL
+⚠️ Important:
+This project is built using Angular 4.1.3 and Angular CLI 1.2.6.
+It will NOT work correctly on Node 16, 18, or newer versions.
+Please use Node 10.24.1 for a stable setup.
+
+If you are using nvm:
+
+    nvm install 10.24.1
+    nvm use 10.24.1
 
 ### Installation
 

@@ -34,21 +34,48 @@ Ensure that the following prerequisites are met before building the MMU service:
 
 * JDK 1.8
 * Maven
+* **Node.js v14.x or v16.x** (strictly required — see note below)
 * NPM/YARN
 * Spring Boot v2
 * MySQL
+
+> **Important — Node.js Version:**
+> This project depends on internal Node.js APIs (e.g. `http_parser`) that were **removed in Node.js v18+**.
+> Running `npm install` or `npm start` on Node.js v18 or later will crash with:
+> `Error: No such module: http_parser`
+>
+> **You must use Node.js v14.x (recommended: `14.21.3`) or v16.x.**
+> Use [nvm](https://github.com/nvm-sh/nvm) (Linux/macOS) or [nvm-windows](https://github.com/coreybutler/nvm-windows) to manage versions:
+> ```bash
+> nvm install 14.21.3
+> nvm use 14.21.3
+> ```
+> A `.nvmrc` file is present in the root — running `nvm use` inside the project directory will automatically pick the correct version.
 
 ### Installation
 
 To install the MMU module, please follow these steps:
 
 1. Clone the repository to your local machine.
-2. Install the dependencies and build the module:
+2. Switch to the required Node.js version:
+   ```bash
+   nvm install 14.21.3
+   nvm use 14.21.3
+   ```
+3. Install the dependencies and build the module:
    - Run the command `npm install`.
    - Run the command `npm run build`.
    - Run the command `mvn clean install`.
    - Run the command `npm start`.
-3. Open your browser and access `http://localhost:4200/#/login` to view the login page of module.
+4. Open your browser and access `http://localhost:4211/#/login` to view the login page of module.
+
+> **Fallback for users who cannot downgrade Node.js:**
+> If you must stay on Node.js v18+, try:
+> ```bash
+> npm run start-legacy
+> ```
+> This sets `NODE_OPTIONS=--openssl-legacy-provider` which resolves some OpenSSL-related errors.
+> However, the `http_parser` removal in v18+ is a hard breakage — using Node.js v14 or v16 is the only fully supported path.
 
 ## Usage
 

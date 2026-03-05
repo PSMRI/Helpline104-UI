@@ -324,7 +324,7 @@
         <div class="col-xs-12 col-sm-12 m-t-20" *ngIf="showCallActivityDetails">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4><strong>Call Activity Details</strong></h4>
+              <h4><strong>{{currentLanguageSet?.callActivityDetails}}</strong></h4>
             </div>
 
             <div class="panel-body">
@@ -334,7 +334,7 @@
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
                   <!-- <md-input-container style="width:100%"> -->
                     <md-select
-                      placeholder="Activity *"
+                      placeholder="{{currentLanguageSet?.activity}} *"
                       [(ngModel)]="callActivityForm.activity"
                       [ngModelOptions]="{ standalone: true }" style="width:100%;min-width:200px;">
                       <md-option *ngFor="let act of activityList" [value]="act">
@@ -348,7 +348,7 @@
                 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 p-b-1-5">
                   <!-- <md-input-container style="width:100%"> -->
                     <md-select
-                      placeholder="Call Status *"
+                      placeholder="{{currentLanguageSet?.callStatus}} *"
                       [(ngModel)]="callActivityForm.callStatus"
                       [ngModelOptions]="{ standalone: true }" style="width:100%;min-width:200px;">
                       <md-option *ngFor="let status of callStatusList" [value]="status">
@@ -364,7 +364,7 @@
                     <textarea
                       mdInput
                       rows="2"
-                      placeholder="Remarks (optional)"
+                      placeholder="{{currentLanguageSet?.remarksOptional}}"
                       [(ngModel)]="callActivityForm.remarks"
                       [ngModelOptions]="{ standalone: true }">
                     </textarea>
@@ -378,7 +378,7 @@
                         md-raised-button
                         color="primary"
                         (click)="saveCallActivity()">
-                  Save
+                  {{currentLanguageSet?.save}}
                 </button>
               </div>
             </div>
@@ -389,11 +389,11 @@
         <div class="col-xs-12 col-sm-12 m-t-20">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h4 class="pull-left"><strong>Call Activity History</strong></h4>
+              <h4 class="pull-left"><strong>{{currentLanguageSet?.callActivityHistory}}</strong></h4>
               <div class="pull-right" style="width:250px;">
                 <md-input-container style="width:100%">
                   <input mdInput
-                    placeholder="Search call activities"
+                    placeholder="{{currentLanguageSet?.searchCallActivities}}"
                     [(ngModel)]="callActivitySearchTerm"
                     [ngModelOptions]="{ standalone: true }"
                     (keyup)="filterCallActivityDetails(callActivitySearchTerm)">
@@ -407,16 +407,16 @@
                   <thead>
                     <tr>
                       <th id="callActivitySNo">{{currentLanguageSet?.sno}}</th>
-                      <th id="callphonenumber">Beneficiary Phone Number</th>
-                      <th id="callActivityName">Activity</th>
-                      <th id="callActivityStatus">Call Status</th>
+                      <th id="callphonenumber">{{currentLanguageSet?.beneficiaryPhoneNumber}}</th>
+                      <th id="callActivityName">{{currentLanguageSet?.activity}}</th>
+                      <th id="callActivityStatus">{{currentLanguageSet?.callStatus}}</th>
                       <th id="callActivityRemarks">{{currentLanguageSet?.remarks}}</th>
-                      <th id="callActivityCreatedDate">Call Connected Date</th>
+                      <th id="callActivityCreatedDate">{{currentLanguageSet?.callConnectedDate}}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngIf="md2Activity.data.length == 0">
-                      <td class="t-a-c record-not-found" colspan="7">No records found</td>
+                      <td class="t-a-c record-not-found" colspan="7">{{currentLanguageSet?.noRecordsFound}}</td>
                     </tr>
                     <tr *ngFor="let item of md2Activity.data; let i = index">
                       <td>{{(md2Activity.activePage-1)*(md2Activity.rowsPerPage)+i+1}}</td>

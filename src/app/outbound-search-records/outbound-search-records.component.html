@@ -79,14 +79,14 @@
 <!-- Admin / Supervisor Activity Management -->
 <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <h4 class="f-s-b m-t-20 m-b-10">Activity Management</h4>
+    <h4 class="f-s-b m-t-20 m-b-10">{{assignSelectedLanguageValue?.activityManagement}}</h4>
 
     <!-- Add Activity -->
     <div class="row m-b-20">
       <div class="col-xs-12 col-sm-6 col-md-5 col-lg-4">
         <md-input-container class="width100">
           <input mdInput
-                 placeholder="New Activity Name"
+                 placeholder="{{assignSelectedLanguageValue?.newActivityName}}"
                  #activityName>
         </md-input-container>
       </div>
@@ -94,7 +94,7 @@
         <button md-raised-button
                 color="primary"
                 (click)="addNewActivity(activityName.value); activityName.value=''">
-          Add Activity
+          {{assignSelectedLanguageValue?.addActivity}}
         </button>
       </div>
     </div>
@@ -105,8 +105,8 @@
       <table class="table table-bordered table-hover" aria-describedby="activityManagement">
         <thead>
           <tr>
-            <th id="activityName">Activity Name</th>
-            <th id="activityActions">Actions</th>
+            <th id="activityNameHeader">{{assignSelectedLanguageValue?.activity}}</th>
+            <th id="activityActions">{{assignSelectedLanguageValue?.action}}</th>
           </tr>
         </thead>
         <tbody>
@@ -127,10 +127,10 @@
               </button>
 
               <md-slide-toggle
-                [ngModel]="!activity.deleted"
+                [checked]="!activity.deleted"
                 (change)="toggleActivity(activity)"
                 color="primary"
-                mdTooltip="Enable / Disable">
+                mdTooltip="{{assignSelectedLanguageValue?.enableDisable}}">
               </md-slide-toggle>
             </td>
           </tr>
@@ -164,22 +164,22 @@
 <div class="custom-modal" *ngIf="showEditPopup">
   <div class="custom-modal-content">
 
-    <h4>Edit Activity</h4>
+    <h4>{{assignSelectedLanguageValue?.editActivity}}</h4>
 
     <div class="form-group">
-      <input type="text" placeholder="Activity Name" [(ngModel)]="editableActivity.activityName"
+      <input type="text" placeholder="{{assignSelectedLanguageValue?.activity}}" [(ngModel)]="editableActivity.activityName"
              class="form-control">
     </div>
 
     <div class="text-right m-t-15">
       <button md-raised-button color="primary"
               (click)="saveActivityEdit()">
-        Save
+        {{assignSelectedLanguageValue?.save}}
       </button>
 
       <button md-button
               (click)="cancelEdit()">
-        Cancel
+        {{assignSelectedLanguageValue?.cancel}}
       </button>
     </div>
 

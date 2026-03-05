@@ -34,7 +34,6 @@ import { ConfirmationDialogsService } from '../services/dialog/confirmation.serv
 import { NgForm } from '@angular/forms';
 import { SetLanguageComponent } from 'app/set-language.component';
 import { HttpServices } from 'app/services/http-services/http_services.service';
-import { MdSlideToggleModule, MdInputModule} from '@angular/material';
 
 declare var jQuery: any;
 
@@ -369,11 +368,11 @@ activityPageSize: number = 5;
 getActivities() {
   this._activityService.getAllActivities().subscribe(
     (response) => {
-      this.activities = response;
+      this.activities = Array.isArray(response) ? response : [];
     },
     (error) => {
-      console.log('Error fetching activities', error);
-      this.message.alert('Error fetching activities', 'error');
+      this.activities = [];
+      this.message.alert(this.assignSelectedLanguageValue.errorFetchingActivities, 'error');
     }
   );
 }
@@ -391,31 +390,30 @@ addNewActivity(activityName: string) {
 
   this._activityService.saveActivity(payload).subscribe(
     (response) => {
-      this.message.alert('Activity added successfully', 'success');
+      this.message.alert(this.assignSelectedLanguageValue.activityAddedSuccessfully, 'success');
       this.getActivities();
     },
     (error) => {
-      console.log('Error adding activity', error);
-      this.message.alert('Error adding activity', 'error');
+      this.message.alert(this.assignSelectedLanguageValue.errorAddingActivity, 'error');
     }
   );
 }
 
 toggleActivity(activity: any) {
+  activity.deleted = !activity.deleted;
   const payload = {
     activityID: activity.activityID,
-    deleted: !activity.deleted,
-	modifiedBy: this.saved_data.Userdata.userName,
+    deleted: activity.deleted,
+    modifiedBy: this.saved_data.Userdata.userName,
   };
 
   this._activityService.toggleActivityStatus(payload).subscribe(
     (response) => {
-      this.message.alert('Activity status updated successfully', 'success');
+      this.message.alert(this.assignSelectedLanguageValue.activityStatusUpdatedSuccessfully, 'success');
     },
     (error) => {
-      activity.isActive = !activity.isActive;
-      console.log('Error toggling activity status', error);
-      this.message.alert('Error updating activity status', 'error');
+      activity.deleted = !activity.deleted;
+      this.message.alert(this.assignSelectedLanguageValue.errorUpdatingActivityStatus, 'error');
     }
   );
 }
@@ -439,13 +437,11 @@ saveActivityEdit() {
     (response) => {
       this.selectedActivityRef.activityName = this.editableActivity.activityName.trim();
       this.showEditPopup = false;
-	  this.getActivities()
-      this.message.alert('Activity updated successfully', 'success');
-
+      this.getActivities();
+      this.message.alert(this.assignSelectedLanguageValue.activityUpdatedSuccessfully, 'success');
     },
     (error) => {
-      console.log('Error updating activity', error);
-      this.message.alert('Error updating activity', 'error');
+      this.message.alert(this.assignSelectedLanguageValue.errorUpdatingActivity, 'error');
     }
   );
 }

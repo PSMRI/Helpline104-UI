@@ -420,6 +420,7 @@ export class OutbondWorklistComponent implements OnInit {
         this.disconnectAndCleanup();
       },
       (err) => {
+        this.currentCallSessionId = undefined;
         console.log("Error fetching agent status", err);
         this.disconnectAndCleanup();
       }
@@ -580,32 +581,30 @@ export class OutbondWorklistComponent implements OnInit {
   saveCallActivity() {
 
   if (!this.callActivityForm.activity || !this.callActivityForm.callStatus) {
-    this.message.alert('Activity and Call Status are mandatory', 'error');
+    this.message.alert(this.currentLanguageSet.activityAndCallStatusAreMandatory, 'error');
     return;
   }
 
-  
-console.log('Saving call activity with form data:', this.callActivityForm, 'Current Call Session ID:', this.currentCallSessionId);
-const payload = {
-  callId: this.currentCallSessionId,
-  activityID: this.callActivityForm.activity && this.callActivityForm.activity.activityID ? this.callActivityForm.activity.activityID : this.callActivityForm.activity,
-  callStatus: this.callActivityForm.callStatus,
-  callRemarks: this.callActivityForm.remarks,
-  createdBy: this._dataServivce.Userdata.userName,
-  beneficiaryPhoneNumber: this.phoneNumber
-};
+  const payload = {
+    callId: this.currentCallSessionId,
+    activityID: this.callActivityForm.activity && this.callActivityForm.activity.activityID ? this.callActivityForm.activity.activityID : this.callActivityForm.activity,
+    callStatus: this.callActivityForm.callStatus,
+    callRemarks: this.callActivityForm.remarks,
+    createdBy: this._dataServivce.Userdata.userName,
+    beneficiaryPhoneNumber: this.phoneNumber,
+    providerServiceMapID: this._dataServivce.current_service.serviceID
+  };
 
   this._activityService.saveCallActivity(payload).subscribe(
     (response) => {
-      this.message.alert('Call activity saved successfully', 'success');
+      this.message.alert(this.currentLanguageSet.callActivitySavedSuccessfully, 'success');
       this.callActivityForm = { activity: null, callStatus: '', remarks: '' };
       this.showCallActivityDetails = false;
       this.getOutboundActivityList();
       this.loadCallActivityDetails();
     },
     (error) => {
-      console.log('Error saving call activity', error);
-      this.message.alert('Error saving call activity', 'error');
+      this.message.alert(this.currentLanguageSet.errorSavingCallActivity, 'error');
     }
   );
 

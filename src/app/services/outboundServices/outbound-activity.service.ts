@@ -26,14 +26,13 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { ConfigService } from "../config/config.service";
 import { Observable } from 'rxjs/Observable';
 import { InterceptedHttp } from './../../http.interceptor';
-import { SecurityInterceptedHttp } from './../../http.securityinterceptor';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class OutboundActivityService {
 
-    _baseurl: String = this._config.get104BaseURL();
+    _baseurl: string = this._config.get104BaseURL();
 
     private _saveActivityUrl: string = this._baseurl + "outbound/activity";
     private _getAllActivitiesUrl: string = this._baseurl + "outbound/activities/all";
@@ -44,7 +43,6 @@ export class OutboundActivityService {
     private _getCallDetailsUrl: string = this._baseurl + "outbound/callDetails/get";
 
     constructor(
-        private _http: SecurityInterceptedHttp,
         private _config: ConfigService,
         private _httpInterceptor: InterceptedHttp
     ) { }
@@ -93,6 +91,10 @@ export class OutboundActivityService {
     };
 
     private handleError(error: Response | any) {
-        return Observable.throw(error.json());
+        try {
+            return Observable.throw(error.json());
+        } catch (e) {
+            return Observable.throw(error.statusText || 'Unknown error');
+        }
     };
 }

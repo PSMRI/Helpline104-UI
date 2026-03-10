@@ -1642,7 +1642,26 @@
       "okay": "Okay",
       "thankYou": "Thank you, your feedback is valuable to us!"
   },
-  "sessionExpiry": "Your session has expired. Please login again."
-    
+  "sessionExpiry": "Your session has expired. Please login again.",
+  "callActivityDetails": "Call Activity Details",
+  "activityManagement": "Activity Management",
+  "newActivityName": "New Activity Name",
+  "addActivity": "Add Activity",
+  "editActivity": "Edit Activity",
+  "remarksOptional": "Remarks (optional)",
+  "callActivityHistory": "Call Activity History",
+  "callConnectedDate": "Call Connected Date",
+  "searchCallActivities": "Search call activities",
+  "activityStatusUpdatedSuccessfully": "Activity status updated successfully",
+  "activityAddedSuccessfully": "Activity added successfully",
+  "activityUpdatedSuccessfully": "Activity updated successfully",
+  "callActivitySavedSuccessfully": "Call activity saved successfully",
+  "activityAndCallStatusAreMandatory": "Activity and Call Status are mandatory",
+  "errorSavingCallActivity": "Error saving call activity",
+  "errorFetchingActivities": "Error fetching activities",
+  "errorAddingActivity": "Error adding activity",
+  "errorUpdatingActivity": "Error updating activity",
+  "errorUpdatingActivityStatus": "Error updating activity status",
+  "enableDisable": "Enable / Disable"
   }
 }

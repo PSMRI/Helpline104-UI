@@ -1637,6 +1637,26 @@
       "okay": "ठीक है",
       "thankYou": "धन्यवाद, आपकी प्रतिक्रिया हमारे लिए मूल्यवान है!"
     },
-    "sessionExpiry": "आपका सत्र समाप्त हो गया है। कृपया दोबारा लॉगिन करें।"
+    "sessionExpiry": "आपका सत्र समाप्त हो गया है। कृपया दोबारा लॉगिन करें।",
+  "callActivityDetails": "कॉल गतिविधि विवरण",
+  "activityManagement": "गतिविधि प्रबंधन",
+  "newActivityName": "नई गतिविधि का नाम",
+  "addActivity": "गतिविधि जोड़ें",
+  "editActivity": "गतिविधि संपादित करें",
+  "remarksOptional": "टिप्पणी (वैकल्पिक)",
+  "callActivityHistory": "कॉल गतिविधि इतिहास",
+  "callConnectedDate": "कॉल कनेक्ट तिथि",
+  "searchCallActivities": "कॉल गतिविधियाँ खोजें",
+  "activityStatusUpdatedSuccessfully": "गतिविधि स्थिति सफलतापूर्वक अपडेट की गई",
+  "activityAddedSuccessfully": "गतिविधि सफलतापूर्वक जोड़ी गई",
+  "activityUpdatedSuccessfully": "गतिविधि सफलतापूर्वक अपडेट की गई",
+  "callActivitySavedSuccessfully": "कॉल गतिविधि सफलतापूर्वक सहेजी गई",
+  "activityAndCallStatusAreMandatory": "गतिविधि और कॉल स्थिति अनिवार्य हैं",
+  "errorSavingCallActivity": "कॉल गतिविधि सहेजने में त्रुटि",
+  "errorFetchingActivities": "गतिविधियाँ लाने में त्रुटि",
+  "errorAddingActivity": "गतिविधि जोड़ने में त्रुटि",
+  "errorUpdatingActivity": "गतिविधि अपडेट करने में त्रुटि",
+  "errorUpdatingActivityStatus": "गतिविधि स्थिति अपडेट करने में त्रुटि",
+  "enableDisable": "सक्षम / अक्षम"
   }
 }

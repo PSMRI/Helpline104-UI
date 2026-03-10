@@ -48,6 +48,7 @@ export class OutboundSearchRecordService {
     private _allocateurl: string = this._baseurl + "";
     private _getFeatureRoleMappingURL: string = this._baseurl + "user/getRoleScreenMappingByProviderID";
 
+ 
 
     getUnallocatedCalls(val: any) {
 
@@ -91,5 +92,6 @@ export class OutboundSearchRecordService {
         // In a real world app, you might use a remote logging infrastructure
         return Observable.throw(error.json());
     };
+
 
 }

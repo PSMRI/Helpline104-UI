@@ -56,11 +56,15 @@ To install the Helpline104 module, please follow these steps:
    npm install --force
    ```
 4. Configure your local environment by editing `src/environments/environment.local.ts` with your local API URLs.
-5. Start the development server:
+5. Copy the local environment file:
    ```bash
-   npm run dev
+   cp src/environments/environment.local.ts src/environments/environment.ts
    ```
-6. Open your browser and access `http://localhost:4200/#/login` to view the login page of module.
+6. Start the development server:
+   ```bash
+   npm start
+   ```
+7. Open your browser and access `http://localhost:4200/#/login` to view the login page of module.
 
 ## Usage
 

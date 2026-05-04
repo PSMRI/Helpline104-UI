@@ -48,7 +48,7 @@ To install the MMU module, please follow these steps:
    - Run the command `npm run build`.
    - Run the command `mvn clean install`.
    - Run the command `npm start`.
-3. Open your browser and access `http://localhost:4200/#/login` to view the login page of module.
+3. Open your browser and access `http://localhost:4211/#/login` to view the login page of module.
 
 ## Usage
 

@@ -15,12 +15,14 @@
     "lib": [
       "es2016",
       "dom"
-    ]
+    ],
+    "skipLibCheck": true
   },
   "exclude": [
     "node_modules",
     "build",
     "src/**/*.spec.ts",
-    "src/**/*.e2e.ts"
+    "src/**/*.e2e.ts",
+    "Common-UI"
   ]
 }

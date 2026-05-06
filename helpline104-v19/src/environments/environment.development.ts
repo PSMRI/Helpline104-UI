@@ -1,0 +1,15 @@
+export const environment = {
+  production: false,
+  encKey: '',
+  commonAPI: 'http://localhost:8083/',
+  ip1097: 'http://localhost:8090/',
+  telephoneServer: 'http://uatcz.piramalswasthya.org/',
+  adminAPI: 'http://localhost:8082/',
+  ip104: 'http://localhost:8081/',
+  mmuAPI: 'http://localhost:8087/',
+  tmAPI: 'http://localhost:8089/',
+  fhirAPI: 'http://localhost:8093/',
+  siteKey: '',
+  captchaChallengeURL: '',
+  enableCaptcha: false,
+};

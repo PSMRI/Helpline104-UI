@@ -407,26 +407,38 @@ export class loginContentClass implements OnInit {
 
   private restoreRememberedUserId() {
     try {
-      if (sessionStorage.getItem(this.rememberUserStorageKey) === "true") {
+      if (
+        localStorage.getItem(this.rememberUserStorageKey) !== "true" &&
+        sessionStorage.getItem(this.rememberUserStorageKey) === "true"
+      ) {
+        const legacyUser = sessionStorage.getItem(this.savedUsernameStorageKey);
+        if (legacyUser) {
+          localStorage.setItem(this.rememberUserStorageKey, "true");
+          localStorage.setItem(this.savedUsernameStorageKey, legacyUser);
+        }
+        sessionStorage.removeItem(this.rememberUserStorageKey);
+        sessionStorage.removeItem(this.savedUsernameStorageKey);
+      }
+      if (localStorage.getItem(this.rememberUserStorageKey) === "true") {
         this.rememberUserId = true;
-        const saved = sessionStorage.getItem(this.savedUsernameStorageKey);
+        const saved = localStorage.getItem(this.savedUsernameStorageKey);
         if (saved) {
           this.userID = saved;
         }
       }
-    } catch (_) { /* sessionStorage unavailable */ }
+    } catch (_) { /* localStorage unavailable */ }
   }
 
   private persistRememberUserPreference() {
     try {
       if (this.rememberUserId && this.userID) {
-        sessionStorage.setItem(this.rememberUserStorageKey, "true");
-        sessionStorage.setItem(this.savedUsernameStorageKey, String(this.userID).trim());
+        localStorage.setItem(this.rememberUserStorageKey, "true");
+        localStorage.setItem(this.savedUsernameStorageKey, String(this.userID).trim());
       } else {
-        sessionStorage.removeItem(this.rememberUserStorageKey);
-        sessionStorage.removeItem(this.savedUsernameStorageKey);
+        localStorage.removeItem(this.rememberUserStorageKey);
+        localStorage.removeItem(this.savedUsernameStorageKey);
       }
-    } catch (_) { /* sessionStorage unavailable */ }
+    } catch (_) { /* localStorage unavailable */ }
   }
 
   // getServiceProviderMapIDSuccessHandeler(response)

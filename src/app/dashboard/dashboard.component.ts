@@ -207,6 +207,10 @@ export class dashboardContentClass implements OnInit {
     // this.testEvent();
   }
 
+  refreshDashboardWidgets() {
+    this.alertRefresh++;
+  }
+
   // testing event
   testEvent() {
     // var event = new Event('message');

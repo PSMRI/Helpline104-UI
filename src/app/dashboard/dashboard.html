@@ -24,6 +24,11 @@
               <div class="pull-left ">
                 <dashboard-user-id (click)="testEvent()" *ngIf="current_role!='Supervisor'"></dashboard-user-id>
               </div>
+              <div class="pull-right p-t-5">
+                <button md-icon-button type="button" (click)="refreshDashboardWidgets()" mdTooltip="Refresh dashboard">
+                  <md-icon>refresh</md-icon>
+                </button>
+              </div>
               <div class="pull-right p-t-10 p-b-10" *ngIf="current_role=='MO' || current_role=='CO' || current_role=='SIO' || current_role=='HAO' || hasHAOPrivilege || current_role == 'PD'">
                 <md-radio-group name=" inOutBound" (change)="campaign(inOutBound)" [(ngModel)]="inOutBound">
                   <md-radio-button color="primary" value='1'>{{assignSelectedLanguageValue?.inbound}}</md-radio-button>

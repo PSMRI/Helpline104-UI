@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -46,7 +46,7 @@ const providerForFakeDataService = {
 };
 
 const fakeRouter = {
-  
+
 };
 
 const providerForFakeRouter = {
@@ -95,7 +95,7 @@ function Initialize104haoTestBed(){
 
 describe('Hao_104_Component', () => {
 
-  fdescribe('When the component is getting loaded, then ngOninit', () => {
+  describe('When the component is getting loaded, then ngOninit', () => {
 
     Initialize104haoTestBed();
 

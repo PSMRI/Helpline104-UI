@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -178,7 +178,7 @@ describe('CaseSheetComponent', () => {
     dataServiceInstance = TestBed.get(dataService);
   });
 
-  fdescribe('case sheet on init ()', () => {
+  describe('case sheet on init ()', () => {
     it('should be created', () => {
       expect(component).toBeTruthy();
     });

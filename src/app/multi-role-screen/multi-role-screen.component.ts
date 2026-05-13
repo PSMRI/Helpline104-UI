@@ -70,6 +70,7 @@ export class MultiRoleScreenComponent implements OnInit {
   language_file_path: any = "./assets/";
   currentLanguageSet: any;
   app_language: any;
+  copyrightYear = new Date().getFullYear();
 
   constructor(
     private sessionstorage:sessionStorageService,

@@ -58,6 +58,9 @@ export class loginContentClass implements OnInit {
   encryptpassword: any;
   captchaToken: string;
   enableCaptcha = environment.enableCaptcha;
+  rememberUserId = false;
+  private readonly rememberUserStorageKey = "104_login_remember_user";
+  private readonly savedUsernameStorageKey = "104_login_saved_username";
 
   constructor(
     public loginservice: loginService,
@@ -88,6 +91,7 @@ export class loginContentClass implements OnInit {
   }
 
   ngOnInit() {
+    this.restoreRememberedUserId();
     /*
       JA354063 - Added on 21/4/2022
       Purpose - If user already logged in , kick the prev session and create a new session
@@ -287,6 +291,7 @@ export class loginContentClass implements OnInit {
         return userPrivelige.serviceName == "104";
     });
     if (this.privleges.length > 0) {
+      this.persistRememberUserPreference();
       this.dataSettingService.Userdata = response;
 
       let previlageObj: any = [];
@@ -398,6 +403,30 @@ export class loginContentClass implements OnInit {
       this.captchaCmp.reset();
       this.captchaToken = '';
     }
+  }
+
+  private restoreRememberedUserId() {
+    try {
+      if (sessionStorage.getItem(this.rememberUserStorageKey) === "true") {
+        this.rememberUserId = true;
+        const saved = sessionStorage.getItem(this.savedUsernameStorageKey);
+        if (saved) {
+          this.userID = saved;
+        }
+      }
+    } catch (_) { /* sessionStorage unavailable */ }
+  }
+
+  private persistRememberUserPreference() {
+    try {
+      if (this.rememberUserId && this.userID) {
+        sessionStorage.setItem(this.rememberUserStorageKey, "true");
+        sessionStorage.setItem(this.savedUsernameStorageKey, String(this.userID).trim());
+      } else {
+        sessionStorage.removeItem(this.rememberUserStorageKey);
+        sessionStorage.removeItem(this.savedUsernameStorageKey);
+      }
+    } catch (_) { /* sessionStorage unavailable */ }
   }
 
   // getServiceProviderMapIDSuccessHandeler(response)

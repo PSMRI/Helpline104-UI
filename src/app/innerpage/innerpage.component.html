@@ -62,6 +62,12 @@
           <ul class="list-inline list-unstyled pull-left">
           </ul>
           <ul class="list-unstyled list-inline pull-left p-a-0 m-b-0">
+            <li class="f-s-16 f-c-0 p-l-20" *ngIf="selectedBenData.mob">
+              <strong>{{currentLanguageSet?.phone || 'Phone'}}:</strong> {{selectedBenData.mob}}
+              <md-icon class="cursorPointer mat-icon material-icons m-l-5" role="button" tabindex="0"
+                [mdTooltip]="currentLanguageSet?.copyPhone || 'Copy phone'"
+                (click)="copyBeneficiaryPhone()" (keydown.enter)="copyBeneficiaryPhone()">content_copy</md-icon>
+            </li>
             <li class="f-s-16 f-c-0 p-l-20" *ngIf="selectedBenData.fullname"><strong>{{selectedBenData.fullname ? selectedBenData.fullname+', ' : ''}}</strong></li>
             <li *ngIf="selectedBenData.id">{{selectedBenData.id ? selectedBenData.id+', ' : ''}}</li>
             <!-- SH20094090,23-092021,HealthID Integration changes on Innerpage -->

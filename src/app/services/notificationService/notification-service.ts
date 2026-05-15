@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -23,7 +23,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Http, Response, RequestOptions, Headers } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from '../config/config.service';
 import 'rxjs/add/operator/catch';

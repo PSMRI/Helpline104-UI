@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -29,7 +29,7 @@ import { InterceptedHttp } from './../../http.interceptor';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { Response} from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 @Injectable()
@@ -39,10 +39,10 @@ export class BalVivahServiceService {
 
   address: String = this._config.get104BaseURL();
   //_104BaseURL = this._config.get104BaseURL();
-  
+
   getbalVivahURL: string = this.address+"beneficiary/saveBalVivahComplaint";
   getBalVivahWorklist : string = this.address+"beneficiary/getBalVivahList"
-  
+
   getbalVivahdDetails(data: any) {
       return this._httpInterceptor.post(this.getbalVivahURL, data)
           .map(this.extractData)
@@ -53,17 +53,17 @@ export class BalVivahServiceService {
         .map(this.extractData)
         .catch(this.handleError);
 }
-  private extractData(response: Response) {
+  private extractData(response: any) {
     //    console.log("responsee", response);
-        if (response.json().data) {
-            return response.json().data;
+        if (response.data) {
+            return response.data;
         } else {
 
-            return response.json();
+            return response;
         }
     }
 
-    private handleError(error: Response | any) {
+    private handleError(error: any) {
 
         // console.log("errorr", error);
         // // In a real world app, you might use a remote logging infrastructure
@@ -76,6 +76,6 @@ export class BalVivahServiceService {
         //     errMsg = error.message ? error.message : error.toString();
         // }
 
-        return Observable.throw(error.json());
+        return Observable.throw(error);
     };
 }

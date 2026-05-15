@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -28,7 +28,7 @@ import { ConfigService } from "../config/config.service";
 import { InterceptedHttp } from './../../http.interceptor';
 import { SecurityInterceptedHttp } from '../../http.securityinterceptor';
 import { Observable } from 'rxjs/Observable';
-import { Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class OtherHelplineService {
@@ -53,7 +53,7 @@ export class OtherHelplineService {
   }
 
   getTmOrMmuBenCasesheet(obj,isTm) {
-    if(isTm) 
+    if(isTm)
     return this.interHTTP.post(this.tmBaseUrl + this.getMmuBenCasesheetURL, obj).map(this.extractData).catch(this.handleError)
     else
     return this.interHTTP.post(this.mmuBaseUrl + this.getMmuBenCasesheetURL, obj).map(this.extractData).catch(this.handleError)
@@ -67,15 +67,15 @@ export class OtherHelplineService {
   }
 
 
-  private extractData(res : Response) {
-    if (res.json().data) {
-      return res.json().data;
+  private extractData(res : any) {
+    if (res.data) {
+      return res.data;
     } else {
-      return Observable.throw(res.json());
+      return Observable.throw(res);
     }
   }
 
-  private handleError(error: Response | any) {
-    return Observable.throw(error.json());
+  private handleError(error: any) {
+    return Observable.throw(error);
   }
 }

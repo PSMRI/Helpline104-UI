@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -29,7 +29,6 @@ import {
   Renderer2,
   ElementRef,
 } from "@angular/core";
-import { Response } from "@angular/http";
 import { SupervisorCallTypeReportService } from "../services/supervisorServices/supervisor-calltype-reports-service.service";
 import { dataService } from "../services/dataService/data.service";
 import { MdDialog, MdDialogRef } from "@angular/material";
@@ -572,10 +571,10 @@ export class CDICallModel {
       /*	this.questionaireForm = this.formBuilder.group({
 					questions: this.formBuilder.array([])
 				});
-	
+
 				if(this.beneficiaryDetails.i_beneficiary)
 				this.beneficiaryRegID = this.beneficiaryDetails.i_beneficiary.beneficiaryRegID;
-	
+
 				this.getCDIScreeningQuestions(this.qualitativeQuestionTypeId);
 				this.getCDIScreeningQuestions(this.utilityQuestionTypeId);
 				this.getCDIScreeningQuestions(this.quantitativeQuestionTypeId); */

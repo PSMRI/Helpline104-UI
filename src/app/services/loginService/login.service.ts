@@ -22,7 +22,7 @@
 
 
 import { forwardRef, Inject, Injectable } from "@angular/core";
-import { Http, Response } from "@angular/http";
+
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
@@ -69,8 +69,8 @@ export class loginService {
     if (captchaToken) { body.captchaToken = captchaToken; }
 
     return this.httpInter.post(this._baseUrl + "user/userAuthenticate", body)
-      .map((res: Response) => {
-        const json = res.json();
+      .map((res: any) => {
+        const json = res;
         if (json.statusCode && json.statusCode !== 200) {
           throw {
             status: json.statusCode,
@@ -132,26 +132,26 @@ export class loginService {
       .catch(this.handleError);
   }
   getApiVersionDetails() {
-    return this.httpInter.get(this.apiVersionUrl).map((res) => res.json());
+    return this.httpInter.get(this.apiVersionUrl).map((res) => res);
   }
-  private extractData(res: Response) {
-    if (res.json().data) {
-      return res.json().data;
+  private extractData(res: any) {
+    if (res.data) {
+      return res.data;
     } else {
-      return Observable.throw(res.json());
+      return Observable.throw(res);
     }
   }
 
-  private extractDataForSecurity(res: Response) {
-    if (res.json().data) {
-      return res.json();
+  private extractDataForSecurity(res: any) {
+    if (res.data) {
+      return res;
     } else {
-      return Observable.throw(res.json());
+      return Observable.throw(res);
     }
   }
 
-  private handleError(error: Response | any) {
-    return Observable.throw(error.json());
+  private handleError(error: any) {
+    return Observable.throw(error);
   }
 
  

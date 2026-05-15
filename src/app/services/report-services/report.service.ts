@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -25,7 +25,7 @@ import { Injectable } from '@angular/core';
 import { ConfigService } from '../config/config.service';
 import { SecurityInterceptedHttp } from '../../http.securityinterceptor';
 import { InterceptedHttp } from '../../http.interceptor';
-import { Http, Response, Headers, RequestOptions, ResponseContentType } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -33,17 +33,17 @@ import { AuthService } from '../authentication/auth.service';
 
 @Injectable()
 export class ReportService {
-  headers = new Headers(
+  headers = new HttpHeaders(
     {'Content-Type': 'application/json',
     // 'Access-Control-Allow-Origin': '*',
     'Authorization': this.authService.getToken()
   }
    );
-   
-  options = new RequestOptions({ headers: this.headers , responseType: ResponseContentType.Blob });
+
+  options = { headers: this.headers, responseType: 'blob' as 'blob' };
 
   constructor(private interceptedHTTP: InterceptedHttp, private _http: SecurityInterceptedHttp, private _config: ConfigService,
-    private httpReport: Http,  private authService: AuthService) { }
+    private httpReport: HttpClient,  private authService: AuthService) { }
   _104baseUrl = this._config.get104BaseURL();
   _commonBaseUrl = this._config.getCommonBaseURL();
 
@@ -86,7 +86,7 @@ export class ReportService {
   getReportTypeMaster_url=this._commonBaseUrl +'crmReports/getReportTypes/';
   getROSummaryReportByDate(data) {
 
-   
+
     return this.httpReport
       .post(this.getROSummaryReportByDate_url, data, this.options)
       .map(res => <Blob>res.blob());
@@ -127,7 +127,7 @@ export class ReportService {
   }
 
   getPDSummaryReportByDate(data) {
- 
+
     return this.httpReport
     .post(this.getPDSummaryReportByDate_url, data, this.options)
     .map(res => <Blob>res.blob());
@@ -152,7 +152,7 @@ export class ReportService {
     return this.httpReport
     .post(this.getFoodSafetyReportByDate_url, data, this.options)
     .map(res => <Blob>res.blob());
-    
+
     // return this.interceptedHTTP.post(this.getFoodSafetyReportByDate_url, data)
     //   .map(this.extractData)
     //   .catch(this.handleError);

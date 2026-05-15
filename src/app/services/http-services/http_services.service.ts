@@ -23,7 +23,7 @@
 
 import { Injectable } from "@angular/core";
 
-import { Http, Response } from "@angular/http";
+import { HttpClient } from '@angular/common/http';
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/catch";
 import "rxjs/add/operator/map";
@@ -48,7 +48,7 @@ export class HttpServices {
 
   constructor(
     private http: SecurityInterceptedHttp,
-    private _http: Http,
+    private _http: HttpClient,
     private _config: ConfigService
   ) {}
 
@@ -61,9 +61,7 @@ export class HttpServices {
 
   getLanguage(url: string) {
     return this._http
-      .get(url)
-      .map(this.handleGetlanguageSuccess)
-      .catch(this.handleGetError);
+      .get(url);
   }
   getCommitDetails(url: string) {
     return this.http
@@ -71,21 +69,19 @@ export class HttpServices {
       .map(this.handleGetSuccess)
       .catch(this.handleGetError);
   }
-  handleGetlanguageSuccess(response: Response) {
-    //	console.log(response.json());
-    return response.json();
+  handleGetlanguageSuccess(response: any) {
+    //	console.log(response);
+    return response;
   }
 
-  handleGetSuccess(response: Response) {
-    //	console.log(response.json());
-    return response.json();
+  handleGetSuccess(response: any) {
+    return response;
   }
-  handleGetSuccessForSecurity(response: Response) {
-    //	console.log(response.json());
-    return response.json();
+  handleGetSuccessForSecurity(response: any) {
+    return response;
   }
 
-  handleGetError(error: Response | any) {
+  handleGetError(error: any) {
     // let errMsg: string;
     // if (error instanceof Response) {
     // 	const body = error.json() || '';
@@ -95,7 +91,7 @@ export class HttpServices {
     // 	errMsg = error.message ? error.message : error.toString();
     // }
     // console.error(errMsg);
-    return Observable.throw(error.json());
+    return Observable.throw(error);
   }
 
   postData(url: string, data: any) {
@@ -112,7 +108,7 @@ export class HttpServices {
   }
 
   fetchLanguageSet() {
-    return this.http.get(this.getLanguageListURL).map((res) => res.json().data);
+    return this.http.get(this.getLanguageListURL).map((res: any) => res.data);
   }
 
   getCurrentLanguage(response) {

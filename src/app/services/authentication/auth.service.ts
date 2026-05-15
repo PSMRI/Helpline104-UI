@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -22,7 +22,7 @@
 
 
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from '../config/config.service';
 import 'rxjs/add/operator/catch';
@@ -34,7 +34,7 @@ import { sessionStorageService } from '../sessionStorageService/session-storage.
 @Injectable()
 export class AuthService {
 
-    constructor(private getCommonData: dataService,private sessionstorage:sessionStorageService, private _http : Http, private _config : ConfigService){}
+    constructor(private getCommonData: dataService,private sessionstorage:sessionStorageService, private _http : HttpClient, private _config : ConfigService){}
 
     common_url = this._config.getCommonBaseURL();
     _agentLogOut = this.common_url + 'cti/doAgentLogout';
@@ -60,12 +60,12 @@ export class AuthService {
         const loginObj = { 'agent_id': this.getCommonData.agentID };
         this._http.post(this._agentLogOut, loginObj).map(this.extractData).catch(this.handleError);
     }
-    private extractData(res: Response) {
-        return res.json().data;
+    private extractData(res: any) {
+        return res.data;
     };
 
-    private handleError(error: Response | any) {
-        return Observable.throw(error.json());
+    private handleError(error: any) {
+        return Observable.throw(error);
     };
 
 }

@@ -20,41 +20,13 @@
 * along with this program.  If not, see https://www.gnu.org/licenses/.
 */
 
-
 /*
- * Created by Pankush Manchanda 10,August 2017
- * Http Interceptor to add diffrent function to http request like passing option in every request
- * Advantage : Used to remove the code duplication
+ * DEPRECATED - No longer required.
+ * InterceptedHttp is now a plain @Injectable() service using HttpClient.
+ * It is provided directly in app.module.ts providers[] without a factory.
+ * This file is kept to avoid breaking imports but exports nothing functional.
  */
 
-import { XHRBackend, Http, RequestOptions } from "@angular/http";
-import { InterceptedHttp } from "./http.interceptor";
-import { LoaderService } from "./services/common/loader.service";
-import { ConfirmationDialogsService } from "./services/dialog/confirmation.service";
-import { AuthService } from "./services/authentication/auth.service";
-import { Router } from "@angular/router";
-import { SocketService } from "./services/socketService/socket.service";
-import { sessionStorageService } from "./services/sessionStorageService/session-storage.service";
-
-export function httpFactory(
-  xhrBackend: XHRBackend,
-  requestOptions: RequestOptions,
-  loaderService: LoaderService,
-  router: Router,
-  authService: AuthService,
-  alertMessage: ConfirmationDialogsService,
-  sessionstorage:sessionStorageService,
-  socketService: SocketService
- 
-): Http {
-  return new InterceptedHttp(
-    xhrBackend,
-    requestOptions,
-    loaderService,
-    router,
-    authService,
-    alertMessage,
-    socketService,
-    sessionstorage
-  );
+export function httpFactory() {
+  // No-op: InterceptedHttp is now a regular Injectable, no factory needed.
 }

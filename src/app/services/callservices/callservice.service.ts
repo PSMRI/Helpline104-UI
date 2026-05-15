@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -22,7 +22,7 @@
 
 
 import { Injectable } from '@angular/core';
-import { Response } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from "../config/config.service";
 import { InterceptedHttp } from './../../http.interceptor';
@@ -115,26 +115,7 @@ export class CallServices {
   getBlackListCalls(objSearch: any) {
     return this._httpInterceptor.post(this._blacklistCalls, objSearch).map(this.extractData).catch(this.handleCustomError);
   }
-  extractData(response: Response) {
-    if (response.json().data) {
-      return response.json().data;
-    } else {
-      return Observable.throw(response.json());
-    }
-  }
-  blockPhoneNumber(phoneBlockID: any) {
-    return this._httpInterceptor.post(this._blockPhoneNo, phoneBlockID).map(this.extractData).catch(this.handleCustomError);
-  }
-  UnBlockPhoneNumber(phoneBlockID: any) {
-    return this._httpInterceptor.post(this._unblockPhoneNo, phoneBlockID).map(this.extractData).catch(this.handleCustomError);
-
-  }
-  handleError(error: Response) {
-    return Observable.throw(error.json());
-  }
-  handleCustomError(error: Response) {
-    return Observable.throw(error.json());
-  }
+  extractData(response: any) {\n    if (response.data) {\n      return response.data;\n    } else {\n      return Observable.throw(response);\n    }\n  }\n  blockPhoneNumber(phoneBlockID: any) {\n    return this._httpInterceptor.post(this._blockPhoneNo, phoneBlockID).map(this.extractData).catch(this.handleCustomError);\n  }\n  UnBlockPhoneNumber(phoneBlockID: any) {\n    return this._httpInterceptor.post(this._unblockPhoneNo, phoneBlockID).map(this.extractData).catch(this.handleCustomError);\n\n  }\n  handleError(error: any) {\n    return Observable.throw(error);\n  }\n  handleCustomError(error: any) {\n    return Observable.throw(error);\n  }
   getRecording(obj) {
     return this._httpInterceptor.post(this._getRecording_url, obj).map(this.extractData).catch(this.handleCustomError);
   }

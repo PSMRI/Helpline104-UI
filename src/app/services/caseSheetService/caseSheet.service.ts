@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -23,7 +23,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -38,8 +38,7 @@ export class CaseSheetService {
 	_1097baseUrl = this._config.get1097BaseURL();
 	// _104baseUrl = "http://localhost:8080/";
 	constructor(private _http: SecurityInterceptedHttp, private _config: ConfigService, private httpIntercept: InterceptedHttp) { }
-	headers = new Headers({ 'Content-Type': 'application/json' });
-	options = new RequestOptions({ headers: this.headers });
+	headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
 	getPreviousCovidVaccineData(data) {
 		return this.httpIntercept.post(this.commenBaseUrl + "covid/getCovidVaccinationDetails", data)
@@ -71,7 +70,7 @@ export class CaseSheetService {
 			.map(this.extractData)
 			.catch(this.handleError);
 	}
-	
+
 	getCategories(obj) {
 		return this.httpIntercept.post(this.commenBaseUrl + "service/category", obj)
 			.map(this.extractData)
@@ -121,7 +120,7 @@ export class CaseSheetService {
 		return this.httpIntercept.get(this._104baseUrl + "hihl/get/masters")
 			.map(this.extractData)
 			.catch(this.handleError);
-	}	
+	}
 
 	saveHihlFormData(data){
 		return this.httpIntercept.post(this._104baseUrl + "hihl/save/casesheet", data)
@@ -156,5 +155,5 @@ export class CaseSheetService {
 			.map(this.extractData)
 			.catch(this.handleError);
 	}
-	
+
 }

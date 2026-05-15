@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -22,7 +22,7 @@
 
 
 import { Injectable} from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -31,8 +31,8 @@ import { InterceptedHttp } from './../../http.interceptor';
 
 @Injectable()
 export class QualityAuditService {
-  
-       
+
+
 
     commonBaseURL: any;
     admin_Base_Url: any;
@@ -87,7 +87,7 @@ export class QualityAuditService {
         this.audioURL =  this.commonBaseURL+"call/getFilePathCTI";
         this.covidVaccinationStatusUrl = this.commonBaseURL + 'covid/getCovidVaccinationDetails'
     }
-   
+
     getServices(userID) {
         return this.httpIntercept.post(this.getServicesUrl,
             { 'userID': userID })
@@ -195,7 +195,7 @@ export class QualityAuditService {
             }).map(this.handleSuccess).catch(this.handleError);
     }
 
-  
+
     getAudio(agentid,sessionID) {
         return this.httpIntercept.post(this.audioURL,
             {
@@ -236,6 +236,6 @@ getCovidVaccinationStatus(benRegID) {
     private handleError(error: Response | any) {
         return Observable.throw(error.json());
     };
-   
- 
+
+
 }

@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -22,7 +22,7 @@
 
 
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
 import { selectedSymp } from '../../cdss/selectedSymp';
@@ -91,7 +91,7 @@ export class CDSSService {
   }
 
   // private handleError(error: any): Promise<any> {
-  //   console.error('An error occurred', error); 
+  //   console.error('An error occurred', error);
   //   return Promise.reject(error.message || error);
   // }
 

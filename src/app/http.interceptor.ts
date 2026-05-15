@@ -25,21 +25,13 @@
  * Created by Pankush Manchanda 10,August 2017
  * Http Interceptor to add diffrent function to http request like passing option in every request
  * Advantage : Used to remove the code duplication
+ * Migrated from @angular/http to @angular/common/http (HttpClient)
  */
 import { Injectable } from "@angular/core";
-import {
-  ConnectionBackend,
-  RequestOptions,
-  Request,
-  RequestOptionsArgs,
-  Response,
-  Http,
-  Headers,
-} from "@angular/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs/Rx";
-import { environment } from "../environments/environment";
 import { LoaderService } from "./services/common/loader.service";
-import { ActivatedRoute, Router, Params } from "@angular/router";
+import { Router } from "@angular/router";
 import { AuthService } from "./services/authentication/auth.service";
 import { ConfirmationDialogsService } from "./services/dialog/confirmation.service";
 import "rxjs/add/operator/catch";
@@ -48,61 +40,31 @@ import { SocketService } from "./services/socketService/socket.service";
 import { sessionStorageService } from "./services/sessionStorageService/session-storage.service";
 
 @Injectable()
-export class InterceptedHttp extends Http {
+export class InterceptedHttp {
   onlineFlag: boolean = true;
   count = 0;
   dologout: boolean = false;
 
   constructor(
-    backend: ConnectionBackend,
-    defaultOptions: RequestOptions,
+    private http: HttpClient,
     private loaderService: LoaderService,
     private router: Router,
     private authService: AuthService,
     private message: ConfirmationDialogsService,
     private socketService: SocketService,
-    private sessionstorage:sessionStorageService,
-  ) {
-    super(backend, defaultOptions);
-  }
-  get(url: string, options?: RequestOptionsArgs): Observable<Response> {
-    // url = this.updateUrl(url);
-    let URL = this.updateURL(url);
+    private sessionstorage: sessionStorageService,
+  ) {}
 
-    if (this.networkCheck()) {
-      this.showLoader();
-      return super
-        .get(URL, this.getRequestOptionArgs(options,url))
-        .catch(this.onCatch)
-        .do(
-          (res: Response) => {
-            this.onSuccess(res);
-          },
-          (error: any) => {
-            this.onError(error);
-          }
-        )
-        .finally(() => {
-          this.onEnd();
-        });
-    } else {
-      return Observable.empty();
-    }
-  }
-
-  post(
-    url: string,
-    body: any,
-    options?: RequestOptionsArgs
-  ): Observable<Response> {
+  get(url: string): Observable<any> {
     let URL = this.updateURL(url);
     if (this.networkCheck()) {
       this.showLoader();
-      return super
-        .post(URL, body, this.getRequestOptionArgs(options,url))
+      const headers = this.getHeaders(url);
+      return this.http
+        .get(URL, { headers })
         .catch(this.onCatch)
         .do(
-          (res: Response) => {
+          (res: any) => {
             this.onSuccess(res);
           },
           (error: any) => {
@@ -117,18 +79,16 @@ export class InterceptedHttp extends Http {
     }
   }
 
-  put(
-    url: string,
-    body: any,
-    options?: RequestOptionsArgs
-  ): Observable<Response> {
-    // url = this.updateUrl(url);
+  post(url: string, body: any): Observable<any> {
+    let URL = this.updateURL(url);
     if (this.networkCheck()) {
-      return super
-        .put(url, body, this.getRequestOptionArgs(options,url))
+      this.showLoader();
+      const headers = this.getHeaders(url);
+      return this.http
+        .post(URL, body, { headers })
         .catch(this.onCatch)
         .do(
-          (res: Response) => {
+          (res: any) => {
             this.onSuccess(res);
           },
           (error: any) => {
@@ -143,14 +103,14 @@ export class InterceptedHttp extends Http {
     }
   }
 
-  delete(url: string, options?: RequestOptionsArgs): Observable<Response> {
-    // url = this.updateUrl(url);
+  put(url: string, body: any): Observable<any> {
     if (this.networkCheck()) {
-      return super
-        .delete(url, this.getRequestOptionArgs(options, url))
+      const headers = this.getHeaders(url);
+      return this.http
+        .put(url, body, { headers })
         .catch(this.onCatch)
         .do(
-          (res: Response) => {
+          (res: any) => {
             this.onSuccess(res);
           },
           (error: any) => {
@@ -165,9 +125,27 @@ export class InterceptedHttp extends Http {
     }
   }
 
-  // private updateUrl(req: string) {
-  //     return environment.origin + req;
-  // }
+  delete(url: string): Observable<any> {
+    if (this.networkCheck()) {
+      const headers = this.getHeaders(url);
+      return this.http
+        .delete(url, { headers })
+        .catch(this.onCatch)
+        .do(
+          (res: any) => {
+            this.onSuccess(res);
+          },
+          (error: any) => {
+            this.onError(error);
+          }
+        )
+        .finally(() => {
+          this.onEnd();
+        });
+    } else {
+      return Observable.empty();
+    }
+  }
 
   private updateURL(url) {
     if (
@@ -182,34 +160,25 @@ export class InterceptedHttp extends Http {
     }
   }
 
-  private getRequestOptionArgs(
-    options?: RequestOptionsArgs,
-    url?: string
-  ): RequestOptionsArgs {
-    if (options == null) {
-      options = new RequestOptions();
-    }
-    if (options.headers == null) {
-      options.headers = new Headers();
-    }
-    options.headers.append("Content-Type", "application/json");
-    options.headers.append("Authorization", this.authService.getToken());
-    return options;
+  private getHeaders(url?: string): HttpHeaders {
+    return new HttpHeaders()
+      .set("Content-Type", "application/json")
+      .set("Authorization", this.authService.getToken() || "");
   }
+
   private onEnd(): void {
     this.hideLoader();
   }
   private onSuccess(response: any) {
-    if (response.json().data) {
+    if (response.data) {
       return response;
-    } else if (response.json().statusCode === 5002) {
-      //    this.authService.cZentrixLogout();
+    } else if (response.statusCode === 5002) {
       if (
-        response.json().errorMessage ===
+        response.errorMessage ===
         "You are already logged in,please confirm to logout from other device and login again"
       ) {
         this.message
-          .confirm("info", response.json().errorMessage)
+          .confirm("info", response.errorMessage)
           .subscribe((confirmResponse) => {
             if (confirmResponse) {
               this.dologoutUsrFromPreSession(true);
@@ -221,7 +190,7 @@ export class InterceptedHttp extends Http {
         sessionStorage.removeItem("CLI");
         sessionStorage.removeItem("service");
         this.router.navigate([""]);
-        this.message.alert(response.json().errorMessage,"error");
+        this.message.alert(response.errorMessage,"error");
         this.authService.removeToken();
         // this.socketService.logOut();
         return Observable.empty();
@@ -232,7 +201,8 @@ export class InterceptedHttp extends Http {
   }
   private onError(error: any) {
     this.hideLoader();
-    if (error.status === 401 || error.status === 403) {
+    const status = error.status;
+    if (status === 401 || status === 403) {
             this.message.alert('Your session has expired. Please login again.', 'error');
             this.authService.removeToken();
             sessionStorage.clear();
@@ -251,8 +221,8 @@ export class InterceptedHttp extends Http {
   }
   private onCatch(
     error: any,
-    caught?: Observable<Response>
-  ): Observable<Response> {
+    caught?: Observable<any>
+  ): Observable<any> {
     return Observable.throw(error);
   }
   private networkCheck(): boolean {

@@ -22,7 +22,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpModule } from "@angular/http";
+import { HttpClientModule } from "@angular/common/http";
 
 import { FeedbackPublicPageComponent } from "./pages/feedback-public-page/feedback-public-page-component";
 import { FeedbackDialogComponent } from "./shared/feedback-dialog/feedback-dialog.component";
@@ -37,7 +37,7 @@ import { MaterialModule } from "../material.module";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
+    HttpClientModule,
     MaterialModule,
   ],
   exports: [FeedbackDialogComponent, FeedbackPublicPageComponent],

@@ -25,7 +25,6 @@ import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, Router, ActivatedRoute,
   ActivatedRouteSnapshot, RouterStateSnapshot, CanDeactivate } from '@angular/router';
 import { dataService } from '../dataService/data.service';
-import { Http, Response } from '@angular/http';
 import { InterceptedHttp } from './../../http.interceptor';
 import { ConfigService } from '../config/config.service';
 import { AuthService } from './../../services/authentication/auth.service';

@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -22,7 +22,7 @@
 
 
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -63,7 +63,7 @@ export class CzentrixServices {
 
 
     constructor(private http: SecurityInterceptedHttp, private _config: ConfigService, private data_service: dataService,
-        private httpInterceptor: InterceptedHttp, private normalHTTP: Http) { }
+        private httpInterceptor: InterceptedHttp, private normalHTTP: HttpClient) { }
 
     agentLogin(agentId, ipAddress) {
         const loginObj = { 'agent_id': agentId };
@@ -120,7 +120,7 @@ export class CzentrixServices {
         // this.ip = ipAddress;
         // this.phone_num = phoneNum;
 
-        // let params = "transaction_id=" + this.transaction_id + "&agent_id=" + this.agent_id + 
+        // let params = "transaction_id=" + this.transaction_id + "&agent_id=" + this.agent_id +
         // "&ip=" + this.ip + "&phone_num=" + this.phone_num + "&resFormat=" + this.resFormat;
         // return this.callAPI(params);
     }
@@ -260,7 +260,7 @@ export class CzentrixServices {
             };
         }
 
-       
+
         return this.httpInterceptor.post(this._transferCall, Obj).map(this.extractData).catch(this.handleError);
 
         // return this.http.get(this.address + 'apps/appsHandler.php?transaction_id=CTI_TRANSFER_CAMPAIGN&agent_id=' + agentId + '&transfer_campaign_info=' + toCampaign + '&ip=' + ipAddress + '&resFormat=3').map(this.extractData).catch(this.handleError);

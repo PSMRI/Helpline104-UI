@@ -24,7 +24,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './material.module';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
@@ -40,7 +40,6 @@ import { MdButtonModule } from '@angular/material';
 import { MdChipsModule, MdSnackBarModule } from '@angular/material';
 import { InterceptedHttp } from './http.interceptor'
 import { ConfirmationDialogsService } from './services/dialog/confirmation.service'
-import { httpFactory } from './http.factory';
 import { LoaderComponent } from './loader/loader.component';
 import { LoaderService } from './services/common/loader.service';
 import { AppComponent } from './app.component';
@@ -202,7 +201,6 @@ import { TrainingResourcesComponent } from './training-resources/training-resour
 import { ReallocateCallsComponent } from './reallocate-calls/reallocate-calls.component';
 import { AuthGuard } from './services/authGuardService/auth-guard.services';
 import { AuthGuard2 } from './services/authGuardService/auth-guard2.services';
-import { SecurityFactory } from './http.security.factory';
 import { AuthService } from './services/authentication/auth.service';
 import { SaveFormsGuard } from './services/authGuardService/auth-guard.services';
 import { CaseSheetRecentPrescription } from './case-sheet/case-sheet.component';
@@ -326,7 +324,7 @@ import { FeedbackModule } from './platform-feedback/feedback.module';
     // TranslateModule.forRoot(),
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     MaterialModule,
     ReactiveFormsModule,
     NgxPaginationModule,
@@ -485,17 +483,8 @@ import { FeedbackModule } from './platform-feedback/feedback.module';
     LoaderService, SessionService, SocketService, ForceLogoutService, SmartsearchService,
     QualityAuditService, ReportService, SmsTemplateService, SupervisorDiseaseSummaryService,BalVivahServiceService,CovidserviceService,RegisterService,
     
-    {
-
-      provide: InterceptedHttp,
-      useFactory: httpFactory,
-      deps: [XHRBackend, RequestOptions, LoaderService, Router, AuthService, ConfirmationDialogsService, SocketService]
-    },
-    {
-      provide: SecurityInterceptedHttp,
-      useFactory: SecurityFactory,
-      deps: [XHRBackend, RequestOptions, Router, AuthService, ConfirmationDialogsService, SocketService]
-    },
+    InterceptedHttp,
+    SecurityInterceptedHttp,
     CaptchaService
   ],
 

@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -22,7 +22,7 @@
 
 
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -64,16 +64,16 @@ export class SupervisorDiseaseSummaryService {
   deleteSummary(deleteReq) {
     return this.httpIntercept.post(this.deleteDiseaseSummaryUrl, deleteReq).map(this.handleSuccess).catch(this.handleError);
   }
-  handleSuccess(response: Response) {
-    if (response.json()) {
-      return response.json();
+  handleSuccess(response: any) {
+    if (response) {
+      return response;
     } else {
-      return Observable.throw(response.json());
+      return Observable.throw(response);
     }
   }
 
-  private handleError(error: Response | any) {
-    return Observable.throw(error.json());
+  private handleError(error: any) {
+    return Observable.throw(error);
   };
 
 }

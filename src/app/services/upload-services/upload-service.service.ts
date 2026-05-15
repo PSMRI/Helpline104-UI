@@ -1,8 +1,8 @@
-/* 
-* AMRIT – Accessible Medical Records via Integrated Technology 
-* Integrated EHR (Electronic Health Records) Solution 
+/*
+* AMRIT – Accessible Medical Records via Integrated Technology
+* Integrated EHR (Electronic Health Records) Solution
 *
-* Copyright (C) "Piramal Swasthya Management and Research Institute" 
+* Copyright (C) "Piramal Swasthya Management and Research Institute"
 *
 * This file is part of AMRIT.
 *
@@ -27,7 +27,7 @@
 */
 
 import { Injectable } from '@angular/core';
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { ConfigService } from '../config/config.service';
 import 'rxjs/add/operator/catch';
@@ -38,10 +38,10 @@ import { InterceptedHttp } from './../../http.interceptor'
 @Injectable()
 export class UploadServiceService {
 
-  public headers = new Headers({ 'Content-Type': 'application/json' });
+  public headers = new HttpHeaders({ 'Content-Type': 'application/json' });
   public baseUrl = this._config.getCommonBaseURL();
   public uploadDocumentUrl = this.baseUrl + 'kmfilemanager/addFile';
-  constructor(private _http: Http,
+  constructor(private _http: HttpClient,
     private _config: ConfigService,
     private httpInter: InterceptedHttp) { }
 
@@ -49,18 +49,18 @@ export class UploadServiceService {
     return this.httpInter.post(this.uploadDocumentUrl, JSON.stringify(uploadObj))
       .map(this.extractData).catch(this.handleError)
   }
-  private extractData(response: Response) {
+  private extractData(response: any) {
 
-    if (response.json().data) {
-      return response.json().data;
+    if (response.data) {
+      return response.data;
     } else {
-   //   console.log('Status', response.json().status);
-      return response.json().status;
+   //   console.log('Status', response.status);
+      return response.status;
     }
   };
 
-  private handleError(error: Response | any) {
-    return Observable.throw(error.json());
+  private handleError(error: any) {
+    return Observable.throw(error);
 
   };
 }

@@ -20,52 +20,39 @@
 * along with this program.  If not, see https://www.gnu.org/licenses/.
 */
 
-
 import { Injectable } from '@angular/core';
 import { environment } from 'environments/environment';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
 import * as CryptoJS from 'crypto-js';
 
 @Injectable()
 export class sessionStorageService {
 
     SECRET_KEY = environment.encKey;
-    constructor(
-      //private cryptoService: CryptoEncService,
-    ) {}
-  
-  
-  //   safeToString(value: any): any {
-  //     if (value === null || value === undefined) {
-  //         return '';
-  //     }
-  //     return value.toString();
-  // }
+    
+    constructor() {}
   
     setItem(key: string, value: any): void {
-          
-      const ciphertext = CryptoJS.AES.encrypt(value, this.SECRET_KEY).toString();
-      sessionStorage.setItem(key,ciphertext);
-
-
+      const stringValue = typeof value === 'object' ? JSON.stringify(value) : value;
+      const keyToUse = this.SECRET_KEY || 'FALLBACK_INSECURE_KEY_CHANGE_ME';
+      const ciphertext = CryptoJS.AES.encrypt(stringValue, keyToUse).toString();
+      sessionStorage.setItem(key, ciphertext);
     }
   
     getItem(key: string): any | null {
-      let text=sessionStorage.getItem(key)
-      if(text && text!==null){
-        const bytes = CryptoJS.AES.decrypt(text, this.SECRET_KEY);
+      let text = sessionStorage.getItem(key);
+      if (text && text !== null) {
+        const keyToUse = this.SECRET_KEY || 'FALLBACK_INSECURE_KEY_CHANGE_ME';
+        const bytes = CryptoJS.AES.decrypt(text, keyToUse);
         const originalText = bytes.toString(CryptoJS.enc.Utf8);
-    //   return this.store.get(key, this.SECRET_KEY);
-    return originalText 
+        
+        try {
+          return JSON.parse(originalText);
+        } catch (e) {
+          return originalText; // Return as string if not JSON
+        }
       }
+      return null;
     }
-
-   
-
-  
-    
-   
   
     removeItem(key: string): void {
       sessionStorage.removeItem(key);
@@ -74,16 +61,18 @@ export class sessionStorageService {
     clear(): void {
       sessionStorage.clear();
     }
-
-    
-     setCookie(name, value, days) {
+  
+    setCookie(name, value, days) {
       var expires = "";
       if (days) {
         var date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
-      }  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+      }
+      // Added SameSite=Lax for CSRF protection
+      document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
     }
+
     getCookie(name) {
       var nameEQ = name + "=";
       var ca = document.cookie.split(';');
@@ -94,7 +83,4 @@ export class sessionStorageService {
       }
       return null;
     }
-
-  
-  }
-  
+}

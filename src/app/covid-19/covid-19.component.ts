@@ -21,7 +21,8 @@
 */
 
 
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { dataService } from 'app/services/dataService/data.service';
 import { UserBeneficiaryData } from 'app/services/common/userbeneficiarydata.service';
 import { SearchService } from 'app/services/searchBeneficiaryService/search.service';
@@ -34,14 +35,14 @@ import { SetLanguageComponent } from 'app/set-language.component';
 import { HttpServices } from 'app/services/http-services/http_services.service';
 import { sessionStorageService } from 'app/services/sessionStorageService/session-storage.service';
 
-declare var jQuery: any;
-
 @Component({
   selector: 'app-covid-19',
   templateUrl: './covid-19.component.html',
   styleUrls: ['./covid-19.component.css']
 })
 export class Covid19Component implements OnInit {
+
+  @ViewChild('covidForm') covidForm: NgForm;
 
   @Input() current_language: any;
   current_language_set: any;
@@ -492,7 +493,7 @@ export class Covid19Component implements OnInit {
       this.isCovidform = false;
       this.category = null;
       this.subCategory = null;
-      jQuery("#covidForm").trigger("reset");
+      this.covidForm.resetForm();
       this.getCommonData.serviceAvailed.next(true); 
     }, (err) => {
       this.alertMessage.alert(err.status, 'error');
@@ -569,7 +570,7 @@ export class Covid19Component implements OnInit {
     this.isCovidform = false;
     this.category = null;
     this.subCategory = null;
-    jQuery("#covidForm").trigger("reset");
+    this.covidForm.resetForm();
   }
   onGenderChange(gen){
     this.ispregnant = null;

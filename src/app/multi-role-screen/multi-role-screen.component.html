@@ -5,7 +5,7 @@
         <div class="pull-left">
           <img src="assets/images/smLogo.png" alt="Logo" title="{{currentLanguageSet?.logo}}">
         </div>
-        <label id="db_label" class="f-c-w f-s-15 p-t-5 m-l-150">{{label}}</label>
+        <label id="db_label" class="f-c-w f-s-15 p-t-5 m-l-150" *ngIf="showDbLabel">{{label}}</label>
         <div class="pull-right p-t-1">
           <ul class="list-inline list-unstyled topIcon pull-right m-l-20  m-b-0">
 

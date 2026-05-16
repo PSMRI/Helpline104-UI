@@ -21,13 +21,13 @@
 */
 
 
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { enableProdMode } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { dataService } from '../services/dataService/data.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, NgForm } from '@angular/forms';
 import { OutboundWorklistService } from '../services/outboundServices/outbound-work-list.service';
 import { BloodOnCallServices } from '../services/sioService/bloodOnCallServices.service';
 import { RegisteredBeneficiaryModal104 } from '../beneficiary-registration-104/beneficiary-registration-104.component';
@@ -35,7 +35,6 @@ import { MdDialog, MdDialogRef } from '@angular/material';
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from 'app/set-language.component';
 
-declare var jQuery: any;
 @Component({
   selector: 'app-sio-outbound-provider',
   templateUrl: './sio-outbound-provider.component.html',
@@ -43,6 +42,8 @@ declare var jQuery: any;
 })
 export class SioOutboundProviderComponent implements OnInit {
   @Input() providerData: any;
+
+  @ViewChild('bloodForm') bloodForm: NgForm;
 
   altNum: any;
   mobileNumber: any;
@@ -123,7 +124,7 @@ export class SioOutboundProviderComponent implements OnInit {
   bloodBankSuccessHandler(res) {
 
     this.bloodOutboundRes = res;
-    jQuery("#blood_form").trigger("reset");
+    this.bloodForm.resetForm();
     let dialogReff = this.dialog.open(RegisteredBeneficiaryModal104, {
       // height: '280px',
       width: '420px',

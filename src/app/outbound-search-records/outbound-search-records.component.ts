@@ -33,8 +33,6 @@ import { NgForm } from '@angular/forms';
 import { SetLanguageComponent } from 'app/set-language.component';
 import { HttpServices } from 'app/services/http-services/http_services.service';
 
-declare var jQuery: any;
-
 @Component({
 	selector: 'app-outbound-search-records',
 	templateUrl: './outbound-search-records.component.html',

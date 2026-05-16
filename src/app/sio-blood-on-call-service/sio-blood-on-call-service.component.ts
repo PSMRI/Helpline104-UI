@@ -22,7 +22,7 @@
 
 
 import {
-  Component, OnInit, Inject, Input, Output, EventEmitter, ChangeDetectorRef
+  Component, OnInit, Inject, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild
 } from '@angular/core';
 import { SearchService } from '../services/searchBeneficiaryService/search.service';
 import { dataService } from '../services/dataService/data.service';
@@ -58,6 +58,9 @@ declare var jQuery: any;
 export class SioBloodOnCallServiceComponent implements OnInit {
 
   @Output() outBoundOnCall: EventEmitter<any> = new EventEmitter<any>();
+
+  @ViewChild('hospitalDetailForm') hospitalDetailForm: NgForm;
+  @ViewChild('patientDetailsForm') patientDetailsForm: NgForm;
 
   providerServiceMapID: any;
 
@@ -504,7 +507,6 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     this.Patient_Details_nav = true;
     this.Hospital_Details_nav = false;
     this.Bloodbank_Details_nav = false;
-    jQuery("#L1").css("font-weight", "800");
     this.Patient_Details = true;
     this.Hospital_Details = false;
     this.Bloodbank_Details = false;
@@ -514,7 +516,6 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     this.Patient_Details_nav = true;
     this.Hospital_Details_nav = true;
     this.Bloodbank_Details_nav = false;
-    jQuery("#L1").css("font-weight", "100");
     //  this.Hospital_Details = true;
     this.Patient_Details = false;
     //  this.Bloodbank_Details = false;
@@ -614,8 +615,8 @@ export class SioBloodOnCallServiceComponent implements OnInit {
       var message = this.msg +" "+ this.requestID;
       this.alertMesage.alert(message, 'success');
 
-      jQuery("#hospitalDetailForm").trigger("reset");
-      jQuery("#patientDetailsForm").trigger("reset");
+      this.hospitalDetailForm.resetForm();
+      this.patientDetailsForm.resetForm();
       this.getBloodRequests();
       this.componentType = "";
       this.bloodgroup = "";

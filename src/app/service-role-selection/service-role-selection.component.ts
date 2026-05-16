@@ -211,7 +211,6 @@ export class ServiceRoleSelectionComponent implements OnInit, DoCheck {
       );
 
       console.log("RoleID: " + role.RoleID);
-      jQuery("#db_label").show();
       this.router.navigate(["/MultiRoleScreenComponent/dashboard"]);
     }
     if (role === "ADMIN") {

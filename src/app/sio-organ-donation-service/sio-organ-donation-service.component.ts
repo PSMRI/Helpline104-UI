@@ -647,18 +647,12 @@ export class SioOrganDonationServiceComponent implements OnInit {
       // this.label1 = true;
       // this.label2 = false;
       // this.label3 = false;
-      jQuery("#L1").css("font-weight", "800");
-      jQuery("#L2").css("font-weight", "100");
-      jQuery("#L3").css("font-weight", "100");
     }
     if (value == 2) {
       this.donerDetailsSection = false;
       this.organDonation = false;
       this.hospitalForm = true;
       this.hospitalSearchResults = false;
-      jQuery("#L1").css("font-weight", "100");
-      jQuery("#L2").css("font-weight", "800");
-      // jQuery("#L3").css("font-weight", "100");
       // this.label1 = false;
       // this.label2 = true;
       // this.label3 = false;
@@ -668,9 +662,6 @@ export class SioOrganDonationServiceComponent implements OnInit {
       // this.organDonation = false;
       // this.hospitalForm = false;
       this.hospitalSearchResults = true;
-      // jQuery("#L1").css("font-weight", "100");
-      // jQuery("#L2").css("font-weight", "100");
-      jQuery("#L3").css("font-weight", "800");
 
       // this.label1 = true;
       // this.label2 = true;
@@ -684,9 +675,6 @@ export class SioOrganDonationServiceComponent implements OnInit {
     this.organDonation = false;
     this.hospitalForm = false;
     this.hospitalSearchResults = true;
-    jQuery("#L1").css("font-weight", "100");
-    jQuery("#L2").css("font-weight", "100");
-    jQuery("#L3").css("font-weight", "800");
     this.institutes = [];
     this.institutes.push(institutes);
 

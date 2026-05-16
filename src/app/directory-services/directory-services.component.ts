@@ -29,9 +29,7 @@ import { CoReferralService } from "../services/coService/co_referral.service";
 import { dataService } from "../services/dataService/data.service"
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { MD_DIALOG_DATA } from '@angular/material';
-declare var jQuery: any;
 import { ConfirmationDialogsService } from './../services/dialog/confirmation.service';
-declare var jQuery: any;
 import { SearchService } from '../services/searchBeneficiaryService/search.service';
 import { AvailableServices } from '../services/common/104-services';
 import { SmsTemplateService } from './../services/supervisorServices/sms-template-service.service';

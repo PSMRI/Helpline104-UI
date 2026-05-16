@@ -28,7 +28,6 @@ import { ConfigService } from "../services/config/config.service";
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NotificationService } from '../services/notificationService/notification-service';
 import { SchemeService } from '../services/sioService/sio-scheme.service';
-declare var jQuery: any;
 import { ConfirmationDialogsService } from './../services/dialog/confirmation.service'
 import { SetLanguageComponent } from 'app/set-language.component';
 import { HttpServices } from "../services/http-services/http_services.service";
@@ -244,7 +243,7 @@ export class SupervisorSchemeComponent implements OnInit {
   successHandler(response) {
     this.schemeData = response;
     this.notUploaded = false;
-    jQuery("#schemeFormm").trigger("reset");
+    this.schemeForm.resetForm();
     var obj = {
       "providerServiceMapID": this.providerServiceMapID
     }
@@ -276,7 +275,7 @@ export class SupervisorSchemeComponent implements OnInit {
   createScheme() {
     this.create = true;
     this.showTable = false;
-    jQuery("#schemeFormm").trigger("reset");
+    this.schemeForm.resetForm();
 
   }
   getSchemesSuccess(res) {

@@ -26,7 +26,6 @@ import { DiseaseScreeningService } from "../services/screening/diseaseScreening.
 import { dataService } from '../services/dataService/data.service';
 import { CaseSheetService } from '../services/caseSheetService/caseSheet.service';
 import { ConfirmationDialogsService } from './../services/dialog/confirmation.service';
-declare var jQuery: any;
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UtilityService } from '../services/common/utility.service';
 import { HttpServices } from "../services/http-services/http_services.service";

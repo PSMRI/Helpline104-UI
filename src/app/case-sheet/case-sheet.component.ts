@@ -1904,7 +1904,7 @@ fetchBenenficiaryDetails()
 
       dialogReff.afterClosed().subscribe((result) => {
         this.altPhNumber = result;
-        jQuery("#caseSheetForm").trigger("reset");
+        this.caseSheetForm.resetForm();
         if (
           this.altPhNumber == undefined &&
           this.altPhNumber != "" &&

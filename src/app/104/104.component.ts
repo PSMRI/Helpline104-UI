@@ -28,7 +28,6 @@ import { SearchService } from "app/services/searchBeneficiaryService/search.serv
 import { CallerService } from "../services/common/caller.service";
 import { dataService } from "../services/dataService/data.service";
 import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
-declare var jQuery: any;
 
 @Component({
   selector: "app-104",

@@ -21,7 +21,8 @@
 */
 
 
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { EpidemicServices } from '../services/sioService/epidemicServices.service';
 import { dataService } from '../services/dataService/data.service';
 import { LocationService } from '../services/common/location.service';
@@ -29,7 +30,6 @@ import { FeedbackResponseModel } from '../sio-grievience-service/sio-grievience-
 import { RegisteredBeneficiaryModal104 } from '../beneficiary-registration-104/beneficiary-registration-104.component';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { ConfirmationDialogsService } from './../services/dialog/confirmation.service';
-declare var jQuery: any;
 import { FeedbackTypes } from "../services/common/feedbacktypes.service";
 import { CallServices } from '../services/callservices/callservice.service';
 import { SmsTemplateService } from './../services/supervisorServices/sms-template-service.service';
@@ -42,6 +42,8 @@ import { SetLanguageComponent } from 'app/set-language.component';
   styleUrls: ['./sio-epidemic-outbreak-service.component.css']
 })
 export class SioEpidemicOutbreakServiceComponent implements OnInit {
+
+  @ViewChild('epidemic_Details_Form') epidemicForm: NgForm;
 
   beneficiaryRegID: any;
   outbreakComplaintID: any = "";
@@ -379,7 +381,7 @@ export class SioEpidemicOutbreakServiceComponent implements OnInit {
 
         this.showTable = true;
         //	this.showEpidemicForm = false;
-        jQuery("#epidemic_form").trigger("reset");
+        this.epidemicForm.resetForm();
       }
       else {
         this.msg = this.currentLanguageSet.epidemicOutbreakInformationUpdatedSuccessfully + this.outbreakComplaintID;

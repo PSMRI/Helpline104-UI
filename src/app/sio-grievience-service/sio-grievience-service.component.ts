@@ -21,7 +21,7 @@
 */
 
 
-import { Component, OnInit, Inject, Input, HostListener } from '@angular/core';
+import { Component, OnInit, Inject, Input, HostListener, ViewChild } from '@angular/core';
 import { UserBeneficiaryData } from '../services/common/userbeneficiarydata.service'
 import { LocationService } from "../services/common/location.service";
 import { CoFeedbackService } from "../services/coService/co_feedback.service";
@@ -30,10 +30,10 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { dataService } from '../services/dataService/data.service';
 import { RegisteredBeneficiaryModal104 } from '../beneficiary-registration-104/beneficiary-registration-104.component';
 import { SmsTemplateService } from './../services/supervisorServices/sms-template-service.service';
+import { NgForm } from '@angular/forms';
 
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { MD_DIALOG_DATA } from '@angular/material';
-declare var jQuery: any;
 import { ConfirmationDialogsService } from './../services/dialog/confirmation.service';
 import { SmartsearchService } from '../services/common/smartsearch-service.service';
 
@@ -45,6 +45,8 @@ import { SetLanguageComponent } from 'app/set-language.component';
 	styleUrls: ['./sio-grievience-service.component.css']
 })
 export class SioGrievienceServiceComponent implements OnInit {
+
+	@ViewChild('feedbackForm') feedbackForm: NgForm;
 
 
 	countryID: any = 1;
@@ -541,7 +543,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 			if (result != 'close' && result !='') {
 				this.sendSMS(result, response.data, this.isHealthCareWorker);
 			}
-			jQuery('#feedbckForm').trigger("reset");
+			this.feedbackForm.resetForm();
 			this.showTable();
 			this.isHealthCareWorker = false;
 			this.count = 0 + '/300';

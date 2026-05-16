@@ -39,7 +39,6 @@ import { HttpServices } from "../services/http-services/http_services.service";
 
 import { NgForm } from '@angular/forms';
 import { SetLanguageComponent } from 'app/set-language.component';
-declare var jQuery: any;
 
 @Component({
   selector: 'app-sio-food-safety-service',

@@ -38,7 +38,6 @@ import { UtilityService } from '../services/common/utility.service';
 import { SetLanguageComponent } from 'app/set-language.component';
 import { HttpServices } from 'app/services/http-services/http_services.service';
 
-declare var jQuery: any;
 @Component({
     selector: 'diabetic-screening-component',
     templateUrl: './diabetic-screening-component.html',

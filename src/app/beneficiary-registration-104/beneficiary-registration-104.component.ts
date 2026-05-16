@@ -523,13 +523,13 @@ export class BeneficiaryRegistration104Component implements OnInit {
 
       this.personIsSelf = false;
       this.initiallyState();
-      jQuery("#registerForm").trigger("reset");
+      this.registrationForm.resetForm();
     }
   }
 
   showHistory() {
     //			this.registrationPage1 = true; //..........(to reset the form, have to make full form visible)
-    jQuery("#registerForm").trigger("reset");
+    this.registrationForm.resetForm();
     this.personIsSelf = false;
     //	this.registrationPage2 = true; //...........||..
     this.retrieveRegHistoryByPhoneNo(this.callerNumber);
@@ -1612,7 +1612,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.onBenRegDataSelect.emit(obj);
     this.showForm = false;
     //this.showTableFlag = true;
-    jQuery("#registerForm").trigger("reset");
+    this.registrationForm.resetForm();
     this.personIsSelf = false;
     this.updateBeneficiry = false;
     this.nexButtonEvent.emit(false); //can be removed in future if provider services are no longer in use, also has to remove from its parent html & its function in ts....gursimran 2/10/18
@@ -1682,7 +1682,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       this.altPhNumber = result;
 
       //	this.closurePage.emit(); //added now 10/2/18 since provider services page is removed...Gursimran
-      jQuery("#registerForm").trigger("reset");
+      this.registrationForm.resetForm();
       this.showForm = false;
       this.quesVisibilityFlag = true;
       //		jQuery('#cancelLink').attr('disabled', false);

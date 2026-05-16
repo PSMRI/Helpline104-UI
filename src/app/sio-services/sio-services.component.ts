@@ -28,8 +28,6 @@ import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from 'app/set-language.component';
 import { sessionStorageService } from 'app/services/sessionStorageService/session-storage.service';
 
-declare var jQuery: any;
-
 @Component({
   selector: 'app-sio-services',
   templateUrl: './sio-services.component.html',
@@ -59,15 +57,6 @@ export class SioServicesComponent implements OnInit {
   }
 
   tab: number = 1;
-
-  // changeService(val) {
-  //   this.tab = val;
-  //   jQuery("#service" + val).parent().find("li").removeClass();
-  //   jQuery("#service" + val).addClass("animation-nav-active");
-
-  //   jQuery("#service" + val).parent().find('a').removeClass();
-  //   jQuery("#service" + val + " a").addClass("f-c-o");
-  // }
 
   @Input() current_language: any;
   current_language_set: any; // contains the language set which is there through out in the app ; value is set by the value in 'Input() current_language'

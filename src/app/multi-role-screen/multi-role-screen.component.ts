@@ -51,6 +51,7 @@ import { sessionStorageService } from "app/services/sessionStorageService/sessio
 export class MultiRoleScreenComponent implements OnInit {
   current_role: any;
   current_service: any;
+  showDbLabel: boolean = false;
   id: any;
   ctiHandlerURL: any;
   barMinimized: boolean = true;
@@ -123,13 +124,18 @@ export class MultiRoleScreenComponent implements OnInit {
       this.current_service = obj["service"];
     });
     this.hideHeader = true;
-    jQuery("#db_label").hide();
+    this.showDbLabel = false;
 
     const url =
       this.configService.getTelephonyServerURL() + "bar/cti_handler.php";
     this.ctiHandlerURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
     this.getCommonData.sendHeaderStatus.subscribe((data) => {
       this.setHeaderName(data);
+      if (data === "Role Selection") {
+        this.showDbLabel = false;
+      } else {
+        this.showDbLabel = true;
+      }
     });
 
     jQuery(document).ready(function () {

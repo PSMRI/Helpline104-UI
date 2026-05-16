@@ -32,7 +32,6 @@ import { SearchService } from '../services/searchBeneficiaryService/search.servi
 import { FeedbackResponseModel } from '../sio-grievience-service/sio-grievience-service.component';
 import { SmsTemplateService } from './../services/supervisorServices/sms-template-service.service';
 
-declare var jQuery: any;
 import { ConfirmationDialogsService } from './../services/dialog/confirmation.service'
 import { NgForm } from '@angular/forms';
 import { SetLanguageComponent } from 'app/set-language.component';

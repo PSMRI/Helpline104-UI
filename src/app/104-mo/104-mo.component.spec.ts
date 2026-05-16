@@ -105,7 +105,7 @@ function Initialize104moTestBed() {
 
 describe('Mo_104_Component', () => {
 
-  fdescribe('When the component is getting loaded, then ngOninit', () => {
+  describe('When the component is getting loaded, then ngOninit', () => {
 
     Initialize104moTestBed();
 

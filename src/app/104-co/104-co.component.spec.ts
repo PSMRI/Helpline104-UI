@@ -90,7 +90,7 @@ function Initialize104coTestBed() {
 
 describe('Co_104_Component', () => {
 
-  fdescribe('When the component is getting loaded, then ngOninit', () => {
+  describe('When the component is getting loaded, then ngOninit', () => {
 
     Initialize104coTestBed();
 

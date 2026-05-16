@@ -80,7 +80,7 @@ function Initialize104coTestBed() {
 
 describe('Supervisor-reports', () => {
 
-    fdescribe('When the component is getting loaded, then ngOninit', () => {
+    describe('When the component is getting loaded, then ngOninit', () => {
 
         Initialize104coTestBed();
 

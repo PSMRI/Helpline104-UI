@@ -93,7 +93,7 @@
 
 // }
 // describe('SupervisorCalltypeReportsComponent', () => {
-//   fdescribe('When the component get initiated', () => {
+//   describe('When the component get initiated', () => {
 //     Initializetestbed();
 //     it('should be created', () => {
 //       expect(component).toBeTruthy();

@@ -71,7 +71,7 @@ function InitializeAlternateEmailModelTestBed() {
 }
 
 describe('AlernateEmailModelComponent', () => {
-  fdescribe('When the component is getting loaded, then ngOninit', () => {
+  describe('When the component is getting loaded, then ngOninit', () => {
 
     InitializeAlternateEmailModelTestBed();
 

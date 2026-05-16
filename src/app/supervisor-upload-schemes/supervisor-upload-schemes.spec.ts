@@ -108,7 +108,7 @@ function Initialize104TestBed() {
 }
 describe('Supervisor-upload-schemes', () => {
 
-    fdescribe('When the component is getting loaded, then ngOninit', () => {
+    describe('When the component is getting loaded, then ngOninit', () => {
 
         Initialize104TestBed();
 

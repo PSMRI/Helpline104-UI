@@ -132,7 +132,7 @@ function Initialize104coTestBed() {
     });
 }
 describe('SupervisorNotificationsComponent Testbed creation', () => {
-    fdescribe('When the component is getting loaded, then ngOninit', () => {
+    describe('When the component is getting loaded, then ngOninit', () => {
         Initialize104coTestBed()
 
         it('should be created', () => {

@@ -33,6 +33,7 @@ const TELEPHONY_SERVER = '<%= TELEPHONY_SERVER %>';
 const siteKey = '<%= SITE_KEY %>';
 const captchaChallengeURL = '<%= CAPTCHA_CHALLENGE_URL %>';
 const enableCaptcha = <%= ENABLE_CAPTCHA %>;
+const SOCKET_URL = '<%= SOCKET_URL %>';
 
 export const environment = {
   production: true,
@@ -47,5 +48,6 @@ export const environment = {
   fhirAPI: FHIR_API,
   siteKey:siteKey,
   captchaChallengeURL: captchaChallengeURL,
-  enableCaptcha: enableCaptcha
+  enableCaptcha: enableCaptcha,
+  socketURL: SOCKET_URL
 };

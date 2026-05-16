@@ -39,6 +39,7 @@ export class ConfigService {
     private _mmuBaseURL: string = environment.adminAPI;
     private _tmBaseURL: string = environment.tmAPI;
     private _fhirBaseURL = environment.fhirAPI;
+    private _socketURL: string = environment.socketURL;
 
 
     public defaultWrapupTime: any = 30;
@@ -72,5 +73,8 @@ export class ConfigService {
     }
     getFHIRBaseURL() {
         return this._fhirBaseURL;
+    }
+    getSocketURL() {
+        return this._socketURL;
     }
 }

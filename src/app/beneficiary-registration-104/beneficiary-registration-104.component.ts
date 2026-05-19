@@ -21,7 +21,7 @@
 */
 
 
-import {
+import { OnDestroy,
   Component,
   SimpleChanges,
   OnInit,
@@ -63,7 +63,9 @@ import { sessionStorageService } from "app/services/sessionStorageService/sessio
   templateUrl: "./beneficiary-registration-104.component.html",
   styleUrls: ["./beneficiary-registration-104.component.css"],
 })
-export class BeneficiaryRegistration104Component implements OnInit {
+export class BeneficiaryRegistration104Component implements OnDestroy, OnInit {
+  private subscriptionSink: Subscription = new Subscription();
+
   @Output() onBenRegDataSelect: EventEmitter<any> = new EventEmitter<any>();
   @Output() nexButtonEvent: EventEmitter<any> = new EventEmitter<any>();
   @Output() closurePage: EventEmitter<any> = new EventEmitter<any>();
@@ -237,7 +239,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.privleges = this.getCommonData.userPriveliges;
     this.checkHAOPrivilege();
     this.IntializeSessionValues();
-    //this._util.getDistricts().subscribe(response => this.districts = this.successHandeler(response));
+    this.subscriptionSink.add(//this._util.getDistricts().subscribe(response => this.districts = this.successHandeler(response)));
     if (this.sessionstorage.getItem("CLI") != undefined) {
       this.callerNumber = this.sessionstorage.getItem("CLI");
       this.phoneNo = this.callerNumber;
@@ -327,7 +329,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     }
   }
   initiallyState() {
-    this._util.getProviderStates(this.providerServiceID).subscribe(
+    this.subscriptionSink.add(this._util.getProviderStates(this.providerServiceID).subscribe(
       (response) => this.getAllStatesSuccessHandeler(response),
       (err) => {
         this.alertMessage.alert(
@@ -335,7 +337,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
           "error"
         );
       }
-    );
+    ));
   }
   IntializeSessionValues() {
     let data = {
@@ -344,12 +346,12 @@ export class BeneficiaryRegistration104Component implements OnInit {
 
     this._userData
       .getUserBeneficaryData(data)
-      .subscribe((response) => 
+      this.subscriptionSink.add(.subscribe((response) => 
       {
         if(response !== undefined && response !== null) {
           this.IDsuccessHandeler(response);
         }
-      })
+      }))
 
     this.today = new Date();
     this.maxDate = this.today;
@@ -417,7 +419,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.village = undefined;
     this._util
       .getSubDistricts(districtID)
-      .subscribe((response) => this.getSubDistrictSuccessHandeler(response));
+      this.subscriptionSink.add(.subscribe((response) => this.getSubDistrictSuccessHandeler(response)));
   }
 
   getSubDistrictSuccessHandeler(response) {
@@ -428,7 +430,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
   getVillage(subDistrictID) {
     this._util
       .getVillages(subDistrictID)
-      .subscribe((response) => this.getVillageSuccessHandeler(response));
+      this.subscriptionSink.add(.subscribe((response) => this.getVillageSuccessHandeler(response)));
   }
 
   getVillageSuccessHandeler(response) {
@@ -449,7 +451,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     let data = JSON.stringify(this.altNumObj);
     this._userData
       .storeAlternateNumber(data)
-      .subscribe((res) => (this.altNumberResult = res));
+      this.subscriptionSink.add(.subscribe((res) => (this.altNumberResult = res)));
   }
 
   private parentBenRegID: any = null;
@@ -572,9 +574,9 @@ export class BeneficiaryRegistration104Component implements OnInit {
     if (value === "Yes") {
       this.healthcareWorkerField = true;
 
-      this._util.getHealthCareWorkerTypes().subscribe((response) => {
+      this.subscriptionSink.add(this._util.getHealthCareWorkerTypes().subscribe((response) => {
         this.healthCareWorkerTypes = this.successHandeler(response);
-      });
+      }));
 
       // filtering out titles suitable only for a health worker
       this.current_titles = this.all_titles.filter(function (item) {
@@ -634,14 +636,14 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.BeneficiaryExistsWIthOtherPhNum = true;
     //	console.log(searchData);
 
-    this._util.searchBenficiary(JSON.stringify(searchData)).subscribe(
+    this.subscriptionSink.add(this._util.searchBenficiary(JSON.stringify(searchData)).subscribe(
       (response) => {
         this.searchBenSuccessHandeler(response);
       },
       (err) => {
         this.alertMessage.alert(err.status, "error");
       }
-    );
+    ));
   }
 
   /** Purpose: function to retrive beneficiaries based on the phone numbers */
@@ -649,7 +651,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     //	console.log("retrieveRegHistoryByPhoneNo");
     this._util
       .retrieveRegHistoryByPhoneNo(PhoneNo)
-      .subscribe((response) => this.handlesuccess(response));
+      this.subscriptionSink.add(.subscribe((response) => this.handlesuccess(response)));
     // console.log(this.relationShips);
   }
   searchFormReset() {
@@ -749,10 +751,10 @@ export class BeneficiaryRegistration104Component implements OnInit {
       this.getCommonData.apiCalledForInbound = true;
       let res = this._callServices
         .storeCallID(JSON.stringify(this.callerObj))
-        .subscribe(
+        this.subscriptionSink.add(.subscribe(
           (response) =>
             (this.callerResponse = this.callerSuccessHandeler(response))
-        );
+        ));
     } else {
       console.log("Session ID is null not able to land a call");
     }
@@ -773,9 +775,9 @@ export class BeneficiaryRegistration104Component implements OnInit {
     };
     let res = this._callerService
       .updateCallerBeneficiaryID(data)
-      .subscribe(
+      this.subscriptionSink.add(.subscribe(
         (response) => (this.updateResponse = this.callerHandleSuccess(response))
-      );
+      ));
   }
 
   callerSuccessHandeler(response) {
@@ -921,7 +923,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       this.registerObj.benPhoneMaps.push(Obj);
     }
     //	console.log(JSON.stringify(this.registerObj));
-    this._util.registerBeneficiary(JSON.stringify(this.registerObj)).subscribe(
+    this.subscriptionSink.add(this._util.registerBeneficiary(JSON.stringify(this.registerObj)).subscribe(
       (response) => {
         this.registrationDetails = this.regSuccessHandeler(response);
         this.getCommonData.districtID = response.i_bendemographics.districtID;
@@ -930,7 +932,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       (err) => {
         this.alertMessage.alert(err.errorMessage, "error");
       }
-    );
+    ));
   }
 
   getGenderNameById(value) {
@@ -966,7 +968,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       beneficiaryID: null,
       beneficiaryRegID: benRegID,
     };
-    this._util.fetchHealthIdDetails(obj).subscribe(
+    this.subscriptionSink.add(this._util.fetchHealthIdDetails(obj).subscribe(
       (healthIDDetails) => {
         if (
           healthIDDetails != undefined &&
@@ -1011,7 +1013,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
           "error"
         );
       }
-    );
+    ));
   }
   selectBeneficiary(regHistory: any) {
     console.log("regHistory: " + JSON.stringify(regHistory));
@@ -1036,7 +1038,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     };
     let res = this._util
       .retrieveRegHistory(IDobj)
-      .subscribe((response) =>{
+      this.subscriptionSink.add(.subscribe((response) =>{
       if(response)
         this.populateRegistrationFormForUpdate(response);
         // checking if the demographics details are present or not and triggering a observable to disable procced to hao button 
@@ -1049,7 +1051,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
         this.registerService.checkForDemographicDetails(false);
         else
         this.registerService.checkForDemographicDetails(true);
-      });
+      }));
 
     this.showForm = true;
 
@@ -1057,14 +1059,14 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.showSearchForm = false;
 
     let obj = '{"beneficiaryRegID":"' + benRegData.beneficiaryRegID + '"}';
-    this.caseSheetService.getValidCaseSheetData(obj).subscribe(
+    this.subscriptionSink.add(this.caseSheetService.getValidCaseSheetData(obj).subscribe(
       (response) => {
         this.handlesuccess2(response);
       },
       (err) => {
         console.log("Case Sheet Error");
       }
-    );
+    ));
   }
   handlesuccess2(res) {
     if (res.length > 0) {
@@ -1546,7 +1548,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
 
     // debugger;
 
-    this._util.updateBeneficiaryData(JSON.stringify(this.updatedObj)).subscribe(
+    this.subscriptionSink.add(this._util.updateBeneficiaryData(JSON.stringify(this.updatedObj)).subscribe(
       (response) => {
         this.updateSuccessHandeler(response);
         this.getCommonData.districtID = response.i_bendemographics.districtID;
@@ -1555,7 +1557,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       (err) => {
         this.alertMessage.alert(err.status, "error");
       }
-    );
+    ));
   }
 
   getKeys(obj) {
@@ -1591,13 +1593,13 @@ export class BeneficiaryRegistration104Component implements OnInit {
           this.currentLanguageSet
             .beneficiaryDetailsModifiedSuccessfullyYouWantToProceedHao
         )
-        .subscribe((response) => {
+        this.subscriptionSink.add(.subscribe((response) => {
           if (response) {
             this.navigateToHAO();
           } else {
             this.closurePage.emit();
           }
-        });
+        }));
     } else {
       this.alertMessage.alert(
         this.currentLanguageSet.beneficiaryDetailsModifiedSuccessfully,
@@ -1625,7 +1627,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
 
   // getLatestValidPrescriptions() {
   // 	let data = "{'beneficiaryRegID':'" + this.beneficiaryRegID + "'}";
-  // 	this.prescriptionService.getlatestValidPescription(data).subscribe(response => this.LatestValidPrescriptions = this.successHandeler(response))
+  this.subscriptionSink.add(// 	this.prescriptionService.getlatestValidPescription(data).subscribe(response => this.LatestValidPrescriptions = this.successHandeler(response)))
   // }
 
   resendPrescription(mobileNumber) {
@@ -1678,7 +1680,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     );
     this.onBenRegDataSelect.emit(response);
 
-    dialogReff.afterClosed().subscribe((result) => {
+    this.subscriptionSink.add(dialogReff.afterClosed().subscribe((result) => {
       this.altPhNumber = result;
 
       //	this.closurePage.emit(); //added now 10/2/18 since provider services page is removed...Gursimran
@@ -1718,7 +1720,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       } else {
         this.messageAlertHAO();
       }
-    });
+    }));
     this.retrieveRegHistoryByPhoneNo(this.callerNumber);
 
     return response;
@@ -1733,7 +1735,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
         "error"
       );
     else {
-      this._util.updatebeneficiaryincall(data).subscribe(
+      this.subscriptionSink.add(this._util.updatebeneficiaryincall(data).subscribe(
         (response) => {
           if (response.statusCode != undefined && response.statusCode == 200) {
             //	console.log(response, 'success while updating ben in call');
@@ -1743,7 +1745,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
         (err) => {
           console.log(err.errorMessage, "Error while updating ben in call");
         }
-      );
+      ));
     }
   }
 
@@ -1814,7 +1816,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
   stateSelect(value) {
     let res = this._locationService
       .getDistricts(value)
-      .subscribe((response) => this.SetDistricts(response));
+      this.subscriptionSink.add(.subscribe((response) => this.SetDistricts(response)));
     // if (this.nonEmergency) {
     // 	if (value == '' || value == undefined) {
     // 		this.stateErrFlag = true;
@@ -1982,11 +1984,11 @@ export class BeneficiaryRegistration104Component implements OnInit {
     if (this.validateSearchItem(searchTerm, searchObject)) {
       let res = this._util
         .retrieveRegHistory(searchObject)
-        .subscribe((response) => {
+        this.subscriptionSink.add(.subscribe((response) => {
           if (response !== undefined && response !== null) {
             this.handlesuccess(response);
           }
-        });
+        }));
     }
   }
   validateSearchItem(searchTerm, searchObject) {
@@ -2095,7 +2097,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     let smsTypeID = "";
     let currentServiceID = this.getCommonData.current_serviceID;
 
-    this._smsService.getSMStypes(currentServiceID).subscribe(
+    this.subscriptionSink.add(this._smsService.getSMStypes(currentServiceID).subscribe(
       (response) => {
         if (response != undefined) {
           if (response.length > 0) {
@@ -2173,7 +2175,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       (err) => {
         console.log(err, "error while fetching sms types");
       }
-    );
+    ));
   }
 
   messageAlertHAO() {
@@ -2183,13 +2185,13 @@ export class BeneficiaryRegistration104Component implements OnInit {
           "Confirm Alert",
           this.currentLanguageSet.doYouWantToProceedToHao
         )
-        .subscribe((res) => {
+        this.subscriptionSink.add(.subscribe((res) => {
           if (res) {
             this.navigateToHAO();
           } else {
             this.closurePage.emit();
           }
-        });
+        }));
     }
   }
 
@@ -2278,5 +2280,11 @@ export class BeneficiaryABHADetailsModal {
 
   ngDoCheck() {
     this.currentLanguageSetValue();
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptionSink) {
+      this.subscriptionSink.unsubscribe();
+    }
   }
 }

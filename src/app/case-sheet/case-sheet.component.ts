@@ -21,7 +21,7 @@
 */
 
 
-import { Component, OnInit, Input, Inject, ViewChild } from "@angular/core";
+import { OnDestroy, Component, OnInit, Input, Inject, ViewChild } from "@angular/core";
 import { MdDialog, MdDialogRef } from "@angular/material";
 import { MD_DIALOG_DATA } from "@angular/material";
 import { FeedbackResponseModel } from "../sio-grievience-service/sio-grievience-service.component";
@@ -62,7 +62,9 @@ declare var jQuery: any;
   templateUrl: "./case-sheet.component.html",
   styleUrls: ["./case-sheet.component.css"],
 })
-export class CaseSheetComponent implements OnInit {
+export class CaseSheetComponent implements OnDestroy, OnInit {
+  private subscriptionSink: Subscription = new Subscription();
+
   @Input() providerData: any;
 
   beneficiaryDetails: any;
@@ -292,7 +294,7 @@ export class CaseSheetComponent implements OnInit {
       this.beneficiaryRegID = this.saved_data.outboundBenID;
     }
 
-    this.saved_data.roleChanged.subscribe(
+    this.subscriptionSink.add(this.saved_data.roleChanged.subscribe(
       (response) => {
         if (response === "HAO") {
           console.log("subject recieved");
@@ -304,7 +306,7 @@ export class CaseSheetComponent implements OnInit {
       (err) => {
         console.log("err", err);
       }
-    );
+    ));
   }
 
   @ViewChild("caseSheetForm") caseSheetForm: NgForm;
@@ -336,7 +338,7 @@ export class CaseSheetComponent implements OnInit {
     };
     this._availableServices
       .getServices(requestObj)
-      .subscribe((response) => this.servicesSuccessHandler(response));
+      this.subscriptionSink.add(.subscribe((response) => this.servicesSuccessHandler(response)));
     this.agentData = this.saved_data.Userdata;
 
     //** load case sheet if beneficiary id is present
@@ -351,7 +353,7 @@ export class CaseSheetComponent implements OnInit {
   fetchCommonData() {
     this.searchBenData
       .getCommonData()
-      .subscribe((response) => this.m_gender_successHandeler(response));
+      this.subscriptionSink.add(.subscribe((response) => this.m_gender_successHandeler(response)));
   }
   m_gender_successHandeler(response) {
     if (response) {
@@ -373,7 +375,7 @@ export class CaseSheetComponent implements OnInit {
         //   ? this.saved_data.ben_gender_name.charAt(0)
         //   : this.genders[0].genderName.charAt(0),
       })
-      .subscribe((any) => this.chiefComplaintsSuccessHandeler(any));
+      this.subscriptionSink.add(.subscribe((any) => this.chiefComplaintsSuccessHandeler(any)));
   }
   chiefComplaintsSuccessHandeler(response) {
     if (response !== undefined && response !== null) {
@@ -393,7 +395,7 @@ export class CaseSheetComponent implements OnInit {
       callID: this.callerID,
     };
     if (this.beneficiaryRegID && this.current_campaign == "INBOUND") {
-      this.caseSheetService.getPresentCaseSheet(obj).subscribe(
+      this.subscriptionSink.add(this.caseSheetService.getPresentCaseSheet(obj).subscribe(
         (res) => {
           this.presentCasesheetSuccess(res);
         },
@@ -401,14 +403,14 @@ export class CaseSheetComponent implements OnInit {
           this.benDataInboundPopulationg();
           this.alertMessage.alert(err.errorMessage, "error");
         }
-      ); //calling to check if ben has taken the service as 'other' on the same call
+      )); //calling to check if ben has taken the service as 'other' on the same call
     } else if (this.current_campaign == "OUTBOUND") {
       let obj = {
         beneficiaryRegID: this.saved_data.outboundBenID,
       };
       this.searchBenData
         .retrieveRegHistory(obj)
-        .subscribe((response) => this.benDataOnBenIDSuccess(response));
+        this.subscriptionSink.add(.subscribe((response) => this.benDataOnBenIDSuccess(response)));
 
       let res = this.saved_data.isSelf;
       if (res) {
@@ -424,7 +426,7 @@ export class CaseSheetComponent implements OnInit {
     let data = {
       beneficiaryRegID: this.beneficiaryRegID,
     };
-    this.caseSheetService.getPreviousCovidVaccineData(data).subscribe(
+    this.subscriptionSink.add(this.caseSheetService.getPreviousCovidVaccineData(data).subscribe(
       (res) => {
         if (res.statusCode == 200) {
           if (res.data.covidVSID != undefined && res.data.covidVSID != null) {
@@ -439,7 +441,7 @@ export class CaseSheetComponent implements OnInit {
           }
         }
       }
-    );
+    ));
   }
   saveCovidVaccineData() {
     let data = {
@@ -461,7 +463,7 @@ export class CaseSheetComponent implements OnInit {
       //"parkingPlaceID" : parkingPlaceID,
       //"processed": "N"
     };
-    this.caseSheetService.saveCovidVaccineData(data).subscribe(
+    this.subscriptionSink.add(this.caseSheetService.saveCovidVaccineData(data).subscribe(
       (res) => {
         if (res.statusCode == 200 && res.data != null) {
           this.covidVSID = res.data.covidVSID;
@@ -478,10 +480,10 @@ export class CaseSheetComponent implements OnInit {
       (err) => {
         this.alertMessage.alert(err.errorMessage, "error");
       }
-    );
+    ));
   }
   getCovidVaccineMaster() {
-    this.caseSheetService.getCovidVaccineMasterData().subscribe(
+    this.subscriptionSink.add(this.caseSheetService.getCovidVaccineMasterData().subscribe(
       (res) => {
         if (res.statusCode == 200) {
           if (res.data) {
@@ -494,7 +496,7 @@ export class CaseSheetComponent implements OnInit {
       (err) => {
         this.alertMessage.alert(err.errorMessage, "error");
       }
-    );
+    ));
   }
 
   currentLanguageSetValue() {
@@ -582,7 +584,7 @@ export class CaseSheetComponent implements OnInit {
     this.nameFlag = false;
   }
   initiallyCountry() {
-    this._locationService.getCountry().subscribe(
+    this.subscriptionSink.add(this._locationService.getCountry().subscribe(
       (response) => this.getAllCounrySuccessHandeler(response),
       (err) => {
         this.alertMessage.alert(
@@ -590,14 +592,14 @@ export class CaseSheetComponent implements OnInit {
           "error"
         );
       }
-    );
+    ));
   }
   getAllCounrySuccessHandeler(response) {
     this.countries = response;
   }
 
   getCitiesFromInter(countryID) {
-    this._locationService.getCity(countryID).subscribe(
+    this.subscriptionSink.add(this._locationService.getCity(countryID).subscribe(
       (response) => this.getAllCitySuccessHandelerFromInter(response),
 
       (err) => {
@@ -606,14 +608,14 @@ export class CaseSheetComponent implements OnInit {
           "error"
         );
       }
-    );
+    ));
   }
   getAllCitySuccessHandelerFromInter(response) {
     this.citiesFromInter = response;
   }
 
   getCitiesToInter(countryID) {
-    this._locationService.getCity(countryID).subscribe(
+    this.subscriptionSink.add(this._locationService.getCity(countryID).subscribe(
       (response) => this.getAllCitySuccessHandelerToInter(response),
 
       (err) => {
@@ -622,14 +624,14 @@ export class CaseSheetComponent implements OnInit {
           "error"
         );
       }
-    );
+    ));
   }
   getAllCitySuccessHandelerToInter(response) {
     this.citiesToInter = response;
   }
 
   initiallyState() {
-    this._locationService.getStates(1).subscribe(
+    this.subscriptionSink.add(this._locationService.getStates(1).subscribe(
       (response) => this.getAllStatesSuccessHandeler(response),
       (err) => {
         this.alertMessage.alert(
@@ -637,7 +639,7 @@ export class CaseSheetComponent implements OnInit {
           "error"
         );
       }
-    );
+    ));
   }
   getAllStatesSuccessHandeler(response) {
     this.states = response;
@@ -645,12 +647,12 @@ export class CaseSheetComponent implements OnInit {
   GetDistrictsFromDom(value) {
     let res = this._locationService
       .getDistricts(value)
-      .subscribe((response) => this.SetDistrictsFromDom(response));
+      this.subscriptionSink.add(.subscribe((response) => this.SetDistrictsFromDom(response)));
   }
   GetDistrictsToDom(value) {
     let res = this._locationService
       .getDistricts(value)
-      .subscribe((response) => this.SetDistrictsTomDom(response));
+      this.subscriptionSink.add(.subscribe((response) => this.SetDistrictsTomDom(response)));
   }
   SetDistrictsFromDom(response: any) {
     this.districtsFromDom = response;
@@ -663,17 +665,17 @@ export class CaseSheetComponent implements OnInit {
     this.village = undefined;
     this.searchBenData
       .getSubDistricts(districtID)
-      .subscribe((response) =>
+      this.subscriptionSink.add(.subscribe((response) =>
         this.getSubDistrictSuccessHandelerFromDom(response)
-      );
+      ));
   }
   getSubDistrictToDom(districtID) {
     this.village = undefined;
     this.searchBenData
       .getSubDistricts(districtID)
-      .subscribe((response) =>
+      this.subscriptionSink.add(.subscribe((response) =>
         this.getSubDistrictSuccessHandelerToDom(response)
-      );
+      ));
   }
 
   getSubDistrictSuccessHandelerFromDom(response) {
@@ -688,7 +690,7 @@ export class CaseSheetComponent implements OnInit {
   getVillage(subDistrictID) {
     this.searchBenData
       .getVillages(subDistrictID)
-      .subscribe((response) => this.getVillageSuccessHandeler(response));
+      this.subscriptionSink.add(.subscribe((response) => this.getVillageSuccessHandeler(response)));
   }
 
   getVillageSuccessHandeler(response) {
@@ -944,7 +946,7 @@ export class CaseSheetComponent implements OnInit {
     {
     this.disableSaveForGender = true;
     this.alertMessage.confirm("info", "Unable to fetch beneficiary details, Please click 'OK' to reload beneficiary details again")
-    .subscribe((confirmResponse) => {
+    this.subscriptionSink.add(.subscribe((confirmResponse) => {
       if (confirmResponse) {
         this.fetchBenenficiaryDetails();
       }
@@ -952,7 +954,7 @@ export class CaseSheetComponent implements OnInit {
       {
         this.disableSaveForGender = false;
       }
-    });
+    }));
   }
 }
 
@@ -962,7 +964,7 @@ fetchBenenficiaryDetails()
   if(this.is_patient === "self")
   {
   let data = '{"callID":"' + this.callerID + '"}';
-  this.callerService.getBeneficiaryByCallID(data).subscribe(
+  this.subscriptionSink.add(this.callerService.getBeneficiaryByCallID(data).subscribe(
     (response) => {
       
       this.firstName = response.i_beneficiary.firstName;
@@ -985,7 +987,7 @@ fetchBenenficiaryDetails()
       this.alertMessage.alert(err.errorMessage, 'error');
       this.checkPatientDetailsPatched();
     }
-  );
+  ));
   }
   else
   {
@@ -993,7 +995,7 @@ fetchBenenficiaryDetails()
       beneficiaryRegID: this.beneficiaryRegID,
       callID: this.callerID,
     };
-    this.caseSheetService.getPresentCaseSheet(obj).subscribe(
+    this.subscriptionSink.add(this.caseSheetService.getPresentCaseSheet(obj).subscribe(
       (res) => {
         let name = res[0].patientName.split(" ");
         this.firstName = name[0];
@@ -1007,7 +1009,7 @@ fetchBenenficiaryDetails()
         this.alertMessage.alert(err.errorMessage, "error");
         this.checkPatientDetailsPatched();
       }
-    ); 
+    )); 
   }
 
 
@@ -1078,9 +1080,9 @@ fetchBenenficiaryDetails()
       subServiceID: this.subServiceID,
     };
 
-    this.caseSheetService.getCategories(obj).subscribe((response) => {
+    this.subscriptionSink.add(this.caseSheetService.getCategories(obj).subscribe((response) => {
       this.categorySuccess(response);
-    });
+    }));
   }
   allCategories: any = [];
   categorySuccess(res) {
@@ -1128,7 +1130,7 @@ fetchBenenficiaryDetails()
         : null,
     };
     console.log("Request: " + JSON.stringify(getDocuments));
-    this.caseSheetService.getDetails(getDocuments).subscribe(
+    this.subscriptionSink.add(this.caseSheetService.getDetails(getDocuments).subscribe(
       (response) => {
         if (response !== undefined && response !== null) {
           this.detailsSuccess(response);
@@ -1137,7 +1139,7 @@ fetchBenenficiaryDetails()
       (err) => {
         console.log(err);
       }
-    );
+    ));
   }
   showDocument: boolean = false;
   detailsList: any = [];
@@ -1170,9 +1172,9 @@ fetchBenenficiaryDetails()
   getSubCategories(categoryID) {
     this.subcategory = null;
     this.showDocument = false;
-    this.caseSheetService.getSubCategories(categoryID).subscribe((response) => {
+    this.subscriptionSink.add(this.caseSheetService.getSubCategories(categoryID).subscribe((response) => {
       this.subSategorySuccess(response);
-    });
+    }));
   }
   subCategories: any = [];
   subSategorySuccess(res) {
@@ -1296,14 +1298,14 @@ fetchBenenficiaryDetails()
       // this.patientData = { "age": this.age, "gender": this.saved_data.ben_gender_name?this.saved_data.ben_gender_name.charAt(0):this.genders[0].genderName.charAt(0), "symptom": this.pcc }
       this.patientData = { age: this.age, gender: gen, symptom: this.pcc };
 
-      this._CDSSService.getQuestions(this.patientData).subscribe(
+      this.subscriptionSink.add(this._CDSSService.getQuestions(this.patientData).subscribe(
         (any) => {
           this.success(any);
         },
         (err) => {
           console.log(err);
         }
-      );
+      ));
 
       console.log("patientData: " + JSON.stringify(this.patientData));
 
@@ -1317,7 +1319,7 @@ fetchBenenficiaryDetails()
   }
 
   getSnomedCTRecord(term, field) {
-    this.snomedService.getSnomedCTRecord(term).subscribe(
+    this.subscriptionSink.add(this.snomedService.getSnomedCTRecord(term).subscribe(
       (response) => {
         console.log("Snomed response: " + JSON.stringify(response));
 
@@ -1346,7 +1348,7 @@ fetchBenenficiaryDetails()
       (err) => {
         console.log("getSnomedCTRecord Error");
       }
-    );
+    ));
   }
 
   result: any = [];
@@ -1368,7 +1370,7 @@ fetchBenenficiaryDetails()
           current_language_set: this.current_language_set,
         },
       });
-      dr.afterClosed().subscribe((result) => {
+      this.subscriptionSink.add(dr.afterClosed().subscribe((result) => {
         console.log("POST MODAL CLOSING", result);
         this.result = result;
 
@@ -1412,7 +1414,7 @@ fetchBenenficiaryDetails()
           this.psd = this.pcc.trim();
           // this.recommendedAction="";
         }
-      });
+      }));
     } else {
       this.alertMessage.alert(
         this.currentLanguageSet.noQuestionsFoundForCorrespondingInput
@@ -1455,7 +1457,7 @@ fetchBenenficiaryDetails()
         presFlag: this.presFlag,
       },
     });
-    dialogReff.afterClosed().subscribe((result) => {
+    this.subscriptionSink.add(dialogReff.afterClosed().subscribe((result) => {
       if (this.prescriptionID == undefined) {
         this.prescriptionID = result;
       }
@@ -1468,13 +1470,13 @@ fetchBenenficiaryDetails()
           console.log("Case Sheet Error");
         }
       );
-    });
+    }));
   }
 
   getCaseSheetData() {
     let data = '{"beneficiaryRegID":"' + this.beneficiaryRegID + '"}';
 
-    this.caseSheetService.getCaseSheetData(data).subscribe(
+    this.subscriptionSink.add(this.caseSheetService.getCaseSheetData(data).subscribe(
       (response) => {
         this.handlesuccess(response);
       },
@@ -1482,16 +1484,16 @@ fetchBenenficiaryDetails()
         ("");
         this.alertMessage.alert(err.errorMessage, "error");
       }
-    );
+    ));
 
     let obj = '{"beneficiaryRegID":"' + this.beneficiaryRegID + '"}';
 
-    this.caseSheetService.getValidCaseSheetData(obj).subscribe(
+    this.subscriptionSink.add(this.caseSheetService.getValidCaseSheetData(obj).subscribe(
       (response) => {
         this.handlesuccess2(response);
       },
       (err) => {}
-    );
+    ));
   }
   changeCovidDisplay(covidDisp, values) {
     if (covidDisp == "yes") {
@@ -1732,7 +1734,7 @@ fetchBenenficiaryDetails()
       this.caseSheetObj.dOB = this.DOB;
     }
     let data = JSON.stringify(this.caseSheetObj);
-    this.caseSheetService.saveCaseSheetData(data).subscribe(
+    this.subscriptionSink.add(this.caseSheetService.saveCaseSheetData(data).subscribe(
       (response) => {
         if (response !== undefined && response !== null) {
           this.successHandler(response);
@@ -1741,7 +1743,7 @@ fetchBenenficiaryDetails()
       (err) => {
         this.alertMessage.alert(err.status, "error");
       }
-    );
+    ));
   }
   populate() {
     if (
@@ -1902,7 +1904,7 @@ fetchBenenficiaryDetails()
         },
       });
 
-      dialogReff.afterClosed().subscribe((result) => {
+      this.subscriptionSink.add(dialogReff.afterClosed().subscribe((result) => {
         this.altPhNumber = result;
         jQuery("#caseSheetForm").trigger("reset");
         if (
@@ -1923,7 +1925,7 @@ fetchBenenficiaryDetails()
           console.log(this.altPhNumber);
           this.sendSMS(this.beneficiaryRegID, this.altPhNumber);
         }
-      });
+      }));
     }
     this.formReset();
     this.caseSheetForm.controls["coviddisplay"].setValue("no");
@@ -1946,7 +1948,7 @@ fetchBenenficiaryDetails()
     let smsTypeID = "";
     let currentServiceID = this.saved_data.current_serviceID;
 
-    this._smsService.getSMStypes(currentServiceID).subscribe(
+    this.subscriptionSink.add(this._smsService.getSMStypes(currentServiceID).subscribe(
       (response) => {
         if (response != undefined) {
           if (response.length > 0) {
@@ -2029,7 +2031,7 @@ fetchBenenficiaryDetails()
       (err) => {
         console.log(err, "error while fetching sms types");
       }
-    );
+    ));
   }
   altNumObj: any = [];
   saveAlternateNumber(beneficiaryRegID, mobileNumber) {
@@ -2044,7 +2046,7 @@ fetchBenenficiaryDetails()
     let data = JSON.stringify(this.altNumObj);
     this._userData
       .storeAlternateNumber(data)
-      .subscribe((res) => (this.altNumberResult = res));
+      this.subscriptionSink.add(.subscribe((res) => (this.altNumberResult = res)));
   }
   handlesuccess(response) {
     // this.caseSheetData = response.reverse();
@@ -2090,11 +2092,11 @@ fetchBenenficiaryDetails()
   }
   getCounsellingFormData(){
     let beneficiaryRegID = this.saved_data.benRegID;
-  this.caseSheetService.getHihlCounsellingData(beneficiaryRegID).subscribe((res)=>{
+  this.subscriptionSink.add(this.caseSheetService.getHihlCounsellingData(beneficiaryRegID).subscribe((res)=>{
     if (res !== null && res !== undefined) {
       this.benHihlData = res;
     }
-  })
+  }))
 }
 
   formReset() {
@@ -2224,7 +2226,7 @@ fetchBenenficiaryDetails()
     }
   }
   getDiseaseNames() {
-    this.caseSheetService.getDiseaseName().subscribe(
+    this.subscriptionSink.add(this.caseSheetService.getDiseaseName().subscribe(
       (diseaseName) => {
         if (diseaseName) {
           this.summaryDetails = diseaseName;
@@ -2241,7 +2243,7 @@ fetchBenenficiaryDetails()
       (err) => {
         console.log("error");
       }
-    );
+    ));
   }
   filterDiseaseNames(val: string): string[] {
     return this.diseaseNames.filter(
@@ -2258,7 +2260,7 @@ fetchBenenficiaryDetails()
     if (diseaseData != undefined && diseaseData != null && diseaseData != "") {
       this.caseSheetService
         .getDiseaseData(this.summaryObj)
-        .subscribe((data) => {
+        this.subscriptionSink.add(.subscribe((data) => {
           if (data) {
             let dialogRef = this.dialog.open(
               ViewDiseaseSummaryDetailsComponent,
@@ -2287,7 +2289,7 @@ fetchBenenficiaryDetails()
               }
             });
           }
-        });
+        }));
     } else {
       this.informationGiven = null;
       this.recommendedAction = null;
@@ -2439,7 +2441,7 @@ export class DialogOverviewExampleDialog {
     console.log(this.data.patientData, "data.patientData");
     this._CDSSService
       .getQuestions(this.data.patientData)
-      .subscribe((any) => this.successHandeler(any));
+      this.subscriptionSink.add(.subscribe((any) => this.successHandeler(any)));
   }
 
   getNextSet(value: any, id: any) {
@@ -2451,7 +2453,7 @@ export class DialogOverviewExampleDialog {
     questionSelected["selected"] = id;
     this._CDSSService
       .getAnswer(questionSelected)
-      .subscribe((any) => this.assignresult(any));
+      this.subscriptionSink.add(.subscribe((any) => this.assignresult(any)));
   }
 
   assignresult(val: any) {
@@ -2502,7 +2504,7 @@ export class DialogOverviewExampleDialog {
 
     this._CDSSService
       .getAnswer(response)
-      .subscribe((any) => this.resultFunction(any));
+      this.subscriptionSink.add(.subscribe((any) => this.resultFunction(any)));
   }
 
   toggle(element: any, value: any) {
@@ -2656,11 +2658,11 @@ export class DialogOverviewExampleDialog {
     }
   }
   close() {
-    this.alertMessage.confirm("Close ", this._close).subscribe((response) => {
+    this.subscriptionSink.add(this.alertMessage.confirm("Close ", this._close).subscribe((response) => {
       if (response) {
         this.dialogReff.close();
       }
-    });
+    }));
   }
 }
 
@@ -2815,7 +2817,7 @@ export class CaseSheetRecentPrescription {
     let smsTypeID = "";
     let currentServiceID = this.saved_data.current_serviceID;
     if (currentServiceID != undefined) {
-      this._smsService.getSMStypes(currentServiceID).subscribe(
+      this.subscriptionSink.add(this._smsService.getSMStypes(currentServiceID).subscribe(
         (response) => {
           if (response != undefined) {
             if (response.length > 0) {
@@ -2890,11 +2892,17 @@ export class CaseSheetRecentPrescription {
         (err) => {
           console.log(err, "error while fetching sms types");
         }
-      );
+      ));
     } else {
       console.log("Service ID not found");
     }
 
     this.dialogReff.close();
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptionSink) {
+      this.subscriptionSink.unsubscribe();
+    }
   }
 }

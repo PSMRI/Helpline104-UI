@@ -21,7 +21,7 @@
 */
 
 
-import {
+import { OnDestroy,
   Component, OnInit, Inject, Input, Output, EventEmitter, ChangeDetectorRef
 } from '@angular/core';
 import { SearchService } from '../services/searchBeneficiaryService/search.service';
@@ -55,7 +55,9 @@ declare var jQuery: any;
   templateUrl: './sio-blood-on-call-service.component.html',
   styleUrls: ['./sio-blood-on-call-service.component.css']
 })
-export class SioBloodOnCallServiceComponent implements OnInit {
+export class SioBloodOnCallServiceComponent implements OnDestroy, OnInit {
+  private subscriptionSink: Subscription = new Subscription();
+
 
   @Output() outBoundOnCall: EventEmitter<any> = new EventEmitter<any>();
 
@@ -181,9 +183,9 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     this.minDate = today;
     this.dateOfOutbound = today;
 
-    this.searchBenData.getCommonData().subscribe(response => this.commonData = this.successHandeler(response));
+    this.subscriptionSink.add(this.searchBenData.getCommonData().subscribe(response => this.commonData = this.successHandeler(response)));
     this.location.getDistricts(this.commonAppData.current_stateID_based_on_role)
-      .subscribe(response => this.districts = this.successHandeler(response));
+      this.subscriptionSink.add(.subscribe(response => this.districts = this.successHandeler(response)));
 
     if (this.beneficiaryDetails && this.beneficiaryDetails.i_beneficiary && this.current_campaign == "INBOUND") {
       this.benDataInboundPopulationg();
@@ -201,26 +203,26 @@ export class SioBloodOnCallServiceComponent implements OnInit {
       }
 
       this.searchBenData.retrieveRegHistory(obj)
-        .subscribe(response => this.benDataOnBenIDSuccess(response));
+        this.subscriptionSink.add(.subscribe(response => this.benDataOnBenIDSuccess(response)));
       let object = {
 
         "requestID": this.commonAppData.outboundBloodReqtID
       }
       this.bloodOnCallService.getOutboundRequestDetails(object)
-        .subscribe((response) => { this.populateOutboundDetails(response) }, (err) => {
+        this.subscriptionSink.add(.subscribe((response) => { this.populateOutboundDetails(response) }, (err) => {
           //console.log(err)
-        });
+        }));
 
       if (this.sessionstorage.getItem('CLI') != undefined) {
         this.callerNumber = this.sessionstorage.getItem('CLI');
       }
     }
 
-    this.bloodOnCallService.getComponentTypes().subscribe(response => {
+    this.subscriptionSink.add(this.bloodOnCallService.getComponentTypes().subscribe(response => {
       this.componentTypes = this.successHandler(response)
       //    console.log(this.componentTypes);
-    });
-    this.bloodOnCallService.getBloodGroups().subscribe(response => this.bloodGroups = this.successHandler(response));
+    }));
+    this.subscriptionSink.add(this.bloodOnCallService.getBloodGroups().subscribe(response => this.bloodGroups = this.successHandler(response)));
     this.nameFlag = false;
     this.genderFlag = false;
     this.ageFlag = false;
@@ -230,7 +232,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     let requestObj = {
       "providerServiceMapID": this.commonAppData.current_service.serviceID
     };
-    this._availableServices.getServices(requestObj).subscribe(response => this.servicesSuccessHandler(response));
+    this.subscriptionSink.add(this._availableServices.getServices(requestObj).subscribe(response => this.servicesSuccessHandler(response)));
   }
 
   ngDoCheck() {
@@ -386,7 +388,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
   }
 
   getBloodRelatedDocument(blood_subservice_id) {
-    this.bloodOnCallService.getBloodBankUrl(this.providerServiceMapID).subscribe(response => { this.getUrlSuccess(response) });
+    this.subscriptionSink.add(this.bloodOnCallService.getBloodBankUrl(this.providerServiceMapID).subscribe(response => { this.getUrlSuccess(response) }));
     this.blood_related_document = [];
 
     let obj = {
@@ -394,7 +396,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
       'subServiceID': blood_subservice_id
     }
 
-    this.caseSheetService.getCategories(obj).subscribe((response) => {
+    this.subscriptionSink.add(this.caseSheetService.getCategories(obj).subscribe((response) => {
       //  console.log(response, 'ALL CATEGORIES IN CASE OF BLOOD RELATION');
       let categoryID = '';
       let subcategoryID = '';
@@ -429,7 +431,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
         }
       });
 
-    });
+    }));
   }
 
   preventTyping(e: any) {
@@ -448,7 +450,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
 
   getBloodRequests() {
 
-    this.bloodOnCallService.getBloodRequestsByBenID(this.beneficiaryRegID, null).subscribe(response => this.bloodRquestsHistory = this.handleSuccess(response));
+    this.subscriptionSink.add(this.bloodOnCallService.getBloodRequestsByBenID(this.beneficiaryRegID, null).subscribe(response => this.bloodRquestsHistory = this.handleSuccess(response)));
   }
   // ui manipulation functions
   disableFlag: boolean = true;
@@ -594,12 +596,12 @@ export class SioBloodOnCallServiceComponent implements OnInit {
       this.bloodRequestObj.benCallID = this.commonAppData.beneficiaryDataAcrossApp.beneficiaryDetails.benCallID;
     }
     this.bloodOnCallService.saveBloodRequest(JSON.stringify(this.bloodRequestObj))
-      .subscribe((response) => {
+      this.subscriptionSink.add(.subscribe((response) => {
         this.bloodRquest = this.bloodRequestHandler(response)
        
       }, (err) => {
         this.alertMesage.alert(err.status, 'error');
-      })
+      }))
 
   }
   msg: any;
@@ -657,14 +659,14 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     //   width: '420px',
     //   disableClose:true
     // });
-    //   dialogReff.afterClosed().subscribe(result => {
+    this.subscriptionSink.add(//   dialogReff.afterClosed().subscribe(result => {
     //   this.altPhNumber = result;
 
     //   // var idx = jQuery('.carousel-inner div.active').index();
     //   //    jQuery('#myCarousel').carousel(idx + 1);
     //   //     jQuery("#two").parent().find("a").removeClass('active-tab');
     //   //      jQuery("#two").find("a").addClass("active-tab");
-    //    });
+    //    }));
     //   if(this.altPhNumber == undefined) {
     //     console.log("Registered number will be used"); // Registered number will be used
     //   }
@@ -795,12 +797,12 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     else {
       this.bloodOutboundObj.outboundNeeded = false;
     }
-    this.bloodOnCallService.saveBloodRequest(JSON.stringify(this.bloodOutboundObj)).subscribe(response => {
+    this.subscriptionSink.add(this.bloodOnCallService.saveBloodRequest(JSON.stringify(this.bloodOutboundObj)).subscribe(response => {
       this.bloodBankSuccessHandler(response);
       if (form2.outboundReq) {
         this.takeFollowUp(form2);
       }
-    });
+    }));
 
 
     //TODO: remove here, keep where it is needed
@@ -836,10 +838,10 @@ export class SioBloodOnCallServiceComponent implements OnInit {
       "benCallID": id,
 
     }
-    this._callServices.closeCall(obj).subscribe((response) => {
+    this.subscriptionSink.add(this._callServices.closeCall(obj).subscribe((response) => {
       this.followUpSuccess(response);
     },
-      (err) => { console.log(err) });
+      (err) => { console.log(err) }));
   }
   followUpSuccess(res) {
     console.log(res);
@@ -869,7 +871,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
         "mobileNumbers": numbers
       }
     });
-    dialogReff.afterClosed().subscribe(result => {
+    this.subscriptionSink.add(dialogReff.afterClosed().subscribe(result => {
       if (result != '' && result != 'close') {
         let alternate_number = result[0];
         this.sendSMS(alternate_number, res);
@@ -882,7 +884,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
         }
       }
 
-    });
+    }));
 
     if (this.current_campaign == "INBOUND") {
       this.Bloodbank_Details = false;
@@ -932,17 +934,17 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     this.updatebloodOutboundObj.bloodOutboundDetailID = bloodOutboundDetailID;
 
     this._OWLService.updateBloodBankDetails(JSON.stringify(this.updatebloodOutboundObj))
-      .subscribe((response) => {
+      this.subscriptionSink.add(.subscribe((response) => {
         this.alertMesage.alert(this.currentLanguageSet.successfullyAdded, 'success');
         this.updateBloodOutboundRes = response
       }, (err) => {
         this.alertMesage.alert(err.status, 'error');
-      });
+      }));
   }
 
   // getBloodRequest(bloodReqId:any){
   //   console.log("getBloodRequests: "+this.beneficiaryRegID + " : "+bloodReqId);
-  //   this.bloodOnCallService.getBloodRequestsByBenID(this.beneficiaryRegID,bloodReqId).subscribe(response => this.bloodRquest = this.successHandler(response));
+  this.subscriptionSink.add(//   this.bloodOnCallService.getBloodRequestsByBenID(this.beneficiaryRegID,bloodReqId).subscribe(response => this.bloodRquest = this.successHandler(response)));
   // } 
 
   sendSMS(alt_number, blood_data) {
@@ -953,7 +955,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     let currentServiceID = this.commonAppData.current_serviceID;
 
     this._smsService.getSMStypes(currentServiceID)
-      .subscribe(response => {
+      this.subscriptionSink.add(.subscribe(response => {
         if (response != undefined && response.length > 0) {
           for (let i = 0; i < response.length; i++) {
             if (response[i].smsType.toLowerCase() === 'Blood on Call SMS'.toLowerCase()) {
@@ -1007,7 +1009,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
         }
       }, err => {
         console.log(err, 'error while fetching sms types');
-      })
+      }))
   }
 
 
@@ -1017,7 +1019,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     let currentServiceID = this.commonAppData.current_serviceID;
 
     this._smsService.getSMStypes(currentServiceID)
-      .subscribe(response => {
+      this.subscriptionSink.add(.subscribe(response => {
         if (response != undefined && response.length > 0) {
           for (let i = 0; i < response.length; i++) {
             if (response[i].smsType.toLowerCase() === 'SMS for Blood Bank'.toLowerCase()) {
@@ -1072,7 +1074,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
         }
       }, err => {
         console.log(err, 'error while fetching sms types');
-      })
+      }))
   }
 
   sendSMS_to_bloodbank_outbound(data) {
@@ -1081,7 +1083,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
     let currentServiceID = this.commonAppData.current_serviceID;
 
     this._smsService.getSMStypes(currentServiceID)
-      .subscribe(response => {
+      this.subscriptionSink.add(.subscribe(response => {
         if (response != undefined && response.length > 0) {
           for (let i = 0; i < response.length; i++) {
             if (response[i].smsType.toLowerCase() === 'SMS for Blood Bank'.toLowerCase()) {
@@ -1136,13 +1138,13 @@ export class SioBloodOnCallServiceComponent implements OnInit {
         }
       }, err => {
         console.log(err, 'error while fetching sms types');
-      })
+      }))
   }
 
   dialBeneficiary() {
     this.commonAppData.avoidingEvent = true;
 
-    this.cz_service.manualDialaNumber(this.commonAppData.agentID, this.callerNumber).subscribe((res) => {
+    this.subscriptionSink.add(this.cz_service.manualDialaNumber(this.commonAppData.agentID, this.callerNumber).subscribe((res) => {
       if (res.status.toLowerCase() === 'fail') {
         this.alertMesage.alert(this.currentLanguageSet.somethingWentWrongInCalling, 'error');
       } else {
@@ -1154,7 +1156,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
       console.log('resp', res);
     }, (err) => {
       this.alertMesage.alert(err.errorMessage);
-    });
+    }));
   }
 
   requestFullfiled(value, form) {
@@ -1168,7 +1170,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
   }
 
   closeCall() {
-    this.cz_service.disconnectCall(this.commonAppData.agentID).subscribe((res) => {
+    this.subscriptionSink.add(this.cz_service.disconnectCall(this.commonAppData.agentID).subscribe((res) => {
       this.alertMesage.alert(this.currentLanguageSet.callClosedSuccessfully, 'success');
       this.sessionstorage.removeItem("onCall");
       this.sessionstorage.removeItem("CLI");
@@ -1177,7 +1179,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
       this.showDialBlood = true;
       this.outBoundOnCall.emit(false);
       this.outboundService.onCall.next(true);
-    }),
+    })),
       (err) => { this.alertMesage.alert(this.currentLanguageSet.somethingWentWrongInClosing, 'error') }
 
   }
@@ -1187,7 +1189,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
   dialBloodBank(phn) {
     this.commonAppData.avoidingEvent = true;
 
-    this.cz_service.manualDialaNumber(this.commonAppData.agentID, phn).subscribe((res) => {
+    this.subscriptionSink.add(this.cz_service.manualDialaNumber(this.commonAppData.agentID, phn).subscribe((res) => {
       if (res.status.toLowerCase() === 'fail') {
         this.alertMesage.alert(this.currentLanguageSet.somethingWentWrongInCalling, 'error');
       } else {
@@ -1199,7 +1201,7 @@ export class SioBloodOnCallServiceComponent implements OnInit {
       console.log('resp', res);
     }, (err) => {
       this.alertMesage.alert(err.errorMessage);
-    });
+    }));
   }
  
 
@@ -1257,6 +1259,12 @@ export class SioBloodOnCallModel {
     }
     else {
       this.mobileLength = false;
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptionSink) {
+      this.subscriptionSink.unsubscribe();
     }
   }
 }

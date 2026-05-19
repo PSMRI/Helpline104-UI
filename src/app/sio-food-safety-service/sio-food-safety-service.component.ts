@@ -21,7 +21,8 @@
 */
 
 
-import { Component, OnInit, Inject, Input, ViewChild } from '@angular/core';
+import { OnDestroy, Component, OnInit, Inject, Input, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { dataService } from '../services/dataService/data.service';
 import { SearchService } from '../services/searchBeneficiaryService/search.service';
 import { FoodSafetyServices } from '../services/sioService/foodSafetyService.service';
@@ -46,7 +47,9 @@ declare var jQuery: any;
   templateUrl: './sio-food-safety-service.component.html',
   styleUrls: ['./sio-food-safety-service.component.css']
 })
-export class SioFoodSafetyServiceComponent implements OnInit {
+export class SioFoodSafetyServiceComponent implements OnDestroy, OnInit {
+  private subscriptionSink: Subscription = new Subscription();
+
 
   //  showComplaintForm = false;
   showTable = true;
@@ -143,12 +146,12 @@ export class SioFoodSafetyServiceComponent implements OnInit {
     this.maxDate = this.today;
     this.outboundRequestID = this.commonAppData.outboundRequestID;
 
-    this.searchBenData.getCommonData().subscribe(response => this.commonData = this.successHandeler(response));
+    this.subscriptionSink.add(this.searchBenData.getCommonData().subscribe(response => this.commonData = this.successHandeler(response)));
 
     if (this.currentCampaign == 'INBOUND') //During OUTBOUND THESE WILL BE CALLED ONE AFTER THE OTHER
     {
-      this.location.getDistricts(this.commonAppData.current_stateID_based_on_role).subscribe(response => this.districts = this.districtsuccessHandeler(response));
-      this._feedbackTypes.getFeedbackTypeID(this.commonAppData.current_service.serviceID).subscribe(response => this.getFeedbackTypeIDSuccessHandeler(response));
+      this.subscriptionSink.add(this.location.getDistricts(this.commonAppData.current_stateID_based_on_role).subscribe(response => this.districts = this.districtsuccessHandeler(response)));
+      this.subscriptionSink.add(this._feedbackTypes.getFeedbackTypeID(this.commonAppData.current_service.serviceID).subscribe(response => this.getFeedbackTypeIDSuccessHandeler(response)));
     }
 
     if (this.currentCampaign == 'INBOUND' && this.beneficiaryDetails && this.beneficiaryDetails.i_beneficiary) {
@@ -172,7 +175,7 @@ export class SioFoodSafetyServiceComponent implements OnInit {
       if(this.commonAppData.outboundBenID !=undefined)
       {
         this.searchBenData.retrieveRegHistory(obj)
-        .subscribe(response => this.benDataOnBenIDSuccess(response));
+        this.subscriptionSink.add(.subscribe(response => this.benDataOnBenIDSuccess(response)));
       }
      
     }
@@ -225,10 +228,10 @@ export class SioFoodSafetyServiceComponent implements OnInit {
     }
   }
   getFoodSafetyOutboundHistory() {
-    this.foodSafetyServices.getFoodSafetyComplaintsByBenID({ "requestID": this.outboundRequestID }).subscribe(res => this.outboundHistorySuccess(res),
+    this.foodSafetyServices.getFoodSafetyComplaintsByBenID({ "requestID": this.outboundRequestID }this.subscriptionSink.add().subscribe(res => this.outboundHistorySuccess(res),
       (err) => {
         this.alertMesage.alert(this.currentLanguageSet.errorInFetchingFoodSafetyHistory, 'error');
-      });
+      }));
   }
   preventTyping(e: any) {
     if (e.keyCode === 9) {
@@ -243,7 +246,7 @@ export class SioFoodSafetyServiceComponent implements OnInit {
   }
 
   getSubDistrict(districtID) {
-    this.searchBenData.getSubDistricts(districtID).subscribe(response => this.getSubDistrictSuccessHandeler(response));
+    this.subscriptionSink.add(this.searchBenData.getSubDistricts(districtID).subscribe(response => this.getSubDistrictSuccessHandeler(response)));
   }
 
   getSubDistrictSuccessHandeler(response) {
@@ -252,7 +255,7 @@ export class SioFoodSafetyServiceComponent implements OnInit {
   }
 
   getVillage(subDistrictID) {
-    this.searchBenData.getVillages(subDistrictID).subscribe(response => this.getVillageSuccessHandeler(response));
+    this.subscriptionSink.add(this.searchBenData.getVillages(subDistrictID).subscribe(response => this.getVillageSuccessHandeler(response)));
   }
 
   getVillageSuccessHandeler(response) {
@@ -367,14 +370,14 @@ export class SioFoodSafetyServiceComponent implements OnInit {
     }
     //   console.log("food safety complaint " + JSON.stringify(this.foodSafetyObj));
     this.foodSafetyServices.saveFoodSafetyComplaint(this.foodSafetyObj)
-      .subscribe((res) => {
+      this.subscriptionSink.add(.subscribe((res) => {
         if (this.outboundReq) {
           this.takeFollowUp(values, res.requestID);
         }
         this.foodSafetyComplaint = this.successHandler(res)
       }, (err) => {
         this.alertMesage.alert(err.status, 'error');
-      });
+      }));
 
   }
   altPhNumber: any;  //getting from modal window
@@ -421,14 +424,14 @@ export class SioFoodSafetyServiceComponent implements OnInit {
         }
       });
 
-      dialogReff.afterClosed().subscribe(result => {
+      this.subscriptionSink.add(dialogReff.afterClosed().subscribe(result => {
 
         if (result != 'close' && result != '') {
           this.sendSMS(result, response);
 
         }
 
-      });
+      }));
     }
 
     return response;
@@ -441,7 +444,7 @@ export class SioFoodSafetyServiceComponent implements OnInit {
     let currentServiceID = this.commonAppData.current_serviceID;
 
     this._smsService.getSMStypes(currentServiceID)
-      .subscribe(response => {
+      this.subscriptionSink.add(.subscribe(response => {
         if (response != undefined) {
           if (response.length > 0) {
             for (let i = 0; i < response.length; i++) {
@@ -498,7 +501,7 @@ export class SioFoodSafetyServiceComponent implements OnInit {
         }
       }, err => {
         console.log(err, 'error while fetching sms types');
-      })
+      }))
   }
 
   takeFollowUp(values, requestID) {
@@ -526,11 +529,11 @@ export class SioFoodSafetyServiceComponent implements OnInit {
 
     }
     //  console.log(obj);
-    this._callServices.closeCall(obj).subscribe((response) => { this.followUpSuccess(response) },
+    this.subscriptionSink.add(this._callServices.closeCall(obj).subscribe((response) => { this.followUpSuccess(response) },
       (err) => {
         console.log(err)
         this.alertMesage.alert(this.currentLanguageSet.errorWhileTakingFollowUpInFoodSafety, 'error')
-      });
+      }));
   }
   followUpSuccess(res) {
     console.log(res);
@@ -539,21 +542,21 @@ export class SioFoodSafetyServiceComponent implements OnInit {
   successHandeler(response) {
     //  console.log('the response is', response);
     if (this.currentCampaign == 'OUTBOUND') {
-      this.location.getDistricts(this.commonAppData.current_stateID_based_on_role).subscribe(response => this.districts = this.districtsuccessHandeler(response));
+      this.subscriptionSink.add(this.location.getDistricts(this.commonAppData.current_stateID_based_on_role).subscribe(response => this.districts = this.districtsuccessHandeler(response)));
     }
     return response;
   }
   districtsuccessHandeler(response) {
     //  console.log('the response is', response);
     if (this.currentCampaign == 'OUTBOUND') {
-      this._feedbackTypes.getFeedbackTypeID(this.commonAppData.current_service.serviceID).subscribe(response => this.getFeedbackTypeIDSuccessHandeler(response));
+      this.subscriptionSink.add(this._feedbackTypes.getFeedbackTypeID(this.commonAppData.current_service.serviceID).subscribe(response => this.getFeedbackTypeIDSuccessHandeler(response)));
     }
     return response;
   }
 
   getFoodSafetyComplaints() {
     let data = '{"beneficiaryRegID":"' + this.beneficiaryRegID + '"}';
-    this.foodSafetyServices.getFoodSafetyComplaintsByBenID(data).subscribe(res => this.handleSuccess(res));
+    this.subscriptionSink.add(this.foodSafetyServices.getFoodSafetyComplaintsByBenID(data).subscribe(res => this.handleSuccess(res)));
 
   }
   // //  populating form on the basis of request for self or not
@@ -728,7 +731,7 @@ export class SioFoodSafetyServiceComponent implements OnInit {
 			 console.log(JSON.stringify(object));			 
 			this.filteredFeedbackList = [];
 			this.viewALL = false;
-			this.foodSafetyServices.getFoodSafetyComplaintsByBenID(object).subscribe(res => 	this.filteredFeedbackList = res);
+			this.subscriptionSink.add(this.foodSafetyServices.getFoodSafetyComplaintsByBenID(object).subscribe(res => 	this.filteredFeedbackList = res));
 		}
   }
   revertFullTable() {
@@ -738,7 +741,7 @@ export class SioFoodSafetyServiceComponent implements OnInit {
     this.minLength = 1;
     this.maxLength = 30;
 		let data = '{"beneficiaryRegID":"' + this.beneficiaryRegID + '"}';
-    this.foodSafetyServices.getFoodSafetyComplaintsByBenID(data).subscribe(res => this.handleSuccess(res));
+    this.subscriptionSink.add(this.foodSafetyServices.getFoodSafetyComplaintsByBenID(data).subscribe(res => this.handleSuccess(res)));
 	}
  
 
@@ -784,6 +787,12 @@ export class SioFoodSafetyModal {
     }
     else {
       this.validNumber = false;
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.subscriptionSink) {
+      this.subscriptionSink.unsubscribe();
     }
   }
 }

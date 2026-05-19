@@ -21,7 +21,8 @@
 */
 
 
-import { Component, OnInit, Inject, Input, HostListener } from '@angular/core';
+import { OnDestroy, Component, OnInit, Inject, Input, HostListener } from '@angular/core';
+import { Subscription } from 'rxjs/Subscription';
 import { UserBeneficiaryData } from '../services/common/userbeneficiarydata.service'
 import { LocationService } from "../services/common/location.service";
 import { CoFeedbackService } from "../services/coService/co_feedback.service";
@@ -44,7 +45,9 @@ import { SetLanguageComponent } from 'app/set-language.component';
 	templateUrl: './sio-grievience-service.component.html',
 	styleUrls: ['./sio-grievience-service.component.css']
 })
-export class SioGrievienceServiceComponent implements OnInit {
+export class SioGrievienceServiceComponent implements OnDestroy, OnInit {
+  private subscriptionSink: Subscription = new Subscription();
+
 
 
 	countryID: any = 1;
@@ -228,14 +231,14 @@ export class SioGrievienceServiceComponent implements OnInit {
    		this.maxLength = 30;
 		this.searchType = "GrievanceId";
 		this._coFeedbackService.getFeedbackHistoryById(this.benficiaryRegId, this.calledServiceID)
-			.subscribe(response => this.setFeedbackHistoryByID(response));
+			this.subscriptionSink.add(.subscribe(response => this.setFeedbackHistoryByID(response)));
 	}
 	ngOnInit() {
         this.assignSelectedLanguage();
 		this.providerServiceMapID = this.commonAppData.current_service.serviceID;
 
 
-		this._feedbackTypes.getFeedbackTypeID(this.commonAppData.current_service.serviceID).subscribe(response => this.getFeedbackTypeIDSuccessHandeler(response));
+		this.subscriptionSink.add(this._feedbackTypes.getFeedbackTypeID(this.commonAppData.current_service.serviceID).subscribe(response => this.getFeedbackTypeIDSuccessHandeler(response)));
 		this.doi = new Date;
 		this.maxDate = new Date;
 
@@ -246,11 +249,11 @@ export class SioGrievienceServiceComponent implements OnInit {
 
 
 		this._coFeedbackService.getDesignations()
-			.subscribe(response => this.setDesignation(response));
+			this.subscriptionSink.add(.subscribe(response => this.setDesignation(response)));
 
 		this.initialized();
 		this._feedbackTypes.getFeedbackSeverityData(this.commonAppData.current_service.serviceID)
-			.subscribe(response => this.setFeedbackSeverity(response));
+			this.subscriptionSink.add(.subscribe(response => this.setFeedbackSeverity(response)));
 
 		this.current_role = this.commonAppData.current_role;
 
@@ -283,7 +286,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 			"providerServiceMapID": this.commonAppData.current_service.serviceID
 		};
 		this._userBeneficiaryData.getUserBeneficaryData(data)
-			.subscribe(response => this.SetUserBeneficiaryFeedbackData(response));
+			this.subscriptionSink.add(.subscribe(response => this.SetUserBeneficiaryFeedbackData(response)));
 	}
 	getFeedbackTypeIDSuccessHandeler(response) {
 		//	console.log("FEEDBACK ID TYPE ***###***", JSON.stringify(response));
@@ -302,12 +305,12 @@ export class SioGrievienceServiceComponent implements OnInit {
 
 		if (this.ashaFeedbackID && this.genericFeedbackID)
 			this._coFeedbackService.getFeedbackHistoryById(this.benficiaryRegId, this.calledServiceID)
-				.subscribe(response => this.setFeedbackHistoryByID(response));
+				this.subscriptionSink.add(.subscribe(response => this.setFeedbackHistoryByID(response)));
 	}
 
 	getCategory(feedbackID) {
 		this._coFeedbackService.getCategory(this.providerServiceMapID, feedbackID)
-			.subscribe(response => {
+			this.subscriptionSink.add(.subscribe(response => {
 				this.category = undefined;
 				this.subcategory = undefined;
 				this.categories = response.data;
@@ -319,18 +322,18 @@ export class SioGrievienceServiceComponent implements OnInit {
 				}
 			}, err => {
 				console.log(err, 'error while fetching categories based on feedback ID');
-			});
+			}));
 	}
 
 	getSubCategory(categoryID) {
 		this._coFeedbackService.getSubCategory(categoryID)
-			.subscribe(response => {
+			this.subscriptionSink.add(.subscribe(response => {
 				this.subcategory = undefined;
 				this.subcategories = response.data;
 				//	console.log(response,"sub category");
 			}, err => {
 				console.log(err, 'error while fetching sub-categories based on category ID');
-			});
+			}));
 	}
 
 	SetUserBeneficiaryFeedbackData(regData: any) {
@@ -347,7 +350,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 		this.distID=-1;
 	    this.instID=-1;
 		this._locationService.getDistricts(state)
-			.subscribe(response => this.SetDistricts(response));
+			this.subscriptionSink.add(.subscribe(response => this.SetDistricts(response)));
 	}
 	SetDistricts(response: any) {
 		this.districts = response;
@@ -363,7 +366,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 		}
 		
 		this._locationService.getTaluks(district)
-			.subscribe(response => this.SetTaluks(response));
+			this.subscriptionSink.add(.subscribe(response => this.SetTaluks(response)));
 	}
 	SetTaluks(response: any) {
 		this.taluks = response;
@@ -372,7 +375,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 	}
 	GetBlocks(taluk: number) {
 		this._locationService.getBranches(taluk)
-			.subscribe(response => this.SetBlocks(response));
+			this.subscriptionSink.add(.subscribe(response => this.SetBlocks(response)));
 	}
 	SetBlocks(response: any) {
 		this.blocks = response;
@@ -381,7 +384,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 	GetInstitutes() {
 		let object = { "providerServiceMapID": this.calledServiceID };
 		this._locationService.getInstituteList(object)
-			.subscribe(response => this.SetInstitutes(response));
+			this.subscriptionSink.add(.subscribe(response => this.SetInstitutes(response)));
 	}
 	SetInstitutes(response: any) {
 		//	console.log(response, "institutes");
@@ -392,7 +395,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 		this.instID=institutionTypeId;
          		
 		this._locationService.getInstituteNames(institutionTypeId+"/"+this.distID)
-			.subscribe(response => this.SetInstitutesName(response));
+			this.subscriptionSink.add(.subscribe(response => this.SetInstitutesName(response)));
 
 	}
 	SetInstitutesName(response: any) {
@@ -485,11 +488,11 @@ export class SioGrievienceServiceComponent implements OnInit {
 		feedbackObjs[0] = feedbackObj;
 		//	console.log(JSON.stringify(feedbackObj));
 		this._coFeedbackService.createFeedback(feedbackObjs)
-			.subscribe((response) => {
+			this.subscriptionSink.add(.subscribe((response) => {
 				this.showtable(response, object);
 			}, (err) => {
 				this.alertMesage.alert(err.status, 'error');
-			});
+			}));
 	}
 
 	showtable(response, obj) {
@@ -521,7 +524,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 
 		//this.data.push(object);
 		this._coFeedbackService.getFeedbackHistoryById(this.benficiaryRegId, this.calledServiceID)
-			.subscribe(response => this.setFeedbackHistoryByID(response));
+			this.subscriptionSink.add(.subscribe(response => this.setFeedbackHistoryByID(response)));
 		this.commonAppData.serviceAvailed.next(true); // service availed, now call can be marked as valid in closure page
 		this.msg = this.currentLanguageSet.grievanceRegisteredWithFeedbackID;
 		var message = this.msg + response.data.requestID;
@@ -537,7 +540,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 			}
 		});
 
-		dialogReff.afterClosed().subscribe(result => {
+		this.subscriptionSink.add(dialogReff.afterClosed().subscribe(result => {
 			if (result != 'close' && result !='') {
 				this.sendSMS(result, response.data, this.isHealthCareWorker);
 			}
@@ -548,7 +551,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 			this.doi = new Date;
 			this.initialized();
 
-		});
+		}));
 		
 
 	}
@@ -566,7 +569,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 			smsType = 'Generic Grievance SMS';
 		}
 		this._smsService.getSMStypes(currentServiceID)
-			.subscribe(response => {
+			this.subscriptionSink.add(.subscribe(response => {
 				if (response != undefined) {
 					if (response.length > 0) {
 						for (let i = 0; i < response.length; i++) {
@@ -623,7 +626,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 				}
 			}, err => {
 				console.log(err, 'error while fetching sms types');
-			})
+			}))
 	}
 
 	updateCount() {
@@ -661,7 +664,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 		data.providerServiceMapID = this.calledServiceID;
 		data.feedbackTypeID = this.genericFeedbackID;
 		this._feedbackTypes.getFeedbackTypesData(data)
-			.subscribe(response => this.setFeedbackTypes(response));
+			this.subscriptionSink.add(.subscribe(response => this.setFeedbackTypes(response)));
 	}
 
 	filterFeedbackList(searchTerm: string) {
@@ -676,7 +679,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 			this.filteredFeedbackList = [];
 			this.viewALL = false;
 			this._coFeedbackService.getFeedbackHistoryByPh(object)
-				.subscribe(response => this.setFeedbackHistoryByID(response));
+				this.subscriptionSink.add(.subscribe(response => this.setFeedbackHistoryByID(response)));
 		}
 	}
 	onSearchChange(type) {
@@ -720,7 +723,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 			data.providerServiceMapID = this.calledServiceID;
 			data.feedbackTypeID = this.ashaFeedbackID;
 			this._feedbackTypes.getFeedbackTypesData(data)
-				.subscribe(response => this.setFeedbackTypes(response));
+				this.subscriptionSink.add(.subscribe(response => this.setFeedbackTypes(response)));
 		}
 		if (value === "No") {
 			this.isHealthCareWorker = false;
@@ -729,7 +732,7 @@ export class SioGrievienceServiceComponent implements OnInit {
 			data.providerServiceMapID = this.calledServiceID;
 			data.feedbackTypeID = this.genericFeedbackID;
 			this._feedbackTypes.getFeedbackTypesData(data)
-				.subscribe(response => this.setFeedbackTypes(response));
+				this.subscriptionSink.add(.subscribe(response => this.setFeedbackTypes(response)));
 		}
 	}
 }
@@ -760,4 +763,10 @@ export class FeedbackResponseModel {
 		getLanguageJson.setLanguage();
 		this.currentLanguageSet = getLanguageJson.currentLanguageObject;
 	  }
+
+  ngOnDestroy() {
+    if (this.subscriptionSink) {
+      this.subscriptionSink.unsubscribe();
+    }
+  }
 }

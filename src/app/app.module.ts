@@ -109,6 +109,7 @@ import { CallerService } from './services/common/caller.service';
 import { CzentrixServices } from './services/czentrix/czentrix.service';
 import { PrescriptionService } from './services/prescriptionServices/prescription.service';
 import { ConfigService } from './services/config/config.service';
+import { LoggerService } from './services/loggerService/logger.service';
 import { CallServices } from './services/callservices/callservice.service';
 import { OutboundSearchRecordService } from './services/outboundServices/outbound-search-records.service';
 import { OutboundReAllocationService } from './services/outboundServices/outbound-call-reallocation.service';
@@ -472,7 +473,7 @@ import { FeedbackModule } from './platform-feedback/feedback.module';
     ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 
-  providers: [loginService, dataService, DashboardHttpServices, HttpServices, SearchService, CoReferralService, SchemeService, CallServices,
+  providers: [LoggerService, loginService, dataService, DashboardHttpServices, HttpServices, SearchService, CoReferralService, SchemeService, CallServices,
     CoCategoryService, FeedbackTypes, LocationService, UserBeneficiaryData, CoFeedbackService,
     CzentrixServices, PrescriptionService, CaseSheetService, OtherHelplineService,
     SioService, EpidemicServices, CDSSService, OrganDonationServices, BloodOnCallServices, CallerService, FoodSafetyServices, ConfigService,sessionStorageService,

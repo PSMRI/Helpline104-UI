@@ -54,6 +54,7 @@ import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { CallerService } from "app/services/common/caller.service";
 import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
+import { LoggerService } from '../../services/loggerService/logger.service';
 
 declare var jQuery: any;
 
@@ -250,6 +251,7 @@ export class CaseSheetComponent implements OnInit {
   saveMainFlag : boolean = false;
  
   constructor(
+    private logger: LoggerService,
     private _userData: UserBeneficiaryData,
     private _locationService: LocationService,
     private _smsService: SmsTemplateService,
@@ -295,14 +297,14 @@ export class CaseSheetComponent implements OnInit {
     this.saved_data.roleChanged.subscribe(
       (response) => {
         if (response === "HAO") {
-          console.log("subject recieved");
+          this.logger.debug("subject recieved");
           this.beneficiaryDetails =
             this.saved_data.beneficiaryDataAcrossApp.beneficiaryDetails;
           this.benDataInboundPopulationg();
         }
       },
       (err) => {
-        console.log("err", err);
+        this.logger.debug("err", err);
       }
     );
   }
@@ -678,11 +680,11 @@ export class CaseSheetComponent implements OnInit {
 
   getSubDistrictSuccessHandelerFromDom(response) {
     this.subDistrictsFromDom = response;
-    //	console.log("********SUBDISTRICT", this.subDistricts);
+    //	this.logger.debug("********SUBDISTRICT", this.subDistricts);
   }
   getSubDistrictSuccessHandelerToDom(response) {
     this.subDistrictsToDom = response;
-    //	console.log("********SUBDISTRICT", this.subDistricts);
+    //	this.logger.debug("********SUBDISTRICT", this.subDistricts);
   }
 
   getVillage(subDistrictID) {
@@ -693,7 +695,7 @@ export class CaseSheetComponent implements OnInit {
 
   getVillageSuccessHandeler(response) {
     this.villages = response;
-    //	console.log("********VILLAGES", this.villages);
+    //	this.logger.debug("********VILLAGES", this.villages);
   }
 
   onChangeSymptom(event, symp) {
@@ -738,12 +740,12 @@ export class CaseSheetComponent implements OnInit {
   onCheckQuestion1(fev) {
     if (fev == true) {
       this.symptomQ1 = "yes";
-      console.log("Qut1Checked");
+      this.logger.debug("Qut1Checked");
       this.disablesymptomQ1 = false;
       this.disablenoSymptom = true;
     } else {
       this.symptomQ1 = "no";
-      console.log("Qut1UnChecked");
+      this.logger.debug("Qut1UnChecked");
       this.disablesymptomQ1 = true;
       if (this.symptomQ2 == "no" && this.symptomQ3 == "no")
         this.disablenoSymptom = false;
@@ -821,7 +823,7 @@ export class CaseSheetComponent implements OnInit {
       this.suspectedCovid="";  
     }
     /*this.recommendationArray=this.recommendationText.split(":");
-    console.log("REcomArray"+this.recommendationArray)*/
+    this.logger.debug("REcomArray"+this.recommendationArray)*/
   /*  this.covidFill_flag=true;
   }*/
   travelStatuschange(boolean_flag) {
@@ -918,7 +920,7 @@ export class CaseSheetComponent implements OnInit {
         },
       ];
 
-      console.log("GENDERS", this.genders);
+      this.logger.debug("GENDERS", this.genders);
     } else {
       this.firstName = this.saved_data.firstName;
       this.parentBenRegName = this.saved_data.firstName;
@@ -981,7 +983,7 @@ fetchBenenficiaryDetails()
 
     },
     (err) => {
-      console.log("error in benDetailByCallerID");
+      this.logger.debug("error in benDetailByCallerID");
       this.alertMessage.alert(err.errorMessage, 'error');
       this.checkPatientDetailsPatched();
     }
@@ -1020,7 +1022,7 @@ fetchBenenficiaryDetails()
   }
 
   successHandeler(response) {
-    //  console.log("common data", response);
+    //  this.logger.debug("common data", response);
     if (response) {
       this.commonData = response;
       this.relationShips = response.benRelationshipTypes.filter(function (obj) {
@@ -1035,7 +1037,7 @@ fetchBenenficiaryDetails()
   }
 
   getSubserviceID() {
-    console.log(this.services, "ALL SUB SERVICES");
+    this.logger.debug(this.services, "ALL SUB SERVICES");
 
     for (let i = 0; i < this.services.length; i++) {
       if (this.current_role == "HAO") {
@@ -1069,7 +1071,7 @@ fetchBenenficiaryDetails()
       }
     }
     this.getCategories();
-    console.log("this.subServiceID: " + this.subServiceID);
+    this.logger.debug("this.subServiceID: " + this.subServiceID);
   }
 
   getCategories() {
@@ -1118,8 +1120,8 @@ fetchBenenficiaryDetails()
   subCategoryID: any;
 
   showDetails(categoryId: any, subCategoryID: any) {
-    console.log(this.saved_data.beneficiaryDataAcrossApp.beneficiaryDetails);
-    console.log(this.saved_data.benRegID);
+    this.logger.debug(this.saved_data.beneficiaryDataAcrossApp.beneficiaryDetails);
+    this.logger.debug(this.saved_data.benRegID);
     const getDocuments = {
       categoryID: categoryId ? categoryId : null,
       subCategoryID: subCategoryID ? subCategoryID : null,
@@ -1127,7 +1129,7 @@ fetchBenenficiaryDetails()
         ? this.saved_data.current_service.serviceID
         : null,
     };
-    console.log("Request: " + JSON.stringify(getDocuments));
+    this.logger.debug("Request: " + JSON.stringify(getDocuments));
     this.caseSheetService.getDetails(getDocuments).subscribe(
       (response) => {
         if (response !== undefined && response !== null) {
@@ -1135,7 +1137,7 @@ fetchBenenficiaryDetails()
         }
       },
       (err) => {
-        console.log(err);
+        this.logger.debug(err);
       }
     );
   }
@@ -1153,7 +1155,7 @@ fetchBenenficiaryDetails()
         this.noDocument = false;
       }
     });
-    console.log(this.detailsList);
+    this.logger.debug(this.detailsList);
   }
   guidelinesFlag: boolean = false;
   informationFlag: boolean = false;
@@ -1288,7 +1290,7 @@ fetchBenenficiaryDetails()
     } else if (this.current_campaign == "OUTBOUND") {
       gen = this.saved_data.ben_gender_name.charAt(0);
     }
-    console.log(
+    this.logger.debug(
       "this.saved_data.ben_gender_name: " + this.saved_data.ben_gender_name
     );
     if (this.pcc !== null && this.pcc !== undefined && this.pcc !== "") {
@@ -1301,11 +1303,11 @@ fetchBenenficiaryDetails()
           this.success(any);
         },
         (err) => {
-          console.log(err);
+          this.logger.debug(err);
         }
       );
 
-      console.log("patientData: " + JSON.stringify(this.patientData));
+      this.logger.debug("patientData: " + JSON.stringify(this.patientData));
 
       this.sctID_pcc = "";
       this.sctID_pcc_toSave = "";
@@ -1319,7 +1321,7 @@ fetchBenenficiaryDetails()
   getSnomedCTRecord(term, field) {
     this.snomedService.getSnomedCTRecord(term).subscribe(
       (response) => {
-        console.log("Snomed response: " + JSON.stringify(response));
+        this.logger.debug("Snomed response: " + JSON.stringify(response));
 
         if (response.conceptID) {
           if (field == "pcc") {
@@ -1332,7 +1334,7 @@ fetchBenenficiaryDetails()
             else this.sctID_psd_toSave += "," + response.conceptID;
           }
 
-          console.log("sctID_pcc: " + this.sctID_pcc);
+          this.logger.debug("sctID_pcc: " + this.sctID_pcc);
         } else {
           // No SnomedCT ID found
           if (field == "pcc") {
@@ -1344,7 +1346,7 @@ fetchBenenficiaryDetails()
         }
       },
       (err) => {
-        console.log("getSnomedCTRecord Error");
+        this.logger.debug("getSnomedCTRecord Error");
       }
     );
   }
@@ -1352,7 +1354,7 @@ fetchBenenficiaryDetails()
   result: any = [];
   success(res) {
     this.questions = res;
-    console.log(this.questions["Questions"]);
+    this.logger.debug(this.questions["Questions"]);
     if (
       this.questions["Questions"] !== undefined &&
       this.questions["Questions"] !== null &&
@@ -1369,7 +1371,7 @@ fetchBenenficiaryDetails()
         },
       });
       dr.afterClosed().subscribe((result) => {
-        console.log("POST MODAL CLOSING", result);
+        this.logger.debug("POST MODAL CLOSING", result);
         this.result = result;
 
         this.psd = "";
@@ -1399,7 +1401,7 @@ fetchBenenficiaryDetails()
           this.recommendedAction = this.recommendedAction.trim().slice(0, 300);
           this.psd = this.psd.trim().slice(0, 100);
           this.selectedSymptoms = this.selectedSymptoms.trim().slice(0, 300);
-          console.log(
+          this.logger.debug(
             "lengths",
             this.selectedSymptoms.length,
             "/300",
@@ -1465,7 +1467,7 @@ fetchBenenficiaryDetails()
           this.handlesuccess2(response);
         },
         (err) => {
-          console.log("Case Sheet Error");
+          this.logger.debug("Case Sheet Error");
         }
       );
     });
@@ -1779,7 +1781,7 @@ fetchBenenficiaryDetails()
       this.question2 = "";
     }
 
-    console.log(
+    this.logger.debug(
       "QuestionStatus" +
         this.question1 +
         "," +
@@ -1807,7 +1809,7 @@ fetchBenenficiaryDetails()
       this.question2 == "yes" &&
       this.question3 == "no"
     ) {
-      console.log("Questionyes" + this.question2);
+      this.logger.debug("Questionyes" + this.question2);
       this.recommendationText =
         "Treat as Acute Respiratory Infection.Kindly follow Cough Etiquette, Hand Hygiene";
 
@@ -1817,8 +1819,8 @@ fetchBenenficiaryDetails()
       this.question2 == "no" &&
       this.question3 == "no"
     ) {
-      console.log("Question2" + this.question2);
-      console.log(
+      this.logger.debug("Question2" + this.question2);
+      this.logger.debug(
         "QuestionStatus" +
           this.question1 +
           "," +
@@ -1842,7 +1844,7 @@ fetchBenenficiaryDetails()
         "Facility Quarantine 24 hours.Test for Covid 19; if tested positive, follow instructions of the hospital personnel.Look for comorbities (Diabetes, Hypertension) - No comorbidities home quarantine for 28 days; With comorbidities, manage comorbidities and home quarantine for 28 days; Refer to 104/1075 if any symptoms arise.Kindly follow Cough Etiquette, Hand Hygiene, Social Distancing";
 
       this.suspectedCovid = "Yes";
-      console.log("RecommendationNew2" + this.recommendationText);
+      this.logger.debug("RecommendationNew2" + this.recommendationText);
     } else if (
       this.question1 == "yes" &&
       this.question2 == "no" &&
@@ -1884,11 +1886,11 @@ fetchBenenficiaryDetails()
         ? this.currentLanguageSet.counsellingSheetSavedSuccessfully
         : this.currentLanguageSet.caseSheetSavedSuccessfully;
     this.getCaseSheetData();
-    console.log("Recommendation-message" + this.recommendationText);
+    this.logger.debug("Recommendation-message" + this.recommendationText);
     if (this.recommendationText == "") {
       if (this.msg != undefined) {
         this.alertMessage.alert(this.msg, "success");
-        console.log("Successfull Message");
+        this.logger.debug("Successfull Message");
       }
     } else {
       let dialogReff = this.dialog.open(CaseSheetCovidModalComponent, {
@@ -1910,7 +1912,7 @@ fetchBenenficiaryDetails()
           this.altPhNumber != "" &&
           this.altPhNumber != "close"
         ) {
-          console.log("Registered number will be used"); // Registered number will be used
+          this.logger.debug("Registered number will be used"); // Registered number will be used
 
           // ** code to send SMS **
           this.sendSMS(this.beneficiaryRegID);
@@ -1920,14 +1922,14 @@ fetchBenenficiaryDetails()
           this.altPhNumber != "close"
         ) {
           this.saveAlternateNumber(this.beneficiaryRegID, this.altPhNumber);
-          console.log(this.altPhNumber);
+          this.logger.debug(this.altPhNumber);
           this.sendSMS(this.beneficiaryRegID, this.altPhNumber);
         }
       });
     }
     this.formReset();
     this.caseSheetForm.controls["coviddisplay"].setValue("no");
-    console.log(
+    this.logger.debug(
       "Covid Display" + this.caseSheetForm.controls["coviddisplay"].value
     );
     this.isdisplay = false;
@@ -1979,10 +1981,10 @@ fetchBenenficiaryDetails()
                       }
                     }
                   }
-                  /*  console.log("DataResponse"+response.data)
-                console.log("BenHistIDresponse"+response.benHistoryID)
-                console.log("BenHistID"+response.data.benHistoryID);
-                console.log("BenHistValue"+response.data[0].benHistoryID);*/
+                  /*  this.logger.debug("DataResponse"+response.data)
+                this.logger.debug("BenHistIDresponse"+response.benHistoryID)
+                this.logger.debug("BenHistID"+response.data.benHistoryID);
+                this.logger.debug("BenHistValue"+response.data[0].benHistoryID);*/
                   if (smsTypeID != "") {
                     let reqObj = {
                       alternateNo: alternate_Phone_No,
@@ -2002,7 +2004,7 @@ fetchBenenficiaryDetails()
 
                     this._smsService.sendSMS(reqArr).subscribe(
                       (response) => {
-                        //	console.log(response, 'SMS Sent');
+                        //	this.logger.debug(response, 'SMS Sent');
                         if (response) {
                           //setTimeout(this.messageAlertHAO(), 1);
                           this.alertMessage.alert(
@@ -2013,7 +2015,7 @@ fetchBenenficiaryDetails()
                       },
                       (err) => {
                         //	this.messageAlertHAO();
-                        console.log(err, "SMS not sent Error");
+                        this.logger.debug(err, "SMS not sent Error");
                       }
                     );
                   }
@@ -2021,13 +2023,13 @@ fetchBenenficiaryDetails()
               },
               (err) => {
                 //this.messageAlertHAO();
-                console.log(err, "Error in fetching sms templates");
+                this.logger.debug(err, "Error in fetching sms templates");
               }
             );
         }
       },
       (err) => {
-        console.log(err, "error while fetching sms types");
+        this.logger.debug(err, "error while fetching sms types");
       }
     );
   }
@@ -2053,7 +2055,7 @@ fetchBenenficiaryDetails()
     if (this.current_campaign == "OUTBOUND") {
       //   this.loadLatestHistory();
     }
-    console.log(this.caseSheetData);
+    this.logger.debug(this.caseSheetData);
 
     // Load latest history for CO outbound followup
     // if (this.saved_data.current_campaign == 'OUTBOUND')
@@ -2065,7 +2067,7 @@ fetchBenenficiaryDetails()
       this.recentPrescriptionData = res;
     }
 
-    console.log(this.recentPrescriptionData);
+    this.logger.debug(this.recentPrescriptionData);
   }
   showHistory() {
     this.benToMcts = "";
@@ -2239,7 +2241,7 @@ fetchBenenficiaryDetails()
           );
       },
       (err) => {
-        console.log("error");
+        this.logger.debug("error");
       }
     );
   }
@@ -2436,7 +2438,7 @@ export class DialogOverviewExampleDialog {
 
   getQuestions() {
     this.questionid = [];
-    console.log(this.data.patientData, "data.patientData");
+    this.logger.debug(this.data.patientData, "data.patientData");
     this._CDSSService
       .getQuestions(this.data.patientData)
       .subscribe((any) => this.successHandeler(any));
@@ -2460,17 +2462,17 @@ export class DialogOverviewExampleDialog {
       this.page1 = false;
       this.page2 = true;
     }
-    console.log("Data for inbetween model ", val);
+    this.logger.debug("Data for inbetween model ", val);
   }
 
   getAnswers() {
-    console.log(this.questionid);
+    this.logger.debug(this.questionid);
     this.sizeQuestion = [];
     this.questions.Questions.forEach((element) => {
-      console.log(element);
+      this.logger.debug(element);
 
       this.getKeys(element).forEach((element1) => {
-        console.log(Object.keys(element[element1]).length);
+        this.logger.debug(Object.keys(element[element1]).length);
         this.sizeQuestion.push(Object.keys(element[element1]).length);
       });
     });
@@ -2482,11 +2484,11 @@ export class DialogOverviewExampleDialog {
         code[index] += this.sizeQuestion[indexj];
       }
     }
-    console.log(code);
+    this.logger.debug(code);
     var answer = [];
     for (var index = 0; index < this.questionid.length; index++) {
       var element = this.questionid[index].split(".");
-      console.log(element + ":" + index);
+      this.logger.debug(element + ":" + index);
       if (Number(element[0]) > 1) {
         answer[index] = code[Number(element[0]) - 2] + Number(element[1]);
       } else {
@@ -2495,10 +2497,10 @@ export class DialogOverviewExampleDialog {
     }
 
     var response: any = {};
-    console.log(this.questions);
+    this.logger.debug(this.questions);
     response["SymptomId"] = this.questions["id"];
     response["response"] = answer;
-    console.log(response);
+    this.logger.debug(response);
 
     this._CDSSService
       .getAnswer(response)
@@ -2506,7 +2508,7 @@ export class DialogOverviewExampleDialog {
   }
 
   toggle(element: any, value: any) {
-    console.log(value);
+    this.logger.debug(value);
     if (element.selected == undefined) {
       element.selected = [];
     }
@@ -2541,7 +2543,7 @@ export class DialogOverviewExampleDialog {
     this.formattedResult1 = JSON.parse(
       JSON.stringify(this.formattedResult.data)
     );
-    console.log("formateed result 1", this.formattedResult1);
+    this.logger.debug("formateed result 1", this.formattedResult1);
     this.formattedResult.load(this.formattedResult.data);
     if (this.formattedResult1.length != 0) {
       this.page2 = false;
@@ -2572,7 +2574,7 @@ export class DialogOverviewExampleDialog {
   resultFunction(data: any) {
     this.showQuestions = false;
     this.result = data;
-    console.log(this.result);
+    this.logger.debug(this.result);
     var diseases = Object.keys(this.result);
     this.formattedResult = [];
     for (var index = 0; index < diseases.length; index++) {
@@ -2587,14 +2589,14 @@ export class DialogOverviewExampleDialog {
       this.formattedResult.push(format);
     }
 
-    console.log(this.formattedResult);
+    this.logger.debug(this.formattedResult);
   }
   diseasess: Array<any> = [];
   action: Array<any> = [];
   // action:any="";
   indexArray: Array<any> = [];
   getDiseaseName(val: any, i: any, action: any, symptoms, selectedIndexArray) {
-    console.log(this.diseasess);
+    this.logger.debug(this.diseasess);
 
     let obj = {
       diseases: [],
@@ -2632,15 +2634,15 @@ export class DialogOverviewExampleDialog {
         this.indexArray.push(i);
       }
     }
-    console.log(this.diseasess);
+    this.logger.debug(this.diseasess);
   }
 
   successHandeler(questions) {
-    console.log("Get Questions:" + JSON.stringify(questions));
+    this.logger.debug("Get Questions:" + JSON.stringify(questions));
     this.questions = questions;
   }
   handleAnswers(answers) {
-    console.log("answers", answers);
+    this.logger.debug("answers", answers);
     this.answers = answers;
   }
   changePage(val) {
@@ -2868,31 +2870,31 @@ export class CaseSheetRecentPrescription {
 
                       this._smsService.sendSMS(req_arr).subscribe(
                         (ressponse) => {
-                          console.log(ressponse, "SMS Sent");
+                          this.logger.debug(ressponse, "SMS Sent");
                           this.alertMessage.alert(
                             this.currentLanguageSet.smsSent,
                             "success"
                           );
                         },
                         (err) => {
-                          console.log(err, "SMS not sent Error");
+                          this.logger.debug(err, "SMS not sent Error");
                         }
                       );
                     }
                   }
                 },
                 (err) => {
-                  console.log(err, "Error in fetching sms templates");
+                  this.logger.debug(err, "Error in fetching sms templates");
                 }
               );
           }
         },
         (err) => {
-          console.log(err, "error while fetching sms types");
+          this.logger.debug(err, "error while fetching sms types");
         }
       );
     } else {
-      console.log("Service ID not found");
+      this.logger.debug("Service ID not found");
     }
 
     this.dialogReff.close();

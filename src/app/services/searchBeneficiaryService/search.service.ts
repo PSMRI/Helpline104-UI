@@ -29,6 +29,7 @@ import 'rxjs/add/operator/map';
 import { InterceptedHttp } from './../../http.interceptor'
 import { ConfigService } from "../config/config.service";
 import { SecurityInterceptedHttp } from './../../http.securityinterceptor';
+import { LoggerService } from '../../../services/loggerService/logger.service';
 
 @Injectable()
 export class SearchService {
@@ -54,7 +55,8 @@ export class SearchService {
     getVillages_url: any;
     /*end*/
 
-    constructor(private _http: SecurityInterceptedHttp, private _config: ConfigService, private httpIntercept: InterceptedHttp) {
+    constructor(
+    private logger: LoggerService,private _http: SecurityInterceptedHttp, private _config: ConfigService, private httpIntercept: InterceptedHttp) {
         this._getuserdatabyno = this._commonBaseUrl + 'beneficiary/searchUserByPhone';
         this._searchBeneficiaryURL = this._commonBaseUrl + "beneficiary/searchBeneficiary";
 
@@ -112,8 +114,8 @@ export class SearchService {
         //     + '"stateID":"' + district + '",'
         //     + '"cityID":"' + talukSearch + '"'
         //     + '}]}';
-        // console.log(JSON.stringify(createData));
-        // console.log(createData);
+        // this.logger.debug(JSON.stringify(createData));
+        // this.logger.debug(createData);
 
         // return this.httpIntercept.post(this.address + '/beneficiary/searchBeneficiary', createData)
         //     .map(this.extractData).catch(this.handleError);
@@ -123,14 +125,14 @@ export class SearchService {
 
     updatebeneficiaryincall(callData: any) {
         callData.is1097 = false;
-    //    console.log('Data for call update: ' + callData);
+    //    this.logger.debug('Data for call update: ' + callData);
         return this._http.post(this._updatebeneficiaryincall, callData)
           .map(this.extractData)
           .catch(this.handleError);
       }
 
     // retrieveRegHistoryByPhoneNo(phoneNo: any) {
-    //     console.log("retrieveRegHistoryByPhone")
+    //     this.logger.debug("retrieveRegHistoryByPhone")
     //     let data = { "phoneNo": "" + phoneNo, "pageNo": 1, "rowsPerPage": 1000 };
     //     return this._http.post(this.address + "/beneficiary/searchUserByPhone/", data)
     //         .map(this.extractData).catch(this.handleError);
@@ -199,7 +201,7 @@ export class SearchService {
     }
 
     retrieveRegHistory(registrationNo: any) {
-    //    console.log("retrieveRegHistory")
+    //    this.logger.debug("retrieveRegHistory")
         return this.httpIntercept.post(this._commonBaseUrl + this._getuserdata, registrationNo).map(this.extractData).catch(this.handleError);
     }
 
@@ -207,7 +209,7 @@ export class SearchService {
         var headers = new Headers();
         headers.append('Content-Type', 'application/json');
 
-    //    console.log('data to be updated in service is', values)
+    //    this.logger.debug('data to be updated in service is', values)
         return this.httpIntercept.post(this._commonBaseUrl + this._updatebeneficiaryurl, values)
             .map(this.extractData).catch(this.handleError);
         // }

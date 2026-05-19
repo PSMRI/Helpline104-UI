@@ -57,6 +57,7 @@ import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { RegisterService } from "app/services/register-services/register-service";
 import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
+import { LoggerService } from '../../services/loggerService/logger.service';
 
 @Component({
   selector: "app-beneficiary-registration-104",
@@ -208,6 +209,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
   healthIDValue: string = "";
   searchPattern: string;
   constructor(
+    private logger: LoggerService,
     private _util: SearchService,
     public router: ActivatedRoute,
     private _callServices: CallServices,
@@ -254,7 +256,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       this.storeCallID(this.beneficiaryRegID, this.callerID);
     }
     this.initiallyState();
-    //	console.log(this.getCommonData.current_service, "@@@@@");
+    //	this.logger.debug(this.getCommonData.current_service, "@@@@@");
     this.setDateLimits();
     this.setDefaultAgeUnit();
   }
@@ -364,7 +366,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.all_titles = res.m_Title;
     this.current_titles = res.m_Title;
     this.govtID = res.govtIdentityTypes;
-    console.log("IDsuccessHandler", res.benRelationshipTypes);
+    this.logger.debug("IDsuccessHandler", res.benRelationshipTypes);
     this.relationShips = res.benRelationshipTypes.filter(function (obj) {
       return obj.benRelationshipType.toLowerCase() != "self";
     });
@@ -375,7 +377,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
   }
   //Purpose: Backward navigation to the registration form
   capturePrimaryInfo(val: any) {
-    console.log("reg form", this.registrationForm.value);
+    this.logger.debug("reg form", this.registrationForm.value);
     if (val == "registrationPage2") {
       this.registrationPage1 = true;
       this.registrationPage2 = false;
@@ -422,7 +424,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
 
   getSubDistrictSuccessHandeler(response) {
     this.subDistricts = response;
-    //	console.log("********SUBDISTRICT", this.subDistricts);
+    //	this.logger.debug("********SUBDISTRICT", this.subDistricts);
   }
 
   getVillage(subDistrictID) {
@@ -455,7 +457,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
   private parentBenRegID: any = null;
   /** Purpose: function to find and set parent(whose relationshipType is 'self' and parentBenificiary  id is null ) beneficiaryRegID */
   setParentBenID() {
-    console.log("setParentBenID", this.beneficiaryResults);
+    this.logger.debug("setParentBenID", this.beneficiaryResults);
     for (let beneficiaryResult of this.beneficiaryResults) {
       if (
         beneficiaryResult.benPhoneMaps &&
@@ -470,14 +472,14 @@ export class BeneficiaryRegistration104Component implements OnInit {
       }
     }
 
-    //	console.log("parentBenRegID: " + this.parentBenRegID);
-    //	console.log("relationshipTypeID: " + this.relationshipTypeID);
+    //	this.logger.debug("parentBenRegID: " + this.parentBenRegID);
+    //	this.logger.debug("relationshipTypeID: " + this.relationshipTypeID);
   }
   parentBenRegName: any;
   /** Purpose: function to set parent(whose relationshipType is 'self' and parentBenificiary  id is null ) beneficiary name */
   setParentBenName() {
     // debugger
-    console.log(
+    this.logger.debug(
       "setParentBenName: " + JSON.stringify(this.beneficiaryResults)
     );
 
@@ -489,12 +491,12 @@ export class BeneficiaryRegistration104Component implements OnInit {
           .benRelationshipType == "Self"
       ) {
         this.parentBenRegName = beneficiaryResult.firstName;
-        //	console.log("this.parentBenRegName: " + this.parentBenRegName);
+        //	this.logger.debug("this.parentBenRegName: " + this.parentBenRegName);
         // if (beneficiaryResult.middleName)
         // 	this.parentBenRegName += " " + beneficiaryResult.middleName;
         // if (beneficiaryResult.lastName)
         // 	this.parentBenRegName += " " + beneficiaryResult.lastName;
-        //			console.log("parentBenRegName: " + this.parentBenRegName);
+        //			this.logger.debug("parentBenRegName: " + this.parentBenRegName);
       }
     }
   }
@@ -596,7 +598,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
 
   /** Purpose: dynamic loading Registration fields based on condition*/
   Emergency(event) {
-    //	console.log(event);
+    //	this.logger.debug(event);
     // send emergency call status to closure page
     this.getCommonData.isEmergency.next({
       emergency: event,
@@ -630,9 +632,9 @@ export class BeneficiaryRegistration104Component implements OnInit {
         districtID: values.districtSearch,
       },
     };
-    //	console.log(values);
+    //	this.logger.debug(values);
     this.BeneficiaryExistsWIthOtherPhNum = true;
-    //	console.log(searchData);
+    //	this.logger.debug(searchData);
 
     this._util.searchBenficiary(JSON.stringify(searchData)).subscribe(
       (response) => {
@@ -646,11 +648,11 @@ export class BeneficiaryRegistration104Component implements OnInit {
 
   /** Purpose: function to retrive beneficiaries based on the phone numbers */
   retrieveRegHistoryByPhoneNo(PhoneNo: any) {
-    //	console.log("retrieveRegHistoryByPhoneNo");
+    //	this.logger.debug("retrieveRegHistoryByPhoneNo");
     this._util
       .retrieveRegHistoryByPhoneNo(PhoneNo)
       .subscribe((response) => this.handlesuccess(response));
-    // console.log(this.relationShips);
+    // this.logger.debug(this.relationShips);
   }
   searchFormReset() {
     this.searchForm.reset();
@@ -754,7 +756,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
             (this.callerResponse = this.callerSuccessHandeler(response))
         );
     } else {
-      console.log("Session ID is null not able to land a call");
+      this.logger.debug("Session ID is null not able to land a call");
     }
   }
 
@@ -779,19 +781,19 @@ export class BeneficiaryRegistration104Component implements OnInit {
   }
 
   callerSuccessHandeler(response) {
-    //	console.log("callerSuccessHandeler: " + JSON.stringify(response));
+    //	this.logger.debug("callerSuccessHandeler: " + JSON.stringify(response));
     this.getCommonData.benCallID = response.benCallID;
     this.beneficiaryDetails = response;
     this.getCommonData.benDataInRO = response;
-    //	console.log(this.beneficiaryDetails, response, "&&&&&&&&&&&&&&&&");
+    //	this.logger.debug(this.beneficiaryDetails, response, "&&&&&&&&&&&&&&&&");
   }
   callerHandleSuccess(res) {
-    console.log(res);
+    this.logger.debug(res);
   }
 
   registerObj: any = {};
   registerBeneficiary() {
-    // console.log(this.firstName);
+    // this.logger.debug(this.firstName);
     let identityData = {
       govtIdentityNo: this.aadharNo,
       govtIdentityTypeID: this.identityType,
@@ -920,7 +922,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       Obj["createdBy"] = this.agentData.userName;
       this.registerObj.benPhoneMaps.push(Obj);
     }
-    //	console.log(JSON.stringify(this.registerObj));
+    //	this.logger.debug(JSON.stringify(this.registerObj));
     this._util.registerBeneficiary(JSON.stringify(this.registerObj)).subscribe(
       (response) => {
         this.registrationDetails = this.regSuccessHandeler(response);
@@ -949,7 +951,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       this.getCommonData.benDataInRO.benCallID
     );
     this.getCommonData.benRegID = searchedBenData.beneficiaryRegID;
-    // console.log('data passed' + searchedBenData);
+    // this.logger.debug('data passed' + searchedBenData);
     this.onBenRegDataSelect.emit(searchedBenData);
     if (this.BeneficiaryExistsWIthOtherPhNum) {
       this.saveAlternateNumber(
@@ -1014,7 +1016,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     );
   }
   selectBeneficiary(regHistory: any) {
-    console.log("regHistory: " + JSON.stringify(regHistory));
+    this.logger.debug("regHistory: " + JSON.stringify(regHistory));
     this.getHealthIdDetails(regHistory.beneficiaryRegID);
     this.nexButtonEvent.emit(false); //can be removed in future if provider services are no longer in use, also has to remove from its parent html & its function in ts....gursimran 2/10/18
     this.quesVisibilityFlag = false;
@@ -1023,7 +1025,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.updateBenInCall(regHistory);
     // this.onBenRegDataSelect.emit( regHistory );
     this.populateUserData(regHistory);
-    // console.log("LatestValidPrescriptions " + this.LatestValidPrescriptions);
+    // this.logger.debug("LatestValidPrescriptions " + this.LatestValidPrescriptions);
     this.registrationPage1 = true;
     this.showTableFlag = false;
     this.registrationPage2 = false;
@@ -1062,7 +1064,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
         this.handlesuccess2(response);
       },
       (err) => {
-        console.log("Case Sheet Error");
+        this.logger.debug("Case Sheet Error");
       }
     );
   }
@@ -1075,12 +1077,12 @@ export class BeneficiaryRegistration104Component implements OnInit {
       this.hadRecentlyPrescribed = false;
     }
 
-    //	console.log(this.recentPrescriptionData);
+    //	this.logger.debug(this.recentPrescriptionData);
   }
   dummyBenDetails: any = {};
   // Purpose: populate beneficiary details to the update form
   populateRegistrationFormForUpdate(registeredBenData) {
-    //		console.log('registered ben data is :', registeredBenData)
+    //		this.logger.debug('registered ben data is :', registeredBenData)
     if (
       registeredBenData[0].i_bendemographics.healthCareWorkerID != undefined
     ) {
@@ -1119,7 +1121,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
         registeredBenData.benPhoneMaps[0].benRelationshipID;
       this.benPhMapID = registeredBenData.benPhoneMaps[0].benPhMapID;
       let relation = "self";
-      console.log(
+      this.logger.debug(
         "populateRegistrationFormForUpdate: " + registeredBenData
       );
       if (registeredBenData.benPhoneMaps[0].benRelationshipType) {
@@ -1169,7 +1171,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     // else {
     // 	alert("it has not");
     // }
-    //	console.log("@@@@@@@@@@",registeredBenData);
+    //	this.logger.debug("@@@@@@@@@@",registeredBenData);
     this.identityType = registeredBenData.govtIdentityTypeID;
     // if (registeredBenData.i_bendemographics.educationID)
     this.occupationId = registeredBenData.i_bendemographics.occupationID;
@@ -1191,7 +1193,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     this.ageFlag = false;
     this.benOldObj = registeredBenData;
     //	this.getLatestValidPrescriptions();
-    //	console.log(registeredBenData.i_bendemographics.educationID,this.educationQualification);
+    //	this.logger.debug(registeredBenData.i_bendemographics.educationID,this.educationQualification);
 
     //--------$$ creating dummy object, to differenciate between the new keys or change in keys while editong... Gursimran 27/2/18 $$--------
 
@@ -1289,12 +1291,12 @@ export class BeneficiaryRegistration104Component implements OnInit {
       Obj["createdBy"] = this.agentData.userName;
       this.dummyBenDetails.benPhoneMaps.push(Obj);
     }
-    //	console.log(JSON.stringify(this.dummyBenDetails));
+    //	this.logger.debug(JSON.stringify(this.dummyBenDetails));
     // let tempObj = {};
     // for(var i = 0; i< this.dummyBenDetails.benPhoneMaps.length; i++){
     // 	tempObj[i] = Object.assign({}, this.dummyBenDetails.benPhoneMaps[i]);
     // }
-    // console.log(tempObj);
+    // this.logger.debug(tempObj);
     //	delete this.dummyBenDetails['benPhoneMaps'];
     this.dummyBenDetails = JSON.stringify(this.dummyBenDetails);
     this.dummyBenDetails = JSON.parse(this.dummyBenDetails);
@@ -1451,19 +1453,19 @@ export class BeneficiaryRegistration104Component implements OnInit {
   }
 
   diffUpdateBenData() {
-    //	console.log("DUMMY " + JSON.stringify(this.dummyBenDetails));
+    //	this.logger.debug("DUMMY " + JSON.stringify(this.dummyBenDetails));
 
     this.updatedObj = JSON.stringify(this.updatedObj);
     this.updatedObj = JSON.parse(this.updatedObj);
-    //	console.log("UPDATE" + JSON.stringify(this.updatedObj));
+    //	this.logger.debug("UPDATE" + JSON.stringify(this.updatedObj));
 
     let newUpdatedObj = {};
     newUpdatedObj = deepDiff(this.dummyBenDetails, this.updatedObj, true);
-    //console.log(newUpdatedObj);
+    //this.logger.debug(newUpdatedObj);
 
     let keys = [];
     keys = this.getKeys(newUpdatedObj);
-    //	console.log(keys);
+    //	this.logger.debug(keys);
 
     if (
       keys.includes("titleId") ||
@@ -1542,7 +1544,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     newUpdatedObj["changeInContacts"] = true;
     newUpdatedObj["changeInFamilyDetails"] = true;
 
-    //	console.log("NEW " + JSON.stringify(newUpdatedObj));
+    //	this.logger.debug("NEW " + JSON.stringify(newUpdatedObj));
 
     // debugger;
 
@@ -1633,7 +1635,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
   }
 
   successHandeler(response) {
-    //			console.log('the response is', response);
+    //			this.logger.debug('the response is', response);
     return response;
   }
   /** Purpose: callback function after registering a beneficiary */
@@ -1656,7 +1658,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
       // observable to enable the proceedtohao button after success response if it is not a emergency case 
       this.registerService.getIsEmergency(false);
 
-    //	console.log("Registration success");
+    //	this.logger.debug("Registration success");
     let dialogReff = this.dialog.open(RegisteredBeneficiaryModal104, {
       // height: '280px',
       width: "420px",
@@ -1703,7 +1705,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
         this.altPhNumber != "" &&
         this.altPhNumber != "close"
       ) {
-        console.log("Registered number will be used"); // Registered number will be used
+        this.logger.debug("Registered number will be used"); // Registered number will be used
 
         // ** code to send SMS **
         this.sendSMS(response.beneficiaryRegID);
@@ -1713,7 +1715,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
         this.altPhNumber != "close"
       ) {
         this.saveAlternateNumber(generatedId, this.altPhNumber);
-        console.log(this.altPhNumber);
+        this.logger.debug(this.altPhNumber);
         this.sendSMS(response.beneficiaryRegID, this.altPhNumber);
       } else {
         this.messageAlertHAO();
@@ -1736,19 +1738,19 @@ export class BeneficiaryRegistration104Component implements OnInit {
       this._util.updatebeneficiaryincall(data).subscribe(
         (response) => {
           if (response.statusCode != undefined && response.statusCode == 200) {
-            //	console.log(response, 'success while updating ben in call');
+            //	this.logger.debug(response, 'success while updating ben in call');
           }
-          //	console.log(response, 'success while updating ben in call');
+          //	this.logger.debug(response, 'success while updating ben in call');
         },
         (err) => {
-          console.log(err.errorMessage, "Error while updating ben in call");
+          this.logger.debug(err.errorMessage, "Error while updating ben in call");
         }
       );
     }
   }
 
   navigateToHAO() {
-    console.log("navigateToHAO called");
+    this.logger.debug("navigateToHAO called");
     this.getCommonData.current_role = "HAO";
     this.roleChanged.emit("HAO");
     this.getCommonData.roleChanged.next("HAO");
@@ -1914,7 +1916,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
     // if(idType.identityType == 'Aadhar') {
     // 	this.tempIDtype = 'Aadhar';
     // }
-    // console.log(this.tempIDtype);
+    // this.logger.debug(this.tempIDtype);
     // this.aadharNo = "";
     this.registrationForm.controls["aadharNo"].setValue(null);
     this.validateIDonDoCheck(idType);
@@ -2146,7 +2148,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
 
                     this._smsService.sendSMS(reqArr).subscribe(
                       (response) => {
-                        //	console.log(response, 'SMS Sent');
+                        //	this.logger.debug(response, 'SMS Sent');
                         if (response) {
                           setTimeout(() => this.messageAlertHAO(), 1);
                           this.alertMessage.alert(
@@ -2157,7 +2159,7 @@ export class BeneficiaryRegistration104Component implements OnInit {
                       },
                       (err) => {
                         this.messageAlertHAO();
-                        console.log(err, "SMS not sent Error");
+                        this.logger.debug(err, "SMS not sent Error");
                       }
                     );
                   }
@@ -2165,13 +2167,13 @@ export class BeneficiaryRegistration104Component implements OnInit {
               },
               (err) => {
                 this.messageAlertHAO();
-                console.log(err, "Error in fetching sms templates");
+                this.logger.debug(err, "Error in fetching sms templates");
               }
             );
         }
       },
       (err) => {
-        console.log(err, "error while fetching sms types");
+        this.logger.debug(err, "error while fetching sms types");
       }
     );
   }

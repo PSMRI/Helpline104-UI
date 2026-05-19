@@ -48,6 +48,7 @@ import { OutboundReAllocationService } from "../services/outboundServices/outbou
 import { HttpServices } from "../services/http-services/http_services.service";
 import { SetLanguageComponent } from "app/set-language.component";
 import { sessionStorageService } from "app/services/sessionStorageService/session-storage.service";
+import { LoggerService } from '../../services/loggerService/logger.service';
 
 @Component({
   selector: "app-surveyor-calltype-reports",
@@ -111,6 +112,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
   currentLanguageSet: any;
 
   constructor(
+    private logger: LoggerService,
     private sessionstorage:sessionStorageService,
     private message: ConfirmationDialogsService,
     private cz_service: CzentrixServices,
@@ -149,12 +151,12 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
 
     this._OSRService.getFeatureRoleMapping(requestObject).subscribe(
       (response) => {
-        console.log(response, "featureRoleMapArray");
+        this.logger.debug(response, "featureRoleMapArray");
         this.featureRoleMapArray = response.data;
         this.getHAORoleID();
       },
       (error) => {
-        console.log(error);
+        this.logger.debug(error);
       }
     );
   }
@@ -172,7 +174,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
     tempFilterArr = this.featureRoleMapArray.filter((obj) => {
       return obj.screen.screenName == "Health_Advice";
     }, this);
-    console.log(tempFilterArr, "tempFilterArr");
+    this.logger.debug(tempFilterArr, "tempFilterArr");
     this.roleID = tempFilterArr[0].roleID;
 
     //Todo get the role name by calling Roles API (user/getRolesByProviderID)
@@ -200,7 +202,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
           providerServiceMapID:
             this.commonDataService.current_service.serviceID,
         };
-        console.log(
+        this.logger.debug(
           "service.serviceID: " +
             this.commonDataService.current_service.serviceID
         );
@@ -214,7 +216,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
               },
               (err) => {
                 //	alert(nside surveyor")
-                console.log("Could'nt find call types in suveyor");
+                this.logger.debug("Could'nt find call types in suveyor");
               }
             );
         } else {
@@ -225,19 +227,19 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
   }
   calltypesSuccess(response) {
     if (response) {
-      console.log(response);
+      this.logger.debug(response);
       this.callType = response
         .filter(function (item) {
-          console.log(item.callGroupType);
+          this.logger.debug(item.callGroupType);
           return item.callGroupType.toLowerCase() === "valid";
         })[0]
         .callTypes.filter(function (previousData) {
-          console.log(previousData.callType);
+          this.logger.debug(previousData.callType);
           return previousData.callType.toLowerCase().indexOf("valid") != -1;
         })[0].callTypeID;
     }
 
-    console.log("valid call id", this.callType);
+    this.logger.debug("valid call id", this.callType);
     this.setTableFlag(true, 1, this.rowsPerPage, this.filter);
   }
 
@@ -301,7 +303,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
       requestObj.filterEndDate = undefined;
     }
 
-    //	console.log("Request: " + JSON.stringify(requestObj));
+    //	this.logger.debug("Request: " + JSON.stringify(requestObj));
 
     // write the api here to get filtercall list
     this._SupervisorCallTypeReportService.filterCallList(requestObj).subscribe(
@@ -313,7 +315,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
   }
 
   successhandeler(response, pageNo) {
-    console.log("response", response);
+    this.logger.debug("response", response);
     if (response) {
       this.callList = response.workList;
       this.filterCallListArray = response.workList;
@@ -374,14 +376,14 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
     }
   }
   errorInCallType(err) {
-    console.log("ERROR" + err.status);
+    this.logger.debug("ERROR" + err.status);
   }
   getFeedback(item, pageNo, rowsPerPage, status) {
     this.cz_service
       .manualDialaNumber(this.commonDataService.agentID, item.phoneNo)
       .subscribe(
         (res) => {
-          console.log("resp", res);
+          this.logger.debug("resp", res);
           this.commonDataService.avoidingEvent = true;
           this.eventSuccess(item, pageNo, rowsPerPage, status);
         },
@@ -389,7 +391,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
           this.message.alert(err.errorMessage, "error");
         }
       );
-    console.log(item);
+    this.logger.debug(item);
   }
 
   eventSuccess(data, pageNo, rowsPerPage, status) {
@@ -416,7 +418,7 @@ export class SurveyorCalltypeReportsComponent implements OnInit {
         .disconnectCall(this.commonDataService.agentID, "")
         .subscribe(
           (res) => {
-            console.log("resp", res);
+            this.logger.debug("resp", res);
             //	this.message.alert("Call Disconnected Successfully");
           },
           (err) => {
@@ -600,7 +602,7 @@ export class CDICallModel {
   }
 
   getQuestionTypeSuccessHandeler(response) {
-    console.log("*QUESTION TYPES*", response);
+    this.logger.debug("*QUESTION TYPES*", response);
     for (let i = 0; i < response.length; i++) {
       if (response[i].questionType === "Qualitative") {
         this.qualitativeQuestionTypeId = response[i].questionTypeID;
@@ -640,7 +642,7 @@ export class CDICallModel {
 
   requestObj: any = {};
   getCDIScreeningQuestions() {
-    //console.log(screeningServiceName)
+    //this.logger.debug(screeningServiceName)
     this.requestObj = {};
     // this.requestObj.questionTypeID = questionTypeID;
     this.requestObj.providerServiceMapID =
@@ -686,8 +688,8 @@ export class CDICallModel {
         this.createItem(this.qualitativeQuestions[i])
       );
     }
-    console.log(this.questionaireForm);
-    console.log(this.questionaireForm.get("questions"));
+    this.logger.debug(this.questionaireForm);
+    this.logger.debug(this.questionaireForm.get("questions"));
   }
 
   createItem(obj): FormGroup {
@@ -720,8 +722,8 @@ export class CDICallModel {
 
     let val = this.questions.at(index).value.answer;
     let value = val.toUpperCase();
-    console.log("Value:", value);
-    console.log("ID:", ID);
+    this.logger.debug("Value:", value);
+    this.logger.debug("ID:", ID);
     /**Qualitative */
     for (let i = 0; i < this.qualitativeQuestionID.length; i++) {
       if (ID == this.qualitativeQuestionID[i]) {
@@ -742,8 +744,8 @@ export class CDICallModel {
             this.enableQualitativeReason = false;
           }
           for (let j = 0; j < this.setreasonNOArray.length; j++) {
-            console.log("setreasonNOArrayID", this.setreasonNOArray[j]);
-            console.log("setreasonNOArrayID1", this.setreasonNOArray[j].id);
+            this.logger.debug("setreasonNOArrayID", this.setreasonNOArray[j]);
+            this.logger.debug("setreasonNOArrayID1", this.setreasonNOArray[j].id);
             if (
               ID != this.setreasonNOArray[j].id &&
               this.setreasonNOArray[j].value == "NO"
@@ -759,7 +761,7 @@ export class CDICallModel {
         break;
       }
     }
-    console.log("enableQualitativeReason", this.enableQualitativeReason);
+    this.logger.debug("enableQualitativeReason", this.enableQualitativeReason);
     /**Utility */
     for (let i = 0; i < this.utilityQuestionID.length; i++) {
       if (ID == this.utilityQuestionID[i]) {
@@ -775,7 +777,7 @@ export class CDICallModel {
       }
     }
 
-    console.log("this.setreasonNOArray.length2", this.setreasonNOArray);
+    this.logger.debug("this.setreasonNOArray.length2", this.setreasonNOArray);
   }
   //   setQualitativeReason()
   //   {
@@ -784,8 +786,8 @@ export class CDICallModel {
 
   // showCommentBox(value1,value2){
   // 	let
-  // 	console.log("value1 "+value1);
-  // 		console.log("value2 "+value2);
+  // 	this.logger.debug("value1 "+value1);
+  // 		this.logger.debug("value2 "+value2);
   // 	this.showComment = true;
   // }
 
@@ -798,9 +800,9 @@ export class CDICallModel {
     if (this.notIntersted.checked) {
       this.cancelCall();
     } else {
-      //console.log(this.questionaireForm.value);
+      //this.logger.debug(this.questionaireForm.value);
       let questions = this.questionaireForm.value.questions;
-      console.log(questions);
+      this.logger.debug(questions);
       this.CallqaMappings.m_104callqamapping = [];
       var totalScore = 0;
       for (let i = 0; i < questions.length; i++) {
@@ -811,9 +813,9 @@ export class CDICallModel {
         this.CallqaMapping.questionID = questions[i].questionId;
         this.CallqaMapping.answer = questions[i].answer;
         let score = 0;
-        console.log(questions[i].questionOptions);
+        this.logger.debug(questions[i].questionOptions);
         questions[i].questionOptions.filter(function (obj) {
-          console.log(obj.answer, "&&&", questions[i].answer);
+          this.logger.debug(obj.answer, "&&&", questions[i].answer);
           if (obj.answer.toLowerCase() == questions[i].answer.toLowerCase()) {
             score = obj.score;
             return obj.score;
@@ -826,7 +828,7 @@ export class CDICallModel {
             return obj.score;
           }
         });
-        console.log(score);
+        this.logger.debug(score);
         this.CallqaMapping.score = score;
 
         for (let j = 0; j < this.qualitativeQuestionID.length; j++) {
@@ -860,11 +862,11 @@ export class CDICallModel {
         this.CallqaMapping.providerServiceMapID =
           this.saved_data.current_service.serviceID;
         // this.CallqaMapping.notInteresting =  !this.notInteresting;
-        // console.log(this.CallqaMapping);
+        // this.logger.debug(this.CallqaMapping);
         this.CallqaMappings.m_104callqamapping[i] = this.CallqaMapping;
         //	totalScore += this.CallqaMapping.score;
       }
-      console.log(this.CallqaMappings);
+      this.logger.debug(this.CallqaMappings);
       // this.CallqaMappings.totalScore = totalScore;
       // this.CallqaMappings.providerServiceMapID = this.saved_data.current_service.serviceID;
       this.surveyorReportsService
@@ -903,7 +905,7 @@ export class CDICallModel {
   updateStatusObj: any;
   storeCallID(beneficiaryRegID, callerID, CDIcallStatus, dummyUpdate) {
     let date = new Date();
-    console.log("dummyUpdate:" + dummyUpdate);
+    this.logger.debug("dummyUpdate:" + dummyUpdate);
     // this.callerObj = {};
     // this.callerObj.beneficiaryRegID = this.beneficiaryRegID;
     // this.callerObj.callID = callerID;
@@ -944,7 +946,7 @@ export class CDICallModel {
   }
   // this code need to be optimized, dummy update is used to update the modified time which used for last call time of surveyor
   dummySuccessHandeler(response) {
-    console.log("CDI response:" + JSON.stringify(response));
+    this.logger.debug("CDI response:" + JSON.stringify(response));
     if (response.cDICallStatus == "Attempted")
       this.updateStatusObj.cDICallStatus = "Not Interested";
     else this.updateStatusObj.cDICallStatus = "Attempted";

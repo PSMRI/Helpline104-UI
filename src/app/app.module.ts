@@ -114,6 +114,7 @@ import { OutboundSearchRecordService } from './services/outboundServices/outboun
 import { OutboundReAllocationService } from './services/outboundServices/outbound-call-reallocation.service';
 import { OutboundCallAllocationService } from './services/outboundServices/outbound-call-allocation.service';
 import { OutboundWorklistService } from './services/outboundServices/outbound-work-list.service';
+import { OutboundActivityService } from './services/outboundServices/outbound-activity.service';
 import { AvailableServices } from './services/common/104-services';
 import { SupervisorCallTypeReportService } from './services/supervisorServices/supervisor-calltype-reports-service.service';
 import { DiseaseScreeningService } from './services/screening/diseaseScreening.service';
@@ -478,7 +479,7 @@ import { FeedbackModule } from './platform-feedback/feedback.module';
     SioService, EpidemicServices, CDSSService, OrganDonationServices, BloodOnCallServices, CallerService, FoodSafetyServices, ConfigService,sessionStorageService,
     SioService, EpidemicServices, CDSSService, OrganDonationServices, BloodOnCallServices, CallerService, FoodSafetyServices, ConfigService,
     DiseaseScreeningService, OutboundSearchRecordService, OutboundCallAllocationService, OutboundReAllocationService,
-    OutboundWorklistService, AvailableServices, SupervisorCallTypeReportService, FeedbackService,
+    OutboundWorklistService, OutboundActivityService, AvailableServices, SupervisorCallTypeReportService, FeedbackService,
     UploadServiceService, AuthGuard, AuthGuard2, SaveFormsGuard, CallTypeReportService,
     NotificationService, SurveyorReportsService, ListnerService, AuthService,
     OutboundListnerService, UtilityService, SnomedService, ConfirmationDialogsService,

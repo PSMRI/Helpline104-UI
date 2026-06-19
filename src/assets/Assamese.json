@@ -1636,7 +1636,27 @@
       "okay": "ঠিক আছে",
       "thankYou": "ধন্যবাদ, আপোনাৰ প্ৰতিক্ৰিয়া আমাৰ বাবে মূল্যবান!"
     },
-    "sessionExpiry": "আপোনাৰ ছেশ্যন অসমৰ্থ হৈছে। অনুগ্ৰহ কৰি পুনৰ লগিন কৰক।"
+    "sessionExpiry": "আপোনাৰ ছেশ্যন অসমৰ্থ হৈছে। অনুগ্ৰহ কৰি পুনৰ লগিন কৰক।",
+  "callActivityDetails": "কল কাৰ্যকলাপ বিৱৰণ",
+  "activityManagement": "কাৰ্যকলাপ ব্যৱস্থাপনা",
+  "newActivityName": "নতুন কাৰ্যকলাপৰ নাম",
+  "addActivity": "কাৰ্যকলাপ যোগ কৰক",
+  "editActivity": "কাৰ্যকলাপ সম্পাদনা কৰক",
+  "remarksOptional": "মন্তব্য (ঐচ্ছিক)",
+  "callActivityHistory": "কল কাৰ্যকলাপ ইতিহাস",
+  "callConnectedDate": "কল সংযুক্ত তাৰিখ",
+  "searchCallActivities": "কল কাৰ্যকলাপ সন্ধান কৰক",
+  "activityStatusUpdatedSuccessfully": "কাৰ্যকলাপ স্থিতি সফলভাৱে আপডেট কৰা হৈছে",
+  "activityAddedSuccessfully": "কাৰ্যকলাপ সফলভাৱে যোগ কৰা হৈছে",
+  "activityUpdatedSuccessfully": "কাৰ্যকলাপ সফলভাৱে আপডেট কৰা হৈছে",
+  "callActivitySavedSuccessfully": "কল কাৰ্যকলাপ সফলভাৱে সংৰক্ষিত কৰা হৈছে",
+  "activityAndCallStatusAreMandatory": "কাৰ্যকলাপ আৰু কল স্থিতি বাধ্যতামূলক",
+  "errorSavingCallActivity": "কল কাৰ্যকলাপ সংৰক্ষণত ত্ৰুটি",
+  "errorFetchingActivities": "কাৰ্যকলাপ আনাত ত্ৰুটি",
+  "errorAddingActivity": "কাৰ্যকলাপ যোগ কৰাত ত্ৰুটি",
+  "errorUpdatingActivity": "কাৰ্যকলাপ আপডেট কৰাত ত্ৰুটি",
+  "errorUpdatingActivityStatus": "কাৰ্যকলাপ স্থিতি আপডেট কৰাত ত্ৰুটি",
+  "enableDisable": "সক্ষম / অক্ষম"
   }
 }
 

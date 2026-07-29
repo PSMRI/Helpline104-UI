@@ -910,5 +910,48 @@ export class InnerpageComponent implements OnInit, OnDestroy {
     );
     languageSubscription.unsubscribe();
   }
+
+  copyBeneficiaryPhone() {
+    const raw = this.selectedBenData && this.selectedBenData.mob;
+    const text = raw != null ? String(raw).trim() : "";
+    if (!text) {
+      return;
+    }
+    const done = () =>
+      this.message.alert(
+        (this.currentLanguageSet && this.currentLanguageSet.phoneCopied) ||
+          "Phone number copied",
+        "success"
+      );
+    try {
+      const nav: any = navigator;
+      if (nav.clipboard && typeof nav.clipboard.writeText === "function") {
+        nav.clipboard.writeText(text).then(done).catch(() => this.fallbackCopyText(text, done));
+        return;
+      }
+    } catch (_) { /* continue fallback */ }
+    this.fallbackCopyText(text, done);
+  }
+
+  private fallbackCopyText(text: string, onOk: () => void) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      onOk();
+    } catch (_) {
+      this.message.alert(
+        (this.currentLanguageSet && this.currentLanguageSet.copyFailed) ||
+          "Could not copy phone number",
+        "error"
+      );
+    }
+    document.body.removeChild(ta);
+  }
+
   /*END - Methods for multilingual implementation*/
 }

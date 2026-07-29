@@ -30,25 +30,41 @@ To build the Helpline104 microservice from source, follow these steps:
 
 ### Prerequisites
 
-Ensure that the following prerequisites are met before building the MMU service:
+Ensure that the following prerequisites are met before building the Helpline104 service:
 
 * JDK 1.8
 * Maven
+* Node.js v16
 * NPM/YARN
 * Spring Boot v2
 * MySQL
 
 ### Installation
 
-To install the MMU module, please follow these steps:
+To install the Helpline104 module, please follow these steps:
 
 1. Clone the repository to your local machine.
-2. Install the dependencies and build the module:
-   - Run the command `npm install`.
-   - Run the command `npm run build`.
-   - Run the command `mvn clean install`.
-   - Run the command `npm start`.
-3. Open your browser and access `http://localhost:4200/#/login` to view the login page of module.
+2. Install Node.js v16 (recommended via [nvm](https://github.com/nvm-sh/nvm)):
+   ```bash
+   nvm install 16
+   nvm use 16
+   ```
+3. Install the dependencies:
+   ```bash
+   npm config set legacy-peer-deps true
+   npm install node-sass --force
+   npm install --force
+   ```
+4. Configure your local environment by editing `src/environments/environment.local.ts` with your local API URLs.
+5. Copy the local environment file:
+   ```bash
+   cp src/environments/environment.local.ts src/environments/environment.ts
+   ```
+6. Start the development server:
+   ```bash
+   npm start
+   ```
+7. Open your browser and access `http://localhost:4200/#/login` to view the login page of module.
 
 ## Usage
 

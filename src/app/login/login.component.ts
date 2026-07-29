@@ -25,6 +25,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { loginService } from "../services/loginService/login.service";
 import { dataService } from "../services/dataService/data.service";
 import { Router } from "@angular/router";
+import { Http, Response } from "@angular/http";
 import { ConfirmationDialogsService } from "./../services/dialog/confirmation.service";
 import { CzentrixServices } from "../services/czentrix/czentrix.service";
 import { PlatformLocation } from "@angular/common";
@@ -58,6 +59,7 @@ export class loginContentClass implements OnInit {
   encryptpassword: any;
   captchaToken: string;
   enableCaptcha = environment.enableCaptcha;
+  footerVersionLabel = "Helpline104 UI";
 
   constructor(
     public loginservice: loginService,
@@ -68,7 +70,8 @@ export class loginContentClass implements OnInit {
     private czentrixServices: CzentrixServices,
     private socketService: SocketService,
     private sessionstorage:sessionStorageService,
-    private httpService: InterceptedHttp
+    private httpService: InterceptedHttp,
+    private http: Http
   ) {
     location.onPopState((e: any) => {
       // console.log(e);
@@ -88,6 +91,7 @@ export class loginContentClass implements OnInit {
   }
 
   ngOnInit() {
+    this.loadFooterVersionLabel();
     /*
       JA354063 - Added on 21/4/2022
       Purpose - If user already logged in , kick the prev session and create a new session
@@ -202,6 +206,26 @@ export class loginContentClass implements OnInit {
     return salt + iv + ciphertext;
   }
 
+
+  private loadFooterVersionLabel() {
+    this.http.get("assets/git-version.json").subscribe(
+      (res: Response) => {
+        try {
+          const b = res.json();
+          if (b && b.version) {
+            const hash =
+              b.shortHash ||
+              (typeof b.commitHash === "string"
+                ? b.commitHash.substring(0, 7)
+                : "");
+            this.footerVersionLabel =
+              "UI " + b.version + (hash ? " · " + hash : "");
+          }
+        } catch (_) { /* ignore bad json */ }
+      },
+      () => { /* keep default label */ }
+    );
+  }
 
   login(doLogOut) {
     

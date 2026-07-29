@@ -20,17 +20,19 @@
 * along with this program.  If not, see https://www.gnu.org/licenses/.
 */
 
-
+import { Injectable } from '@angular/core';
 import * as io from 'socket.io-client';
 import { Observable } from 'rxjs/Observable';
+import { ConfigService } from '../config/config.service';
 
+@Injectable()
 export class SocketService {
-    private url: string = "http://10.208.122.38:4000/";
+    private url: string;
     private socket;
 
-    // constructor() {
-    //     this.socket = io(this.url);
-    // }
+    constructor(private configService: ConfigService) {
+        this.url = this.configService.getSocketURL();
+    }
 
     public sendRoomsArray(data) {
         this.socket.emit('new_user', data);
@@ -44,20 +46,20 @@ export class SocketService {
         this.socket.emit('all-rooms-leave',{});
     }
 
-    public getMessages = function() {
-        return Observable.create((observer) => {
+    public getMessages() {
+        return new Observable((observer) => {
             this.socket.on('get-notification', (message) => {
                 observer.next(message);
             });
         });
     }
 
-    public getDebugMessage = function() {
-        return Observable.create((observer) => {
+    public getDebugMessage() {
+        return new Observable((observer) => {
             this.socket.on('new-message', (data) => {
                 observer.next(data);
-            })
-        })
+            });
+        });
     }
 
     public getSocketURL(){
@@ -65,6 +67,9 @@ export class SocketService {
     }
 
     public reInstantiate(){
+        if (this.socket) {
+            this.socket.disconnect();
+        }
         this.socket = io(this.url);
     }
 }

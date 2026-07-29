@@ -477,7 +477,6 @@ import { FeedbackModule } from './platform-feedback/feedback.module';
     CoCategoryService, FeedbackTypes, LocationService, UserBeneficiaryData, CoFeedbackService,
     CzentrixServices, PrescriptionService, CaseSheetService, OtherHelplineService,
     SioService, EpidemicServices, CDSSService, OrganDonationServices, BloodOnCallServices, CallerService, FoodSafetyServices, ConfigService,sessionStorageService,
-    SioService, EpidemicServices, CDSSService, OrganDonationServices, BloodOnCallServices, CallerService, FoodSafetyServices, ConfigService,
     DiseaseScreeningService, OutboundSearchRecordService, OutboundCallAllocationService, OutboundReAllocationService,
     OutboundWorklistService, OutboundActivityService, AvailableServices, SupervisorCallTypeReportService, FeedbackService,
     UploadServiceService, AuthGuard, AuthGuard2, SaveFormsGuard, CallTypeReportService,

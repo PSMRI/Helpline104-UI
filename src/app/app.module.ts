@@ -90,6 +90,11 @@ import { AlgoComponentComponent } from './algo-component/algo-component.componen
 // services
 import { loginService } from './services/loginService/login.service';
 import { dataService } from './services/dataService/data.service';
+import { AuthContextService } from './services/state/auth-context.service';
+import { RoleContextService } from './services/state/role-context.service';
+import { BeneficiaryStateService } from './services/state/beneficiary-state.service';
+import { CallStateService } from './services/state/call-state.service';
+import { UiEventBusService } from './services/state/ui-event-bus.service';
 import { DashboardHttpServices } from './http-service/http-service.service';
 import { HttpServices } from './services/http-services/http_services.service';
 import { SearchService } from './services/searchBeneficiaryService/search.service';
@@ -473,7 +478,7 @@ import { FeedbackModule } from './platform-feedback/feedback.module';
     ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 
-  providers: [loginService, dataService, DashboardHttpServices, HttpServices, SearchService, CoReferralService, SchemeService, CallServices,
+  providers: [loginService, AuthContextService, RoleContextService, BeneficiaryStateService, CallStateService, UiEventBusService, dataService, DashboardHttpServices, HttpServices, SearchService, CoReferralService, SchemeService, CallServices,
     CoCategoryService, FeedbackTypes, LocationService, UserBeneficiaryData, CoFeedbackService,
     CzentrixServices, PrescriptionService, CaseSheetService, OtherHelplineService,
     SioService, EpidemicServices, CDSSService, OrganDonationServices, BloodOnCallServices, CallerService, FoodSafetyServices, ConfigService,sessionStorageService,

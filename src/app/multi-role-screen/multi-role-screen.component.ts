@@ -22,7 +22,9 @@
 
 
 import { Component, OnInit } from "@angular/core";
-import { dataService } from "../services/dataService/data.service";
+import { AuthContextService } from "../services/state/auth-context.service";
+import { RoleContextService } from "../services/state/role-context.service";
+import { UiEventBusService } from "../services/state/ui-event-bus.service";
 import { Router } from "@angular/router";
 import { CzentrixServices } from "../services/czentrix/czentrix.service";
 import { ConfirmationDialogsService } from "./../services/dialog/confirmation.service";
@@ -76,7 +78,9 @@ export class MultiRoleScreenComponent implements OnInit {
     private sessionstorage:sessionStorageService,
     private message: ConfirmationDialogsService,
     private authService: AuthService,
-    public getCommonData: dataService,
+    public authCtx: AuthContextService,
+    public roleCtx: RoleContextService,
+    public uiEventBus: UiEventBusService,
     public router: Router,
     location: PlatformLocation,
     private czentrixServices: CzentrixServices,
@@ -105,20 +109,20 @@ export class MultiRoleScreenComponent implements OnInit {
   ngOnInit() {
     this.assignSelectedLanguage();
 
-    this.data = this.getCommonData.Userdata;
+    this.data = this.authCtx.Userdata;
     // this.router.navigate(['/MultiRoleScreenComponent', { outlets: { 'postLogin_router': [''] } }]);
-    this.current_role = this.getCommonData.current_role
-      ? this.getCommonData.current_role.RoleName
+    this.current_role = this.roleCtx.current_role
+      ? this.roleCtx.current_role.RoleName
       : "";
-    this.current_service = this.getCommonData.current_service
-      ? this.getCommonData.current_service.serviceName
+    this.current_service = this.roleCtx.current_service
+      ? this.roleCtx.current_service.serviceName
       : "";
-    this.id = this.getCommonData.agentID
-      ? this.getCommonData.agentID
-      : this.getCommonData.Userdata.agentID
-      ? this.getCommonData.Userdata.agentID
+    this.id = this.authCtx.agentID
+      ? this.authCtx.agentID
+      : this.authCtx.Userdata.agentID
+      ? this.authCtx.Userdata.agentID
       : undefined;
-    this.getCommonData.roleSelected.subscribe((obj) => {
+    this.roleCtx.roleSelected.subscribe((obj: any) => {
       this.id = obj["id"];
       this.current_role = obj["role"];
       this.current_service = obj["service"];
@@ -129,7 +133,7 @@ export class MultiRoleScreenComponent implements OnInit {
     const url =
       this.configService.getTelephonyServerURL() + "bar/cti_handler.php";
     this.ctiHandlerURL = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-    this.getCommonData.sendHeaderStatus.subscribe((data) => {
+    this.uiEventBus.sendHeaderStatus.subscribe((data) => {
       this.setHeaderName(data);
     });
 
@@ -147,7 +151,7 @@ export class MultiRoleScreenComponent implements OnInit {
 		const getLanguageJson = new SetLanguageComponent(this.HttpServices);
 		getLanguageJson.setLanguage();
 		this.currentLanguageSet = getLanguageJson.currentLanguageObject;
-    this.app_language=this.getCommonData.appLanguage;
+    this.app_language = this.roleCtx.appLanguage;
     // this.label=this.currentLanguageSet.roleSelection;
 	  }
 
@@ -181,12 +185,12 @@ export class MultiRoleScreenComponent implements OnInit {
     // }
   }
   ipSuccessLogoutHandler() {
-    this.czentrixServices.agentLogout(this.getCommonData.agentID, "").subscribe(
+    this.czentrixServices.agentLogout(this.authCtx.agentID, "").subscribe(
       (res) => {
         this.sessionstorage.removeItem("key");
         this.sessionstorage.removeItem("onCall");
         this.sessionstorage.removeItem("setLanguage");
-        this.getCommonData.appLanguage="English";
+        this.roleCtx.appLanguage = "English";
         this.loginService
           .userLogout()
           .subscribe((response) => this.handleSuccess(response));
@@ -198,7 +202,7 @@ export class MultiRoleScreenComponent implements OnInit {
         this.sessionstorage.removeItem("key");
         this.sessionstorage.removeItem("onCall");
         this.sessionstorage.removeItem("setLanguage");
-        this.getCommonData.appLanguage="English";
+        this.roleCtx.appLanguage = "English";
         this.loginService
           .userLogout()
           .subscribe((response) => this.handleSuccess(response));
@@ -326,12 +330,12 @@ export class MultiRoleScreenComponent implements OnInit {
     this.languageArray.forEach((item) => {
     if (item.languageName === language) {
     this.app_language = language;
-    this.getCommonData.appLanguage=language;
+    this.roleCtx.appLanguage = language;
     }
     });
     } else {
     this.app_language = language;
-    this.getCommonData.appLanguage=language;
+    this.roleCtx.appLanguage = language;
     }
     this.HttpServices.getCurrentLanguage(response[language]);
     }

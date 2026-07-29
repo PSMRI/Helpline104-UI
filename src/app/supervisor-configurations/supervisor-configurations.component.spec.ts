@@ -54,7 +54,7 @@ function Initialize104TestBed() {
 }
 describe('Supervisor-configurations-component', () => {
 
-  fdescribe('When the component is getting loaded, then ngOninit', () => {
+  describe('When the component is getting loaded, then ngOninit', () => {
 
     Initialize104TestBed();
 

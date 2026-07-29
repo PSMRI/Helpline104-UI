@@ -84,7 +84,7 @@ function InitializeAgentStatusTestBed() {
 
 describe('AgentStatusComponent', () => {
 
-  fdescribe('When the component is getting loaded, then ngOninit', () => {
+  describe('When the component is getting loaded, then ngOninit', () => {
 
     InitializeAgentStatusTestBed();
 

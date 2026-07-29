@@ -178,7 +178,7 @@ describe('CaseSheetComponent', () => {
     dataServiceInstance = TestBed.get(dataService);
   });
 
-  fdescribe('case sheet on init ()', () => {
+  describe('case sheet on init ()', () => {
     it('should be created', () => {
       expect(component).toBeTruthy();
     });

@@ -95,7 +95,7 @@ function Initialize104haoTestBed(){
 
 describe('Hao_104_Component', () => {
 
-  fdescribe('When the component is getting loaded, then ngOninit', () => {
+  describe('When the component is getting loaded, then ngOninit', () => {
 
     Initialize104haoTestBed();
 
